@@ -102,18 +102,26 @@ async function fetchSheet(sheetName) {
 //  Parsers — ממירים שורות גולמיות למבנה הנכון
 // ──────────────────────────────────────────────
 function parseTiers(rows) {
-  return rows.map(r => ({
-    id: String(r.id || '').trim(),
-    label: String(r.label || '').trim(),
-    desc: String(r.desc || '').trim(),
-    allowance: parseFloat(r.allowance) || 0,
-    restrictToSimOnly: String(r.restrictToSimOnly || '').toUpperCase() === 'TRUE',
-  })).filter(r => r.id && r.label);
+  return rows
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
+    .map(r => ({
+      id: String(r.id || '').trim(),
+      label: String(r.label || '').trim(),
+      desc: String(r.desc || '').trim(),
+      allowance: parseFloat(r.allowance) || 0,
+      restrictToSimOnly: String(r.restrictToSimOnly || '').toUpperCase() === 'TRUE' || r.restrictToSimOnly === true,
+    })).filter(r => r.id && r.label);
 }
 
 function parseDevices(rows) {
   return rows
-    .filter(r => String(r.isActive || 'TRUE').toUpperCase() !== 'FALSE')
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
     .map(r => ({
       id: String(r.id || '').trim(),
       label: String(r.label || '').trim(),
@@ -124,18 +132,26 @@ function parseDevices(rows) {
 }
 
 function parseMaintenance(rows) {
-  return rows.map(r => ({
-    tier: String(r.tier || '').trim(),
-    screen1: String(r.screen1 || '').trim(),
-    screen2: String(r.screen2 || '').trim(),
-    theft1: String(r.theft1 || '').trim(),
-    disable1: String(r.disable1 || '').trim(),
-  })).filter(r => r.tier);
+  return rows
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
+    .map(r => ({
+      tier: String(r.tier || '').trim(),
+      screen1: String(r.screen1 || '').trim(),
+      screen2: String(r.screen2 || '').trim(),
+      theft1: String(r.theft1 || '').trim(),
+      disable1: String(r.disable1 || '').trim(),
+    })).filter(r => r.tier);
 }
 
 function parseFaq(rows) {
   return rows
-    .filter(r => String(r.isActive || 'TRUE').toUpperCase() !== 'FALSE')
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
     .map(r => ({
       question: String(r.question || '').trim(),
       answer: String(r.answer || '').trim(),
