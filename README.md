@@ -1,16 +1,33 @@
-# React + Vite
+# מכרז סלולר 2026 - סימולטור עלויות חכם
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+אפליקציית React מודרנית שנועדה לסייע לעובדי מדינה לחשב ולדמות את העלויות האישיות שלהם במסגרת מכרז הסלולר החדש של שנת 2026. האפליקציה מנגישה מידע מורכב בצורה ויזואלית, ברורה וידידותית למשתמש.
 
-Currently, two official plugins are available:
+## 🚀 תכונות עיקריות
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **סימולטור עלויות אישי:** חישוב מדויק של ההשתתפות העצמית החודשית בתלוש השכר, תוך שקלול מדרג הזכאות המשרדי (בכיר א', ב', תיכון וכו') מול המכשיר או המסלול הנבחר.
+- **מדריך למכרז:** ריכוז של כל "חוקי הברזל", ההנחיות והדגשים החשובים מתוך תקציר השירותים הרשמי.
+- **מחירון תחזוקה:** טבלה מפורטת של עלויות השתתפות עצמית במקרה של נזק (שבר מסך), אובדן או גניבה.
+- **שאלות ותשובות (FAQ):** מענה לשאלות הנפוצות ביותר של עובדים לקראת המעבר למכרז החדש.
+- **עיצוב פרימיום:** ממשק Glassmorphism מודרני, תמיכה מלאה ב-RTL (עברית), רספונסיביות מלאה למובייל ואנימציות חלקות.
 
-## React Compiler
+## 🛠 טכנולוגיות
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend:** React 19 + Vite
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
+- **Fonts:** Heebo (Google Fonts)
 
-## Expanding the ESLint configuration
+## 📁 מבנה הפרוייקט
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/App.jsx`: הלוגיקה המרכזית, מסד הנתונים של המכשירים והמדרגים, ומרכיבי ה-UI.
+- `src/App.css`: עיצוב משלים והגדרות טיפוגרפיה.
+- `docs/`: מכיל את מסמך המקור שעליו מבוססת האפליקציה: **"תקציר השירותים במכרז הסלולר גרסה 1.3.pdf"**.
+
+## 🏗 הרצה מקומית
+
+1. התקנת תלויות: `npm install`
+2. הרצה במצב פיתוח: `npm run dev`
+3. בנייה ל-production: `npm run build`
+
+---
+**פותח ע"י:** דינה שרון | משרד התקשורת
