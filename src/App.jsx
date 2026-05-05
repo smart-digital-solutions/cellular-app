@@ -1,68 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import {
   Calculator, BookOpen, HelpCircle, ChevronDown, Smartphone, ShieldAlert,
-  Database, CheckCircle2, Info, Building, Receipt, Printer, HeadphonesIcon,
-  AlertCircle, CreditCard, Zap, Wrench, Phone, MessageCircle, Youtube,
-  Clock, Globe2, Sparkles, MoveRight, MoveLeft, GraduationCap, User, Heart,
-  Plug
+  Database, CheckCircle2, Info, Building, AlertCircle, CreditCard, Zap,
+  Wrench, Phone, Globe2, Sparkles, GraduationCap, Plug, RefreshCw, Megaphone, X, Clock
 } from 'lucide-react';
+import { useAppData } from './useAppData';
 
-const TIERS_DATA = [
-  { id: 'bachir_a', label: "מדרג בכיר א'", desc: "מנכ\"לים ומוקבלי מנכ\"לים ומעלה בדירוגים השונים.", allowance: 236.00 },
-  { id: 'bachir_b', label: "מדרג בכיר ב'", desc: "עובדים בסגל בכיר: מתח דרגות 42-44 ומעלה בדירוג המח\"ר או במתח מקביל.", allowance: 177.00 },
-  { id: 'tichon', label: "מדרג תיכון", desc: "עובדים במתחי דרגות שסיומם בדרגה 42 או 43 בדירוג המח\"ר, או במתח מקביל.", allowance: 118.00 },
-  { id: 'merav', label: "מדרג מירב", desc: "עובדים במתחי דרגות שסיומם בדרגה 40 או 41 בדירוג המח\"ר, או במתח מקביל.", allowance: 88.50 },
-  { id: 'masad', label: "מדרג מסד", desc: "עובדים במתחי דרגות שסיומם ב-39 ומטה. כולל סטודנטים ואזרחים ותיקים.", allowance: 88.50 },
-  { id: 'other', label: "מדרג אחר (SIM ONLY)", desc: "זכאים רק לחבילת סלולר ללא מכשיר, בהתאם לשיקול דעת המשרד.", allowance: 11.06, restrictToSimOnly: true },
-  { id: 'exception', label: "מדרג חריג (ללא השתתפות)", desc: "מכסה זמנית: חל\"ת, השעיה, שליחות. המכשיר ע\"ח פרטי.", allowance: 0 }
-];
+// ──────────────────────────────
+//  Loading Screen Component
+// ──────────────────────────────
+const LoadingScreen = () => (
+  <div className="fixed inset-0 z-[100] bg-[#0B1120] flex flex-col items-center justify-center gap-6">
+    <div className="relative">
+      <div className="w-20 h-20 rounded-full border-4 border-white/10 border-t-[#4F46E5] animate-spin" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <Smartphone className="w-8 h-8 text-[#4F46E5]" />
+      </div>
+    </div>
+    <div className="text-center">
+      <p className="text-white font-black text-xl mb-1">טוען נתונים עדכניים...</p>
+      <p className="text-slate-400 text-sm">מתחבר למאגר הנתונים</p>
+    </div>
+  </div>
+);
 
-const DEVICES_CATALOG = [
+// ──────────────────────────────
+//  Announcement Banner
+// ──────────────────────────────
+const AnnouncementBanner = ({ text, type = 'info', onClose }) => {
+  const colors = {
+    info: 'bg-indigo-600 text-white',
+    warning: 'bg-amber-500 text-white',
+    error: 'bg-red-600 text-white',
+    success: 'bg-emerald-600 text-white',
+  };
+  return (
+    <div className={`fixed top-0 left-0 right-0 z-[60] py-2.5 px-4 flex items-center justify-between gap-3 ${colors[type] || colors.info}`}>
+      <div className="flex items-center gap-2 flex-1 justify-center">
+        <Megaphone className="w-4 h-4 shrink-0" />
+        <span className="text-sm font-bold">{text}</span>
+      </div>
+      <button onClick={onClose} className="shrink-0 p-1 rounded-full hover:bg-white/20 transition-colors">
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
+
+const DEVICES_CATALOG_PLACEHOLDER = [
   { id: 'sim_only', label: 'מסלול ללא מכשיר (SIM Only)', category: 'מסלולים אישיים (BYOD)', totalCost: 11.06 },
   { id: 'sim_only_repair', label: 'מסלול SIM Only + שירות תיקונים', category: 'מסלולים אישיים (BYOD)', totalCost: 18.12 },
-  { id: 'ip17_256', label: 'Apple iPhone 17 (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 73.56 },
-  { id: 'ip17_air_256', label: 'Apple iPhone 17 Air (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 74.78 },
-  { id: 'ip17_pro_256', label: 'Apple iPhone 17 Pro (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 90.49 },
-  { id: 'ip17_pro_512', label: 'Apple iPhone 17 Pro (512GB)', category: 'Apple iPhone - סדרת 17', totalCost: 98.07 },
-  { id: 'ip17_promax_256', label: 'Apple iPhone 17 Pro Max (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 93.06 },
-  { id: 'ip17_promax_512', label: 'Apple iPhone 17 Pro Max (512GB)', category: 'Apple iPhone - סדרת 17', totalCost: 103.76 },
-  { id: 'ip17_promax_1t', label: 'Apple iPhone 17 Pro Max (1TB)', category: 'Apple iPhone - סדרת 17', totalCost: 113.51 },
-  { id: 's25_fe_256', label: 'Samsung Galaxy S25 FE (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 74.00 },
-  { id: 's25_256', label: 'Samsung Galaxy S25 (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 82.34 },
-  { id: 's25_plus_256', label: 'Samsung Galaxy S25 Plus (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 88.62 },
-  { id: 's25_plus_512', label: 'Samsung Galaxy S25 Plus (512GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 95.60 },
-  { id: 's25_ultra_256', label: 'Samsung Galaxy S25 Ultra (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 105.00 },
-  { id: 's25_ultra_512', label: 'Samsung Galaxy S25 Ultra (512GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 112.93 },
-  { id: 's25_ultra_1t', label: 'Samsung Galaxy S25 Ultra (1TB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 130.52 },
-  { id: 'zflip7_256', label: 'Samsung Galaxy Z Flip 7 (256GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 95.61 },
-  { id: 'zflip7_512', label: 'Samsung Galaxy Z Flip 7 (512GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 107.10 },
-  { id: 'zfold7_256', label: 'Samsung Galaxy Z Fold 7 (256GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 150.83 },
-  { id: 'zfold7_512', label: 'Samsung Galaxy Z Fold 7 (512GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 157.42 },
-  { id: 'a26_128', label: 'Samsung Galaxy A26 5G (128GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 49.48 },
-  { id: 'a36_128', label: 'Samsung Galaxy A36 5G (128GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 52.24 },
-  { id: 'a56_256', label: 'Samsung Galaxy A56 5G (256GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 60.49 },
-  { id: 'kosher_phone', label: 'מכשיר כשר מאושר ועדה (שיחות בלבד)', category: 'מכשירים כשרים (לחצנים)', totalCost: 26.20 },
-];
-
-const MAINTENANCE_DATA = [
-  { tier: "מכשיר לחצנים (Feature Phone)", screen1: "50.40 ₪", screen2: "50.40 ₪", theft1: "100.10 ₪", disable1: "100.10 ₪", secondTime: "לפי שווי ביום האירוע. התוכנית נמשכת." },
-  { tier: "מכשיר עד 2,000 ₪", screen1: "110.10 ₪", screen2: "302.50 ₪", theft1: "504.00 ₪", disable1: "403.00 ₪", secondTime: "-" },
-  { tier: "מכשיר עד 3,500 ₪", screen1: "110.10 ₪", screen2: "403.00 ₪", theft1: "1,664.00 ₪", disable1: "1,210.00 ₪", secondTime: "-" },
-  { tier: "מכשיר עד 5,000 ₪", screen1: "110.10 ₪", screen2: "605.00 ₪", theft1: "2,269.00 ₪", disable1: "1,613.70 ₪", secondTime: "-" },
-  { tier: "מכשיר מעל 5,000 ₪", screen1: "110.10 ₪", screen2: "807.00 ₪", theft1: "3,025.70 ₪", disable1: "50% מהמחיר", secondTime: "-" }
-];
-
-const FAQ_DATA = [
-  { question: 'האם אני עובר לפרטנר או לפלאפון?', answer: 'המכרז פוצל: פלאפון זכתה ב-60% מהמנויים, ופרטנר ב-40%.' },
-  { question: 'מתי מתחיל החיוב על המכשיר החדש?', answer: 'החיוב מתחיל באופן רשמי רק לאחר ביצוע השדרוג בפועל.' },
-  { question: 'האם מספר הטלפון משתנה בעקבות הניוד?', answer: 'לא. מספר המנוי הנוכחי שלך נשמר במלואו בדיוק כפי שהוא.' },
-  { question: 'למי פונים אם אני לא מופיע ברשימת הזכאים?', answer: 'יש לפנות אך ורק למנהלן/אחראי הסלולר במשרדך לבירור ועדכון הסטטוס.' },
-  { question: 'מהו צימוד סים (SIM Pairing)?', answer: 'כרטיס ה-SIM משויך טכנולוגית באופן בלעדי למכשיר הליסינג. הכנסת הסים למכשיר אחר תגרום להשהיית הקו.' },
-  { question: 'מה קורה למידע האישי שלי במכשיר הישן?', answer: 'באחריותך הבלעדית לגבות עצמאית ענן טרם מסירת המכשיר.' },
-  { question: 'מתי עלי להחזיר את המכשיר הישן?', answer: 'יש להחזיר את המכשיר הישן לחברת פלאפון תוך 14 ימי עסקים בלבד. אי החזרה תוביל לחיוב מלא.' },
-  { question: 'האם שירות תיקונים כלול בעלות?', answer: 'במסלול ליסינג - כן. במסלול SIM Only - ניתן לרכוש שירות בתוספת 7.06 ₪.' },
-  { question: 'מה קורה אם המכשיר אובד או נגנב?', answer: 'המכשיר ייחסם. קיימת השתתפות עצמית לקבלת מכשיר חלופי לפי מחירון התחזוקה.' },
-  { question: 'כיצד מחושב שווי המס על השימוש במכשיר וההטבות?', answer: 'לפי הנמוך מבין: מחצית מעלות החבילה או סכום קבוע. על רכישת ציוד נלווה חלה זקיפת מס מלאה.' }
 ];
 
 const AccordionItem = ({ question, answer }) => {
@@ -85,27 +72,31 @@ const AccordionItem = ({ question, answer }) => {
 };
 
 export default function App() {
+  const { tiers, devices, maintenance, faq, settings, loading, source, refresh } = useAppData();
   const [activeTab, setActiveTab] = useState('calculator');
   const [selectedTier, setSelectedTier] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('');
+  const [announcementDismissed, setAnnouncementDismissed] = useState(false);
+
+  const showAnnouncement = settings.show_announcement === 'TRUE' && settings.announcement_text && !announcementDismissed;
 
   useEffect(() => {
-    const currentTier = TIERS_DATA.find(t => t.id === selectedTier);
+    const currentTier = tiers.find(t => t.id === selectedTier);
     if (currentTier?.restrictToSimOnly) {
       if (selectedDevice !== 'sim_only' && selectedDevice !== 'sim_only_repair' && selectedDevice !== '') {
         setSelectedDevice('');
       }
     }
-  }, [selectedTier, selectedDevice]);
+  }, [selectedTier, selectedDevice, tiers]);
+  // if (loading) return <LoadingScreen />; // הוסר כדי לאפשר טעינה ברקע (SWR)
+  const currentTier = tiers.find(t => t.id === selectedTier);
+  const currentDevice = devices.find(d => d.id === selectedDevice);
 
-  const currentTier = TIERS_DATA.find(t => t.id === selectedTier);
-  const currentDevice = DEVICES_CATALOG.find(d => d.id === selectedDevice);
-  
   const tierAllowance = currentTier?.allowance || 0;
   const totalCost = currentDevice?.totalCost || 0;
   const employeePayment = Math.max(0, totalCost - tierAllowance);
 
-  const groupedDevices = DEVICES_CATALOG.reduce((acc, device) => {
+  const groupedDevices = devices.reduce((acc, device) => {
     if (!acc[device.category]) acc[device.category] = [];
     acc[device.category].push(device);
     return acc;
@@ -132,7 +123,7 @@ export default function App() {
           </div>
           <select value={selectedTier} onChange={(e) => setSelectedTier(e.target.value)} className="w-full bg-slate-50/80 border-2 border-slate-200 py-4 px-4 rounded-[1.2rem] focus:ring-4 focus:ring-indigo-500/20 focus:border-[#4F46E5] font-bold text-base cursor-pointer">
             <option value="" disabled>-- בחר/י את הדרגה שלך --</option>
-            {TIERS_DATA.map(tier => (<option key={tier.id} value={tier.id}>{tier.label} - תקרת השתתפות: {tier.allowance.toFixed(2)} ₪</option>))}
+            {tiers.map(tier => (<option key={tier.id} value={tier.id}>{tier.label} - תקרת השתתפות: {tier.allowance.toFixed(2)} ₪</option>))}
           </select>
           {currentTier && (
             <div className="mt-5 bg-indigo-50/60 border border-indigo-100/60 rounded-[1.2rem] p-4 flex items-start gap-3 relative overflow-hidden shadow-sm">
@@ -299,7 +290,7 @@ export default function App() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {MAINTENANCE_DATA.map((row, idx) => (
+              {maintenance.map((row, idx) => (
                 <tr key={idx} className="hover:bg-slate-50">
                   <td className="p-4 font-black text-slate-800 bg-slate-50/30 text-sm">{row.tier}</td>
                   <td className="p-4 font-bold text-slate-600 border-r border-slate-100 text-sm">{row.screen1}</td>
@@ -316,7 +307,14 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen font-sans text-right bg-slate-50 relative flex flex-col" dir="rtl">
+    <div className="min-h-screen text-right bg-slate-50 relative flex flex-col" dir="rtl">
+      {showAnnouncement && (
+        <AnnouncementBanner
+          text={settings.announcement_text}
+          type={settings.announcement_type || 'info'}
+          onClose={() => setAnnouncementDismissed(true)}
+        />
+      )}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply" style={{ backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
       <header className="fixed top-0 left-0 right-0 z-50 px-3 py-3">
         <div className="max-w-6xl mx-auto bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1.5rem] md:rounded-full border border-white/10 shadow-2xl flex items-center justify-between px-4 py-3">
@@ -341,13 +339,13 @@ export default function App() {
         {activeTab === 'faq' && (
           <div className="animate-in fade-in max-w-3xl mx-auto relative z-10">
             <h2 className="text-4xl font-black text-center text-slate-800 mb-8">שאלות ותשובות</h2>
-            <div className="space-y-4">{FAQ_DATA.map((faq, idx) => <AccordionItem key={idx} question={faq.question} answer={faq.answer} />)}</div>
+            <div className="space-y-4">{faq.map((item, idx) => <AccordionItem key={idx} question={item.question} answer={item.answer} />)}</div>
           </div>
         )}
       </main>
       <footer className="mt-auto bg-white/50 backdrop-blur-lg border-t border-slate-200/60 py-6 relative z-10 pb-24 md:pb-6">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#4F46E5]" /><span className="font-black text-slate-800 text-sm">מכרז סלולר 2026</span></div>
+          <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#4F46E5]" /><span className="font-black text-slate-800 text-sm">{settings.app_title}</span></div>
           <div className="text-sm font-medium text-slate-500 flex items-center gap-1">אופיין ופותח ע״י <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span> | משרד התקשורת</div>
         </div>
       </footer>
@@ -361,7 +359,7 @@ export default function App() {
           ))}
         </div>
       </nav>
-      <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap'); body { font-family: 'Heebo', sans-serif; } .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); }`}} />
+      <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap'); * { font-family: 'Heebo', sans-serif !important; } .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); }`}} />
     </div>
   );
 }
