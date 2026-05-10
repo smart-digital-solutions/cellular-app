@@ -63,7 +63,7 @@ export const FALLBACK_FAQ = [
 ];
 
 export const FALLBACK_SETTINGS = {
-  app_title: 'מכרז סלולר 2026',
+  app_title: 'סלולאטור',
   vat_rate: '18',
   lease_months: '24',
   contact_name: 'מנהל סלולר',
