@@ -278,7 +278,7 @@ export default function App() {
 
   const renderCalculator = () => (
     <div className="space-y-4 animate-omega-smooth relative z-10">
-      <div className="premium-glass text-[#1E293B] text-sm p-4 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-4 border border-white/40 shadow-xl relative z-10 mb-1 hover:scale-[1.002] transition-transform duration-500">
+      <div className="premium-glass text-[#1E293B] text-sm p-4 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-4 border border-white/40 shadow-xl relative z-10 mb-1 transition-shadow duration-300 hover:shadow-2xl">
         <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] p-3 rounded-xl shadow-lg shrink-0 flex items-center justify-center">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
@@ -299,7 +299,7 @@ export default function App() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10 items-start">
         <div className="flex flex-col gap-4 relative z-10">
-          <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative group flex flex-col hover:scale-[1.005] transition-all duration-500 ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
+          <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative group flex flex-col transition-shadow duration-300 hover:shadow-2xl will-change-xform ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
             <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#4F46E5] to-[#818CF8]"></div>
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-indigo-50 p-2.5 rounded-xl"><Building className="w-5 h-5 text-[#4F46E5]" /></div>
@@ -326,7 +326,7 @@ export default function App() {
 
           {selectedTier && (
             <div className={`animate-omega-spring relative ${activeStep === 2 ? 'z-[60]' : 'z-0'}`}>
-              <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative flex flex-col hover:scale-[1.005] transition-all duration-500`}>
+              <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative flex flex-col transition-shadow duration-300 hover:shadow-2xl will-change-xform`}>
                 <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#06B6D4] to-[#38BDF8]"></div>
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
@@ -359,9 +359,9 @@ export default function App() {
           )}
         </div>
 
-        {/* LEFT COLUMN: Receipt / Image */}
+        {/* RIGHT COLUMN: Receipt / Image */}
         <div className="relative rounded-[1.5rem] shadow-2xl border border-white/10 group min-h-[400px] lg:min-h-[500px] h-full flex flex-col sticky top-24 bg-[#0B1120] overflow-hidden">
-          <img src={heroImage} alt="סלולאטור" className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${selectedTier && selectedDevice ? 'opacity-20 scale-105 mix-blend-screen grayscale' : 'opacity-80 scale-100 hover:scale-105'}`} />
+          <img src={heroImage} alt="" role="presentation" width="800" height="1000" className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${selectedTier && selectedDevice ? 'opacity-20 scale-105 mix-blend-screen grayscale' : 'opacity-80 scale-100 hover:scale-105'}`} />
           <div className={`absolute inset-0 bg-gradient-to-t ${selectedTier && selectedDevice ? 'from-[#0B1120] via-[#0B1120]/80 to-transparent' : 'from-[#0B1120] via-transparent to-transparent'} pointer-events-none transition-colors duration-1000`}></div>
 
           <div className="relative z-10 flex flex-col h-full p-6 lg:p-8 pt-12 lg:pt-16">
@@ -433,7 +433,7 @@ export default function App() {
         <p className="text-base text-slate-500 font-medium">ריכזנו עבורך את כל המידע הקריטי מתוך תקציר השירותים הממשלתי. השוואת מסלולים, חוקי ברזל לשימוש והנחיות התקשרות.</p>
       </div>
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-1 premium-glass rounded-[2rem] border border-slate-200/60 p-6 flex flex-col hover:scale-[1.01] transition-all duration-300 shadow-lg-omega">
+        <div className="lg:col-span-1 premium-glass rounded-[2rem] border border-slate-200/60 p-6 flex flex-col transition-shadow duration-300 hover:shadow-2xl">
           <div className="bg-slate-100 w-12 h-12 rounded-xl flex items-center justify-center mb-5"><CreditCard className="w-6 h-6 text-slate-700" /></div>
           <h3 className="text-xl font-black text-slate-800 mb-5">SIM ONLY<br/><span className="text-slate-400 font-medium text-base">מסלול קו בלבד</span></h3>
           <ul className="space-y-4 flex-grow">
@@ -714,7 +714,11 @@ export default function App() {
         />
       )}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply" style={{ backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
-      <header className="fixed top-0 left-0 right-0 z-50 px-3 py-2" role="banner">
+      <header
+        className="fixed left-0 right-0 z-50 px-3 py-2"
+        style={{ top: showAnnouncement ? '44px' : '0', transition: 'top 0.3s cubic-bezier(0.4,0,0.2,1)' }}
+        role="banner"
+      >
         <div className="max-w-6xl mx-auto bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1rem] md:rounded-full border border-white/10 shadow-2xl flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white" aria-hidden="true"><Smartphone className="w-4 h-4" /></div>
@@ -736,9 +740,9 @@ export default function App() {
           </nav>
         </div>
       </header>
-      <div className="pt-16 md:pt-20"></div>
+      <div className={`transition-all duration-300 ${showAnnouncement ? 'pt-28 md:pt-32' : 'pt-16 md:pt-20'}`} />
 
-      <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-10 flex-grow w-full" role="main">
+      <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         {activeTab === 'calculator' && renderCalculator()}
         {activeTab === 'termination' && renderTermination()}
         {activeTab === 'guide' && renderGuide()}
