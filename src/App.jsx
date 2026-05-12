@@ -256,7 +256,7 @@ export default function App() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
-  // if (loading) return <LoadingScreen />; // הוסר כדי לאפשר טעינה ברקע (SWR)
+
   const currentTier = tiers.find(t => t.id === selectedTier);
   const currentDevice = allDevices.find(d => d.id === selectedDevice);
   const tierAllowance = currentTier?.allowance || 0;
@@ -277,33 +277,33 @@ export default function App() {
   }, {});
 
   const renderCalculator = () => (
-    <div className="space-y-6 animate-omega-smooth relative z-10">
-      <div className="premium-glass text-[#1E293B] text-sm p-6 rounded-[2rem] flex flex-col md:flex-row items-start md:items-center gap-5 border border-white/40 shadow-xl relative z-10 mb-2 hover:scale-[1.005] transition-transform duration-500">
-        <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] p-4 rounded-2xl shadow-lg shrink-0 flex items-center justify-center">
-          <Sparkles className="w-8 h-8 text-white" />
+    <div className="space-y-4 animate-omega-smooth relative z-10">
+      <div className="premium-glass text-[#1E293B] text-sm p-4 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-4 border border-white/40 shadow-xl relative z-10 mb-1 hover:scale-[1.002] transition-transform duration-500">
+        <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] p-3 rounded-xl shadow-lg shrink-0 flex items-center justify-center">
+          <Sparkles className="w-6 h-6 text-white" />
         </div>
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-2 rounded-full bg-indigo-100/80 text-indigo-700 font-bold text-xs border border-indigo-200 w-max">
+        <div className="flex-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-1 rounded-full bg-indigo-100/80 text-indigo-700 font-bold text-[10px] border border-indigo-200 w-max">
             הדור הבא של ניהול סלולר
           </div>
-          <h3 className="font-black text-2xl md:text-3xl mb-1 bg-clip-text text-transparent bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ברוכים הבאים לסלולאטור</h3>
-          <p className="leading-relaxed text-sm md:text-base font-medium text-slate-600 max-w-3xl mb-4">הסימולטור החכם שיעזור לכם לבחור את המסלול המשתלם ביותר, בשקיפות מלאה. משקלל השתתפות ממשלתית, ליסינג ומע"מ (18%).</p>
-          <div className="bg-amber-50/80 border border-amber-200/50 rounded-xl p-3 flex items-center gap-3 animate-in slide-in-from-right duration-1000">
-            <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
-            <p className="text-amber-900 text-sm font-bold leading-tight">
-              שימו לב כי עלות הליסינג מתעדכנת מעת לעת בהתאם למחירי השוק
+          <h3 className="font-black text-xl md:text-2xl mb-0.5 bg-clip-text text-transparent bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ברוכים הבאים לסלולאטור</h3>
+          <p className="leading-tight text-xs md:text-sm font-medium text-slate-500 max-w-3xl mb-2">המחשבון החכם לבחירת מסלול משתלם. משקלל השתתפות ממשלתית, ליסינג ומע"מ.</p>
+          <div className="bg-amber-50/80 border border-amber-200/50 rounded-lg p-2 flex items-center gap-2 animate-in slide-in-from-right duration-1000">
+            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+            <p className="text-amber-900 text-[11px] font-bold leading-none">
+              עלות הליסינג מתעדכנת בהתאם למחירי השוק
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10 items-start">
-        <div className="flex flex-col gap-6 relative z-10">
-          <section className={`premium-glass p-6 rounded-[2rem] omega-shadow border border-white/50 relative group flex flex-col hover:scale-[1.01] transition-all duration-500 ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10 items-start">
+        <div className="flex flex-col gap-4 relative z-10">
+          <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative group flex flex-col hover:scale-[1.005] transition-all duration-500 ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
             <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#4F46E5] to-[#818CF8]"></div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="bg-indigo-50 p-3 rounded-xl"><Building className="w-6 h-6 text-[#4F46E5]" /></div>
-              <h2 className="text-xl font-black text-slate-800">שלב 1: דירוג זכאות</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-indigo-50 p-2.5 rounded-xl"><Building className="w-5 h-5 text-[#4F46E5]" /></div>
+              <h2 className="text-lg font-black text-slate-800">שלב 1: דירוג זכאות</h2>
             </div>
             <OmegaSelect 
               value={selectedTier} 
@@ -313,12 +313,12 @@ export default function App() {
               onOpenChange={(open) => open ? setActiveStep(1) : setActiveStep(null)}
             />
             {currentTier && (
-              <div className="mt-5 bg-indigo-50/60 border border-indigo-100/60 rounded-[1.2rem] p-4 flex items-start gap-3 relative overflow-hidden shadow-sm">
+              <div className="mt-3 bg-indigo-50/60 border border-indigo-100/60 rounded-[1rem] p-3 flex items-start gap-3 relative overflow-hidden shadow-sm">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-200 to-indigo-100"></div>
-                <GraduationCap className="w-6 h-6 text-indigo-500 shrink-0" />
+                <GraduationCap className="w-5 h-5 text-indigo-500 shrink-0" />
                 <div>
-                  <div className="font-bold text-[#4F46E5] text-sm mb-1">{currentTier.label} - למי מיועד?</div>
-                  <div className="text-slate-700 font-medium text-sm leading-relaxed">{currentTier.desc}</div>
+                  <div className="font-bold text-[#4F46E5] text-xs mb-0.5">{currentTier.label}</div>
+                  <div className="text-slate-600 font-medium text-xs leading-relaxed">{currentTier.desc}</div>
                 </div>
               </div>
             )}
@@ -326,15 +326,14 @@ export default function App() {
 
           {selectedTier && (
             <div className={`animate-omega-spring relative ${activeStep === 2 ? 'z-[60]' : 'z-0'}`}>
-              <div className="h-px w-full bg-slate-200/50 my-2" />
-              <section className={`premium-glass p-6 rounded-[2rem] omega-shadow border border-white/50 relative flex flex-col hover:scale-[1.01] transition-all duration-500`}>
+              <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative flex flex-col hover:scale-[1.005] transition-all duration-500`}>
                 <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#06B6D4] to-[#38BDF8]"></div>
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="bg-cyan-50 p-3 rounded-xl"><Smartphone className="w-6 h-6 text-[#06B6D4]" /></div>
-                      <h2 className="text-xl font-black text-slate-800">שלב 2: מכשיר / מסלול</h2>
+                      <div className="bg-cyan-50 p-2.5 rounded-xl"><Smartphone className="w-5 h-5 text-[#06B6D4]" /></div>
+                      <h2 className="text-lg font-black text-slate-800">שלב 2: מכשיר / מסלול</h2>
                     </div>
-                    {currentTier?.restrictToSimOnly && (<span className="bg-amber-100 text-amber-800 text-xs px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" /> זכאות לסים בלבד</span>)}
+                    {currentTier?.restrictToSimOnly && (<span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-1 rounded-lg font-bold flex items-center gap-1"><AlertCircle className="w-3 h-3" /> סים בלבד</span>)}
                 </div>
                 <OmegaSelect 
                   value={selectedDevice} 
@@ -346,16 +345,13 @@ export default function App() {
                   onOpenChange={(open) => open ? setActiveStep(2) : setActiveStep(null)}
                 />
                 {currentDevice && (
-                  <div className="mt-4 space-y-3">
-                    <div className="bg-cyan-50/60 border border-cyan-100/60 rounded-[1.2rem] p-4 flex items-start gap-3 relative overflow-hidden shadow-sm">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-200 to-cyan-100"></div>
-                      <Info className="w-6 h-6 text-cyan-500 shrink-0" />
-                      <div>
-                        <div className="font-bold text-[#06B6D4] text-sm mb-1">{currentDevice.label}</div>
-                        <div className="text-slate-700 font-medium text-sm leading-relaxed">העלות המוצגת כוללת את חבילת התקשורת, נפח הגלישה ושירות התיקונים המלא. <strong>המחיר כולל מע"מ (18%).</strong></div>
-                      </div>
+                  <div className="mt-3 bg-cyan-50/60 border border-cyan-100/60 rounded-[1rem] p-3 flex items-start gap-3 relative overflow-hidden shadow-sm">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-200 to-cyan-100"></div>
+                    <Info className="w-5 h-5 text-cyan-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-[#06B6D4] text-xs mb-0.5">{currentDevice.label}</div>
+                      <div className="text-slate-600 font-medium text-xs leading-relaxed">העלות כוללת חבילת תקשורת ומע"מ (18%).</div>
                     </div>
-                    {/* Disclaimer removed here as it is now global at the top */}
                   </div>
                 )}
               </section>
@@ -364,68 +360,63 @@ export default function App() {
         </div>
 
         {/* LEFT COLUMN: Receipt / Image */}
-        <div className="relative rounded-[1.5rem] shadow-2xl border border-white/10 group min-h-[500px] h-full flex flex-col sticky top-28 bg-[#0B1120] overflow-hidden">
+        <div className="relative rounded-[1.5rem] shadow-2xl border border-white/10 group min-h-[400px] lg:min-h-[500px] h-full flex flex-col sticky top-24 bg-[#0B1120] overflow-hidden">
           <img src={heroImage} alt="סלולאטור" className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${selectedTier && selectedDevice ? 'opacity-20 scale-105 mix-blend-screen grayscale' : 'opacity-80 scale-100 hover:scale-105'}`} />
           <div className={`absolute inset-0 bg-gradient-to-t ${selectedTier && selectedDevice ? 'from-[#0B1120] via-[#0B1120]/80 to-transparent' : 'from-[#0B1120] via-transparent to-transparent'} pointer-events-none transition-colors duration-1000`}></div>
 
-          <div className="relative z-10 flex flex-col h-full p-6 lg:p-10 pt-16 lg:pt-20">
+          <div className="relative z-10 flex flex-col h-full p-6 lg:p-8 pt-12 lg:pt-16">
             {selectedTier && selectedDevice && currentTier && currentDevice ? (
               <div className="animate-in fade-in zoom-in duration-500 flex flex-col h-full justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-emerald-500/20 p-2 rounded-full border border-emerald-500/30"><CheckCircle2 className="w-6 h-6 text-emerald-400" /></div>
-                    <h3 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">סיכום עלויות אישי</h3>
+                    <div className="bg-emerald-500/20 p-2 rounded-full border border-emerald-500/30"><CheckCircle2 className="w-5 h-5 text-emerald-400" /></div>
+                    <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">סיכום עלויות</h3>
                   </div>
-                  <p className="text-slate-300 text-sm font-medium mr-12">משקלל השתתפות משרד ומע"מ נוכחי (18%)</p>
+                  <p className="text-slate-400 text-xs font-medium mr-10">משקלל השתתפות ומע"מ (18%)</p>
                 </div>
                 
-                <div className="mt-8 space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-inner hover:bg-white/10 transition-all duration-500 group/card">
-                      <span className="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider group-hover/card:text-indigo-300 transition-colors">דירוג השתתפות</span>
-                      <span className="font-bold text-lg text-white leading-tight">{currentTier.label}</span>
+                <div className="mt-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-inner group/card">
+                      <span className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase tracking-wider">דירוג</span>
+                      <span className="font-bold text-sm text-white leading-tight">{currentTier.label}</span>
                     </div>
-                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-inner hover:bg-white/10 transition-all duration-500 group/card">
-                      <span className="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider group-hover/card:text-cyan-300 transition-colors">מכשיר נבחר</span>
-                      <span className="font-bold text-lg text-white leading-tight block truncate">{currentDevice.label}</span>
+                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-inner group/card">
+                      <span className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase tracking-wider">מכשיר</span>
+                      <span className="font-bold text-sm text-white leading-tight block truncate">{currentDevice.label}</span>
                     </div>
                   </div>
                   
-                  <div className="space-y-3 pb-6 border-b border-white/20">
-                    <div className="flex justify-between items-center text-base drop-shadow-sm">
-                      <span className="text-slate-200 font-medium">עלות מחירון</span>
+                  <div className="space-y-2 pb-4 border-b border-white/20">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-300 font-medium">עלות מחירון</span>
                       <span className="font-bold text-white">{totalCost.toFixed(2)} ₪</span>
                     </div>
-                    <div className="flex justify-between items-center text-base text-emerald-300 font-bold bg-emerald-500/20 backdrop-blur-sm p-3 rounded-xl border border-emerald-500/30 shadow-sm">
-                      <span className="flex items-center gap-2"><CreditCard className="w-4 h-4"/> מימון ממשלתי</span>
+                    <div className="flex justify-between items-center text-sm text-emerald-300 font-bold bg-emerald-500/10 backdrop-blur-sm p-2 rounded-lg border border-emerald-500/20">
+                      <span className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5"/> מימון ממשלתי</span>
                       <span dir="ltr" className="font-black">- {tierAllowance.toFixed(2)} ₪</span>
                     </div>
                   </div>
                   
-                  <div className="pt-2">
-                    <div className="text-2xl text-white font-black">השתתפות אישית חודשית</div>
-                    <div className="text-sm text-slate-300 mt-1 mb-4 font-medium">חיוב בכרטיס האשראי (כולל מע"מ)</div>
-                    <div className={`text-6xl font-black tracking-tighter ${employeePayment === 0 ? 'text-emerald-400' : 'text-white'}`}>
-                      {employeePayment.toFixed(2)} <span className="text-3xl font-bold ml-1 text-slate-400">₪</span>
+                  <div className="pt-1">
+                    <div className="text-xl text-white font-black">השתתפות אישית חודשית</div>
+                    <div className="text-[10px] text-slate-400 mb-2 font-medium">חיוב בכרטיס האשראי (כולל מע"מ)</div>
+                    <div className={`text-5xl font-black tracking-tighter ${employeePayment === 0 ? 'text-emerald-400' : 'text-white'}`}>
+                      {employeePayment.toFixed(2)} <span className="text-2xl font-bold ml-1 text-slate-400">₪</span>
                     </div>
-                    {employeePayment === 0 && (
-                      <div className="mt-4 bg-gradient-to-r from-emerald-500 to-teal-400 text-white font-black px-4 py-2 rounded-lg shadow-lg inline-flex items-center gap-2">
-                        <Zap className="w-4 h-4 fill-white"/> מימון מלא! ללא עלות מצידך.
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col h-full justify-end pb-4 animate-in fade-in duration-500">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-xs mb-4 border border-white/20 w-max shadow-sm">
-                  <Smartphone className="w-4 h-4 text-[#06B6D4]" /> מתממשק לנתוני 2026
+                <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-[10px] mb-3 border border-white/20 w-max shadow-sm">
+                  <Smartphone className="w-3.5 h-3.5 text-[#06B6D4]" /> נתוני 2026
                 </div>
-                <h3 className="text-4xl font-black text-white mb-3 leading-tight">
+                <h3 className="text-3xl font-black text-white mb-2 leading-tight">
                   ממתין לנתונים<br/>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">לסיכום העלויות</span>
                 </h3>
-                <p className="text-slate-300 font-medium max-w-sm">בחרו דרגת זכאות מסעיף 1 ומסלול מסעיף 2 כדי לקבל שקלול מדויק של ההשתתפות העצמית לחיוב באשראי.</p>
+                <p className="text-slate-400 text-xs font-medium max-w-xs">בחרו דרגת זכאות ומסלול לקבלת שקלול מדויק של ההשתתפות העצמית.</p>
               </div>
             )}
           </div>
@@ -723,10 +714,10 @@ export default function App() {
         />
       )}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply" style={{ backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
-      <header className="fixed top-0 left-0 right-0 z-50 px-3 py-3" role="banner">
-        <div className="max-w-6xl mx-auto bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1.5rem] md:rounded-full border border-white/10 shadow-2xl flex items-center justify-between px-4 py-3">
+      <header className="fixed top-0 left-0 right-0 z-50 px-3 py-2" role="banner">
+        <div className="max-w-6xl mx-auto bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1rem] md:rounded-full border border-white/10 shadow-2xl flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white" aria-hidden="true"><Smartphone className="w-4 h-4" /></div>
+            <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white" aria-hidden="true"><Smartphone className="w-4 h-4" /></div>
             <span className="font-black text-base text-white" aria-label="סלולאטור 2026">סלולאטור <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">2026</span></span>
           </div>
           <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="ניווט ראשי">
@@ -745,7 +736,7 @@ export default function App() {
           </nav>
         </div>
       </header>
-      <div className="pt-20 md:pt-24"></div>
+      <div className="pt-16 md:pt-20"></div>
 
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-10 flex-grow w-full" role="main">
         {activeTab === 'calculator' && renderCalculator()}
@@ -772,7 +763,11 @@ export default function App() {
       </main>
       <footer className="mt-auto bg-white/50 backdrop-blur-lg border-t border-slate-200/60 py-6 relative z-10 pb-24 md:pb-8" role="contentinfo">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#4F46E5]" /><span className="font-black text-slate-800 text-sm">{settings.app_title}</span></div>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+            <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
+            <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
+          </div>
           <div className="text-sm font-medium text-slate-500 flex items-center gap-1">אופיין ופותח ע״י <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span> | משרד התקשורת</div>
         </div>
       </footer>
