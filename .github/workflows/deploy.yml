@@ -12,18 +12,18 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+          node-version: '24'
           
       - name: Install Dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
         
       - name: Build Project
         run: npm run build
