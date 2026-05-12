@@ -287,7 +287,7 @@ export default function App() {
             הדור הבא של ניהול סלולר
           </div>
           <h3 className="font-black text-xl md:text-2xl mb-0.5 bg-clip-text text-transparent bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ברוכים הבאים לסלולאטור</h3>
-          <p className="leading-tight text-xs md:text-sm font-medium text-slate-500 max-w-3xl mb-2">המחשבון החכם לבחירת מסלול משתלם. משקלל השתתפות ממשלתית, ליסינג ומע"מ.</p>
+          <p className="leading-tight text-xs md:text-sm font-medium text-slate-500 max-w-3xl mb-2">הדרך החכמה והמדויקת ביותר למציאת המסלול המנצח במכרז הסלולר הממשלתי. שקלול שקוף של זכאות, עלויות ליסינג והשתתפות עצמית עבור עובדי המדינה.</p>
           <div className="bg-amber-50/80 border border-amber-200/50 rounded-lg p-2 flex items-center gap-2 animate-in slide-in-from-right duration-1000">
             <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
             <p className="text-amber-900 text-[11px] font-bold leading-none">
