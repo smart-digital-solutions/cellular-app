@@ -580,7 +580,7 @@ export default function App() {
         <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 text-[#4F46E5] font-bold text-xs mb-4 border border-indigo-100">
           <Receipt className="w-3.5 h-3.5" /> מחשבון סיום מוקדם
         </div>
-        <h2 className="text-4xl font-black text-slate-800 mb-3">יתרת ליסינג <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">וקנסות</span></h2>
+        <h2 className="text-4xl font-black text-slate-800 mb-3">חישוב יתרת <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ליסינג</span></h2>
         <p className="text-slate-500 text-sm font-medium max-w-xl mx-auto">
           סיום התקשרות לפני תום 24 חודשים דורש תשלום קנס בגין החודשים שנותרו, או לחילופין רכישת המכשיר בעלות מופחתת מראש.
         </p>
