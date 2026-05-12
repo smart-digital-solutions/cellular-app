@@ -61,8 +61,8 @@ const AccordionItem = ({ question, answer }) => {
         aria-controls={`accordion-panel-${id}`}
         id={`accordion-btn-${id}`}
       >
-        <span className="font-bold text-slate-800 pr-2 text-base sm:text-lg group-hover:text-[#4F46E5] transition-colors">{question}</span>
-        <div className={`p-2 rounded-full transition-all duration-300 shrink-0 mr-3 ${isOpen ? 'bg-[#4F46E5] text-white shadow-md' : 'bg-slate-100 text-slate-500'}`}>
+        <span className="font-bold text-slate-800 pe-2 text-base sm:text-lg group-hover:text-[#4F46E5] transition-colors">{question}</span>
+        <div className={`p-2 rounded-full transition-all duration-300 shrink-0 ms-3 ${isOpen ? 'bg-[#4F46E5] text-white shadow-md' : 'bg-slate-100 text-slate-500'}`}>
           <ChevronDown
             className="w-4 h-4"
             style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)' }}
@@ -372,7 +372,7 @@ export default function App() {
                     <div className="bg-emerald-500/20 p-2 rounded-full border border-emerald-500/30"><CheckCircle2 className="w-5 h-5 text-emerald-400" /></div>
                     <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">סיכום עלויות</h3>
                   </div>
-                  <p className="text-slate-400 text-xs font-medium mr-10">משקלל השתתפות ומע"מ (18%)</p>
+                  <p className="text-slate-400 text-xs font-medium ms-10">משקלל השתתפות ומע"מ (18%)</p>
                 </div>
                 
                 <div className="mt-6 space-y-4">
@@ -537,7 +537,7 @@ export default function App() {
 
       <div className="bg-white border border-slate-200/80 rounded-[1.5rem] shadow-xl overflow-hidden">
         <div className="overflow-x-auto pb-2">
-          <table className="w-full text-right border-collapse min-w-[800px]">
+          <table className="w-full text-right border-collapse min-w-[800px]" id="maintenance-table">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="p-4 font-black text-slate-800 text-base">מחירון משוקלל</th>
@@ -605,7 +605,7 @@ export default function App() {
             <h3 className="font-black text-xl text-slate-800 mb-5 flex items-center gap-2"><CalendarDays className="w-5 h-5 text-[#06B6D4]"/> מתי קיבלת את המכשיר?</h3>
             <div className="relative">
               <input type="month" value={receiptDate} onChange={(e) => setReceiptDate(e.target.value)} className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-base rounded-2xl focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500 block p-4 pr-11 font-bold transition-all" />
-              <CalendarDays className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <CalendarDays className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
             {monthsElapsed !== null && (
               <div className="mt-4 flex items-center justify-between text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100">
@@ -728,6 +728,7 @@ export default function App() {
             {[{ id: 'calculator', icon: Calculator, label: 'מחשבון עלויות' }, { id: 'termination', icon: Receipt, label: 'מחשבון סיום ליסינג' }, { id: 'maintenance', icon: Wrench, label: 'מחירון נזקים' }, { id: 'guide', icon: BookOpen, label: 'מדריך והנחיות' }, { id: 'faq', icon: HelpCircle, label: 'שאלות ותשובות' }].map(tab => (
               <button
                 key={tab.id}
+                id={`tab-btn-${tab.id}`}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 aria-current={activeTab === tab.id ? 'page' : undefined}
@@ -767,10 +768,15 @@ export default function App() {
       </main>
       <footer className="mt-auto bg-white/50 backdrop-blur-lg border-t border-slate-200/60 py-6 relative z-10 pb-24 md:pb-8" role="contentinfo">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#4F46E5]" />
-            <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
-            <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-right">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+              <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
+              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
+            </div>
+            <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+              עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')}
+            </div>
           </div>
           <div className="text-sm font-medium text-slate-500 flex items-center gap-1">אופיין ופותח ע״י <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span> | משרד התקשורת</div>
         </div>
