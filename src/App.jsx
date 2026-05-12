@@ -660,7 +660,7 @@ export default function App() {
               
               <div className="pt-2">
                 <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-red-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> תשלום לסיום התקשרות והחזרת המכשיר</div>
+                  <div className="text-red-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> תשלום לסיום תקופת ההתחייבות והחזרת המכשיר (ללא רכישה)</div>
                   <div className="text-3xl font-black text-white">{terminationPenalty.toFixed(2)} <span className="text-lg text-red-300">₪</span></div>
                 </div>
 
@@ -669,36 +669,18 @@ export default function App() {
                    <div className="text-xl font-black text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-300">₪</span></div>
                 </div>
 
-                {(() => {
-                  const termMaintenance = maintenance.find(m => 
-                    checkTierMatch(m.tier, termDevice.maintenanceTier)
-                  );
-                  
-                  if (!termMaintenance) return null;
-
-                  return (
-                    <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-5 mt-6 shadow-inner backdrop-blur-sm">
-                      <div className="text-cyan-400 text-xs font-black mb-4 uppercase tracking-wider flex items-center gap-2">
-                        <Wrench className="w-4 h-4" /> מחירון תחזוקה והשתתפות בנזקים
-                        <span className="bg-cyan-500/20 px-2 py-0.5 rounded text-[10px] border border-cyan-500/30">{termDevice.maintenanceTier}</span>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-3">
-                        {[
-                          { label: 'תיקון מסך (פעם 1)', val: termMaintenance.screen1 },
-                          { label: 'תיקון מסך (פעם 2)', val: termMaintenance.screen2 },
-                          { label: 'אובדן/גניבה', val: termMaintenance.theft1 },
-                          { label: 'השבתה מלאה', val: termMaintenance.disable1 }
-                        ].map((item, idx) => (
-                          <div key={idx} className="bg-[#0B1120] border border-white/5 p-3 rounded-xl">
-                            <div className="text-[10px] text-slate-500 font-bold mb-1">{item.label}</div>
-                            <div className="text-sm font-black text-white">{item.val} ₪</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 mt-6 shadow-lg backdrop-blur-sm relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
+                  <div className="text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> תשלום לסיום תקופת ההתחייבות + רכישת המכשיר
+                  </div>
+                  <div className="text-3xl font-black text-white">
+                    {(terminationPenalty + termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-emerald-300">₪</span>
+                  </div>
+                  <div className="mt-2 text-[10px] text-slate-400 font-medium">
+                    * הסכום כולל את פירעון יתרת חודשי הליסינג ואת עלות הרכישה הסופית.
+                  </div>
+                </div>
               </div>
             </div>
           )}
