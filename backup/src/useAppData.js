@@ -4,6 +4,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { loadAllData, clearCache, getCachedAll } from './sheetsService';
+import {
+  FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
+  FALLBACK_FAQ, FALLBACK_SETTINGS
+} from './fallbackData';
 
 export function useAppData() {
   const [data, setData] = useState(getCachedAll);
@@ -26,11 +30,7 @@ export function useAppData() {
   }, []);
 
   useEffect(() => {
-    // Use a microtask to avoid synchronous state updates during the effect's execution phase
-    // which can trigger the 'set-state-in-effect' lint warning/error.
-    Promise.resolve().then(() => {
-      fetchData();
-    });
+    fetchData();
   }, [fetchData]);
 
   return { ...data, loading, lastUpdated, refresh: () => fetchData(true) };

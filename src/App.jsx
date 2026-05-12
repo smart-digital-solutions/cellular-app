@@ -1,31 +1,12 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   Calculator, BookOpen, HelpCircle, ChevronDown, Smartphone, ShieldAlert,
   Database, CheckCircle2, Info, Building, AlertCircle, CreditCard, Zap,
-  Wrench, Phone, Globe2, Sparkles, GraduationCap, Plug, RefreshCw, Megaphone, X, Clock, CalendarDays, Receipt
+  Wrench, Phone, Globe2, Sparkles, GraduationCap, Plug, Megaphone, X, Clock, CalendarDays, Receipt
 } from 'lucide-react';
 import { useAppData } from './useAppData';
-import { CATALOG_SHEET_URL } from './config';
 import heroImage from './assets/cellular-hero.jpg';
 
-// ──────────────────────────────
-//  Loading Screen Component
-// ──────────────────────────────
-const LoadingScreen = () => (
-  <div className="fixed inset-0 z-[100] bg-[#0B1120] flex flex-col items-center justify-center gap-6 overflow-hidden">
-    <div className="absolute inset-0 mesh-gradient-bg opacity-20"></div>
-    <div className="relative animate-omega-spring">
-      <div className="w-20 h-20 rounded-full border-4 border-white/5 border-t-[#4F46E5] animate-spin" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <Smartphone className="w-8 h-8 text-[#4F46E5] animate-pulse" />
-      </div>
-    </div>
-    <div className="text-center relative z-10">
-      <p className="text-white font-black text-xl mb-1 tracking-tight">טוען נתונים עדכניים...</p>
-      <p className="text-slate-400 text-sm font-medium">מתחבר למאגר המידע הממשלתי</p>
-    </div>
-  </div>
-);
 
 // ──────────────────────────────
 //  Announcement Banner
@@ -67,10 +48,6 @@ const checkTierMatch = (tier1, tier2) => {
   return n1 === n2 || n1.includes(n2) || n2.includes(n1);
 };
 
-const DEVICES_CATALOG_PLACEHOLDER = [
-  { id: 'sim_only', label: 'מסלול ללא מכשיר (SIM Only)', category: 'מסלולים אישיים (BYOD)', totalCost: 11.06 },
-  { id: 'sim_only_repair', label: 'מסלול SIM Only + שירות תיקונים', category: 'מסלולים אישיים (BYOD)', totalCost: 18.12 },
-];
 
 const AccordionItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -121,18 +98,19 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
   const containerRef = useRef(null);
   const listboxId = React.useId();
 
-  useEffect(() => {
-    onOpenChange?.(isOpen);
-  }, [isOpen, onOpenChange]);
+  const handleSetIsOpen = useCallback((val) => {
+    setIsOpen(val);
+    onOpenChange?.(val);
+  }, [onOpenChange]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
-        setIsOpen(false);
+        handleSetIsOpen(false);
       }
     };
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') handleSetIsOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
@@ -140,7 +118,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [handleSetIsOpen]);
 
   const selectedOption = groups 
     ? Object.values(options).flat().find(opt => opt.id === value)
@@ -153,7 +131,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
     >
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => handleSetIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls={listboxId}
@@ -188,7 +166,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                     type="button"
                     role="option"
                     aria-selected={opt.id === value}
-                    onClick={() => { onChange({ target: { value: opt.id } }); setIsOpen(false); }}
+                    onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); }}
                     className={`w-full px-5 py-3.5 text-right flex justify-between items-center transition-colors group border-b border-slate-50 last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50' : 'hover:bg-indigo-50/70'}`}
                   >
                     <span className={`font-bold ${opt.id === value ? 'text-indigo-700' : 'text-slate-700 group-hover:text-indigo-700'}`}>{opt.label}</span>
@@ -208,7 +186,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                 type="button"
                 role="option"
                 aria-selected={opt.id === value}
-                onClick={() => { onChange({ target: { value: opt.id } }); setIsOpen(false); }}
+                onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); }}
                 className={`w-full px-5 py-4 text-right flex justify-between items-center transition-colors group border-b border-slate-50 last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50' : 'hover:bg-indigo-50/70'}`}
               >
                 <span className={`font-bold ${opt.id === value ? 'text-indigo-700' : 'text-slate-700 group-hover:text-indigo-700'}`}>{opt.label}</span>
@@ -227,7 +205,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
 };
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, loading, source, refresh } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback } = useAppData();
   const [activeTab, setActiveTab] = useState('calculator');
   const [selectedTier, setSelectedTier] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('');
@@ -265,14 +243,15 @@ export default function App() {
 
   const showAnnouncement = settings.show_announcement === 'TRUE' && settings.announcement_text && !announcementDismissed;
 
-  useEffect(() => {
-    const currentTier = tiers.find(t => t.id === selectedTier);
+  const handleTierChange = (val) => {
+    setSelectedTier(val);
+    const currentTier = tiers.find(t => t.id === val);
     if (currentTier?.restrictToSimOnly) {
       if (selectedDevice !== 'sim_only' && selectedDevice !== 'sim_only_repair' && selectedDevice !== '') {
         setSelectedDevice('');
       }
     }
-  }, [selectedTier, selectedDevice, tiers]);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -328,7 +307,7 @@ export default function App() {
             </div>
             <OmegaSelect 
               value={selectedTier} 
-              onChange={(e) => setSelectedTier(e.target.value)} 
+              onChange={(e) => handleTierChange(e.target.value)} 
               options={tiers} 
               placeholder="-- בחר/י את הדרגה שלך --" 
               onOpenChange={(open) => open ? setActiveStep(1) : setActiveStep(null)}

@@ -4,10 +4,10 @@
 //  + Cache חכם ב-localStorage
 // =============================================================
 
-import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL } from './config';
+import { SHEET_ID, SHEET_NAMES, CACHE_DURATION_MINUTES } from './config';
 import {
   FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
-  FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG
+  FALLBACK_FAQ, FALLBACK_SETTINGS
 } from './fallbackData';
 
 const CACHE_PREFIX = 'cellular_app_';
@@ -19,7 +19,7 @@ function getCached(key) {
   try {
     const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
-    const { data } = JSON.parse(raw);
+    const { data, timestamp } = JSON.parse(raw);
     // הסרנו את בדיקת התוקף (ageMinutes) כדי שהמטמון ישמש רק כ-Stale data לטעינה ראשונית מהירה
     return data;
   } catch {
@@ -41,6 +41,7 @@ export function clearCache() {
   });
 }
 
+// שולף את כל הנתונים השמורים במטמון כדי להתחיל את האפליקציה ב-0 שניות
 export function getCachedAll() {
   return {
     tiers: getCached(SHEET_NAMES.TIERS) || FALLBACK_TIERS,
@@ -48,8 +49,6 @@ export function getCachedAll() {
     maintenance: getCached(SHEET_NAMES.MAINTENANCE) || FALLBACK_MAINTENANCE,
     faq: getCached(SHEET_NAMES.FAQ) || FALLBACK_FAQ,
     settings: getCached(SHEET_NAMES.SETTINGS) || FALLBACK_SETTINGS,
-    catalog: getCached('catalog') || FALLBACK_CATALOG,
-    catalogIsFallback: getCached('catalogIsFallback') ?? true,
     source: 'cache',
     errors: [],
   };
@@ -68,7 +67,7 @@ async function fetchSheet(sheetName) {
   // const cached = getCached(sheetName);
   // if (cached) return cached;
 
-  const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -83,29 +82,13 @@ async function fetchSheet(sheetName) {
 
   const { cols, rows } = json.table;
   const headers = cols.map(c => c.label || c.id);
-  const colTypes = cols.map(c => c.type); // 'number' | 'string' | 'boolean'
 
   const data = rows
     .map(row => {
       const obj = {};
       headers.forEach((h, i) => {
         const cell = row.c[i];
-        const colType = colTypes[i];
-        const rawV = cell?.v;
-        const rawF = cell?.f;
-
-        if (rawV !== null && rawV !== undefined) {
-          // ערך מספרי/בוליאני תקין
-          obj[h] = rawV;
-        } else if (colType === 'string' && rawF !== null && rawF !== undefined) {
-          // עמודת טקסט — f הוא הערך עצמו
-          obj[h] = rawF;
-        } else if (rawF !== null && rawF !== undefined && rawF !== '') {
-          // עמודה מספרית עם תא טקסטואלי — gviz שם אותו ב-f
-          obj[h] = String(rawF);
-        } else {
-          obj[h] = '';
-        }
+        obj[h] = cell?.v ?? cell?.f ?? '';
       });
       return obj;
     })
@@ -113,113 +96,6 @@ async function fetchSheet(sheetName) {
 
   setCache(sheetName, data);
   return data;
-}
-
-// ──────────────────────────────────────────────
-//  Catalog Fetch — גיליון ממשלתי חיצוני (קריאה בלבד)
-// ──────────────────────────────────────────────
-function getCatalogCategory(manufacturer, model) {
-  const mfr = String(manufacturer).toUpperCase();
-  const mod = String(model).toUpperCase();
-  if (mfr.includes('APPLE')) return 'Apple iPhone';
-  if (mod.includes('Z FOLD') || mod.includes('Z FLIP')) return 'Samsung Galaxy - מתקפלים (Z)';
-  if (mod.includes('S25')) return 'Samsung Galaxy - סדרת S25';
-  if (/\bA\d{2}/.test(mod)) return 'Samsung Galaxy - סדרת A';
-  return 'Samsung Galaxy';
-}
-
-function parseCatalog(rows) {
-  return rows
-    .filter(r => {
-      const mfr = String(r['יצרן'] || r[Object.keys(r).find(k => k.includes('יצרן')) || ''] || '').trim();
-      return mfr.length > 0; // מסנן את שורת מספרי החודשים
-    })
-    .map((r, idx) => {
-      const findVal = (...keys) => {
-        const key = Object.keys(r).find(k => keys.some(kw => k.includes(kw)));
-        return key ? String(r[key] || '').trim() : '';
-      };
-      const manufacturer = findVal('יצרן');
-      const model = findVal('דגם');
-      const storage = findVal('זיכרון');
-      const monthly = parseFloat(String(findVal('ליסינג חודשית')).replace(/,/g, '')) || 0;
-      const buyout = parseFloat(String(findVal('רכישת מכשיר')).replace(/,/g, '')) || 0;
-      const listPrice = parseFloat(String(findVal('מחירון משוקלל')).replace(/,/g, '')) || 0;
-      const mTier = findVal('השתתפות');
-      const label = storage ? `${model} (${storage}GB)` : model;
-      const id = `cat_${idx}_${manufacturer.replace(/[^a-zA-Z]/g, '').toLowerCase()}`;
-      
-      const monthIds = ['AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L','K','J'];
-      const monthlyMatrix = {};
-      monthIds.forEach((colId, i) => {
-        monthlyMatrix[i + 1] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;
-      });
-
-      return {
-        id, label, manufacturer, storage,
-        category: getCatalogCategory(manufacturer, model),
-        totalCost: monthly,
-        buyoutPrice: buyout,
-        listPrice,
-        maintenanceTier: mTier,
-        isFromCatalog: true,
-        matrix: monthlyMatrix,
-      };
-    })
-    .filter(r => r.totalCost > 0);
-}
-
-async function fetchCatalogFromSheet(sheetId, sheetName) {
-  const url = `${GOOGLE_SHEETS_BASE_URL}/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const text = await response.text();
-  const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
-  if (!jsonStr) throw new Error('Invalid catalog response');
-  const json = JSON.parse(jsonStr);
-  if (json.status !== 'ok') throw new Error('Catalog error');
-  const { cols, rows } = json.table;
-  const colTypes = cols.map(c => c.type);
-  const rawRows = rows.map(row => {
-    const obj = {};
-    cols.forEach((c, i) => {
-      const h = c.label || c.id;
-      const cell = row.c[i];
-      const rawV = cell?.v;
-      const rawF = cell?.f;
-      let val = '';
-      if (rawV !== null && rawV !== undefined) val = rawV;
-      else if (colTypes[i] === 'string' && rawF != null) val = rawF;
-      else if (rawF !== null && rawF !== undefined && rawF !== '') val = String(rawF);
-      
-      obj[h] = val;
-      if (c.id) {
-        obj[c.id] = val;
-      }
-    });
-    return obj;
-  });
-  return parseCatalog(rawRows);
-}
-
-export async function fetchCatalog() {
-  try {
-    const parsed = await fetchCatalogFromSheet(CATALOG_SHEET_ID, CATALOG_SHEET_NAME);
-    setCache('catalog', parsed);
-    setCache('catalogIsFallback', false);
-    return { data: parsed, isFallback: false };
-  } catch (err) {
-    console.warn('Official Catalog fetch failed, trying fallback:', err.message);
-    try {
-      const parsed = await fetchCatalogFromSheet(SHEET_ID, 'Catalog');
-      setCache('catalog', parsed);
-      setCache('catalogIsFallback', true);
-      return { data: parsed, isFallback: true };
-    } catch (fallbackErr) {
-      console.warn('Fallback Catalog fetch failed too:', fallbackErr.message);
-      throw fallbackErr;
-    }
-  }
 }
 
 // ──────────────────────────────────────────────
@@ -303,22 +179,21 @@ export async function loadAllData() {
 
   if (!isConfigured) {
     return {
-      tiers: FALLBACK_TIERS, devices: FALLBACK_DEVICES,
-      maintenance: FALLBACK_MAINTENANCE, faq: FALLBACK_FAQ,
-      settings: FALLBACK_SETTINGS, catalog: FALLBACK_CATALOG,
+      tiers: FALLBACK_TIERS,
+      devices: FALLBACK_DEVICES,
+      maintenance: FALLBACK_MAINTENANCE,
+      faq: FALLBACK_FAQ,
+      settings: FALLBACK_SETTINGS,
       source: 'fallback',
     };
   }
 
-  const [results, catalogResult] = await Promise.all([
-    Promise.allSettled([
-      fetchSheet(SHEET_NAMES.TIERS),
-      fetchSheet(SHEET_NAMES.DEVICES),
-      fetchSheet(SHEET_NAMES.MAINTENANCE),
-      fetchSheet(SHEET_NAMES.FAQ),
-      fetchSheet(SHEET_NAMES.SETTINGS),
-    ]),
-    fetchCatalog().catch(e => { console.warn('Catalog fetch failed:', e.message); return null; }),
+  const results = await Promise.allSettled([
+    fetchSheet(SHEET_NAMES.TIERS),
+    fetchSheet(SHEET_NAMES.DEVICES),
+    fetchSheet(SHEET_NAMES.MAINTENANCE),
+    fetchSheet(SHEET_NAMES.FAQ),
+    fetchSheet(SHEET_NAMES.SETTINGS),
   ]);
 
   const getOrFallback = (result, parser, fallback) => {
@@ -334,9 +209,9 @@ export async function loadAllData() {
     devices: getOrFallback(results[1], parseDevices, FALLBACK_DEVICES),
     maintenance: getOrFallback(results[2], parseMaintenance, FALLBACK_MAINTENANCE),
     faq: getOrFallback(results[3], parseFaq, FALLBACK_FAQ),
-    settings: results[4].status === 'fulfilled' ? parseSettings(results[4].value) : FALLBACK_SETTINGS,
-    catalog: (catalogResult && catalogResult.data && catalogResult.data.length > 0) ? catalogResult.data : FALLBACK_CATALOG,
-    catalogIsFallback: catalogResult ? catalogResult.isFallback : true,
+    settings: results[4].status === 'fulfilled'
+      ? parseSettings(results[4].value)
+      : FALLBACK_SETTINGS,
     source: results.every(r => r.status === 'fulfilled') ? 'sheets' : 'partial',
     errors: results.filter(r => r.status === 'rejected').map(r => r.reason?.message),
   };
