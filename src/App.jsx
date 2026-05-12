@@ -205,7 +205,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
 };
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, source } = useAppData();
   const [activeTab, setActiveTab] = useState('calculator');
   const [selectedTier, setSelectedTier] = useState('');
   const [selectedDevice, setSelectedDevice] = useState('');
@@ -777,8 +777,13 @@ export default function App() {
               <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
               <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
             </div>
-            <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
-              עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')}
+            <div className="flex items-center gap-2">
+              <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')}
+              </div>
+              <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border ${source === 'sheets' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                {source === 'sheets' ? 'LIVE' : 'OFFLINE'}
+              </div>
             </div>
           </div>
           <div className="text-sm font-medium text-slate-500 flex items-center gap-1">אופיין ופותח ע״י <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span> | משרד התקשורת</div>

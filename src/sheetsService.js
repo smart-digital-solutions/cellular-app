@@ -129,30 +129,41 @@ function getCatalogCategory(manufacturer, model) {
 }
 
 function parseCatalog(rows) {
-  return rows
+  // החלק הראשון של הגיליון הממשלתי מכיל כותרות ושורת חודשים.
+  // אנחנו מחפשים את השורה שמתחילה את הנתונים (אחרי שורת "יצרן").
+  const headerRowIdx = rows.findIndex(row => {
+    const v = String(row['B'] || row['יצרן'] || '').trim();
+    return v === 'יצרן';
+  });
+
+  if (headerRowIdx === -1) return [];
+
+  return rows.slice(headerRowIdx + 1)
     .filter(r => {
-      const mfr = String(r['יצרן'] || r[Object.keys(r).find(k => k.includes('יצרן')) || ''] || '').trim();
-      return mfr.length > 0; // מסנן את שורת מספרי החודשים
+      const mfr = String(r['B'] || '').trim();
+      const model = String(r['C'] || '').trim();
+      return mfr.length > 0 && model.length > 0;
     })
     .map((r, idx) => {
-      const findVal = (...keys) => {
-        const key = Object.keys(r).find(k => keys.some(kw => k.includes(kw)));
-        return key ? String(r[key] || '').trim() : '';
-      };
-      const manufacturer = findVal('יצרן');
-      const model = findVal('דגם');
-      const storage = findVal('זיכרון');
-      const monthly = parseFloat(String(findVal('ליסינג חודשית')).replace(/,/g, '')) || 0;
-      const buyout = parseFloat(String(findVal('רכישת מכשיר')).replace(/,/g, '')) || 0;
-      const listPrice = parseFloat(String(findVal('מחירון משוקלל')).replace(/,/g, '')) || 0;
-      const mTier = findVal('השתתפות');
-      const label = storage ? `${model} (${storage}GB)` : model;
+      const manufacturer = String(r['B'] || '').trim();
+      const model = String(r['C'] || '').trim();
+      const storage = String(r['D'] || '').trim();
+      const monthly = parseFloat(String(r['E'] || 0).replace(/,/g, '')) || 0;
+      const buyout = parseFloat(String(r['F'] || 0).replace(/,/g, '')) || 0;
+      const listPrice = parseFloat(String(r['G'] || 0).replace(/,/g, '')) || 0;
+      const mTier = String(r['H'] || '').trim();
+      
+      // הוספת שם היצרן לתווית לחיפוש קל יותר
+      const label = storage ? `${manufacturer} ${model} (${storage}GB)` : `${manufacturer} ${model}`;
       const id = `cat_${idx}_${manufacturer.replace(/[^a-zA-Z]/g, '').toLowerCase()}`;
       
-      const monthIds = ['AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L','K','J'];
+      // מטריצת קנסות יציאה מוקדמת (חודשים 1 עד 24)
+      // בגיליון הממשלתי: חודש 24 הוא עמודה K, חודש 1 הוא עמודה AH
       const monthlyMatrix = {};
-      monthIds.forEach((colId, i) => {
-        monthlyMatrix[i + 1] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;
+      const colIds = ['AH','AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L','K'];
+      colIds.forEach((colId, i) => {
+        const monthNum = i + 1;
+        monthlyMatrix[monthNum] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;
       });
 
       return {
