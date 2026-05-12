@@ -12,21 +12,22 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
           
       - name: Install Dependencies
-        run: npm install --no-audit --no-fund
+        run: npm install
         
       - name: Build Project
         run: npm run build
+
+      - name: Verify Build
+        run: ls -R dist
         
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
