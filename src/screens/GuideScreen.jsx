@@ -1,6 +1,6 @@
 import {
   Sparkles, Globe2, Phone, Plug, Wrench, ShieldAlert,
-  AlertCircle, CreditCard, Smartphone, CheckCircle2, Clock, Database
+  CreditCard, Smartphone, CheckCircle2, Clock, Database
 } from 'lucide-react';
 
 const GuideScreen = () => (
