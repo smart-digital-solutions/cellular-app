@@ -4,7 +4,7 @@
 //  + Cache חכם ב-localStorage
 // =============================================================
 
-import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL } from './config';
+import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES } from './config';
 import {
   FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
   FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG
@@ -19,8 +19,18 @@ function getCached(key) {
   try {
     const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
-    const { data } = JSON.parse(raw);
-    // הסרנו את בדיקת התוקף (ageMinutes) כדי שהמטמון ישמש רק כ-Stale data לטעינה ראשונית מהירה
+    const { data, timestamp } = JSON.parse(raw);
+    // SWR: return stale data immediately; background fetch will refresh.
+    // After CACHE_DURATION_MINUTES the entry is considered stale — still
+    // returned here so the UI renders instantly, but flagged so callers
+    // can decide to re-fetch. For simplicity we always return and rely on
+    // the useAppData mount-time fetch to keep data fresh.
+    const ageMinutes = (Date.now() - timestamp) / 60_000;
+    if (ageMinutes > CACHE_DURATION_MINUTES) {
+      // Remove stale entry so next cold-start fetches from the network
+      localStorage.removeItem(CACHE_PREFIX + key);
+      return null;
+    }
     return data;
   } catch {
     return null;
@@ -48,8 +58,8 @@ export function getCachedAll() {
     maintenance: getCached(SHEET_NAMES.MAINTENANCE) || FALLBACK_MAINTENANCE,
     faq: getCached(SHEET_NAMES.FAQ) || FALLBACK_FAQ,
     settings: getCached(SHEET_NAMES.SETTINGS) || FALLBACK_SETTINGS,
-    catalog: getCached('catalog') || FALLBACK_CATALOG,
-    catalogIsFallback: getCached('catalogIsFallback') ?? true,
+    catalog: getCached(CATALOG_CACHE_KEY) || FALLBACK_CATALOG,
+    catalogIsFallback: getCached(CATALOG_FALLBACK_FLAG_KEY) ?? true,
     source: 'cache',
     errors: [],
   };
@@ -78,7 +88,12 @@ async function fetchSheet(sheetName) {
   const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
   if (!jsonStr) throw new Error('Invalid response format');
 
-  const json = JSON.parse(jsonStr);
+  let json;
+  try {
+    json = JSON.parse(jsonStr);
+  } catch {
+    throw new Error('Failed to parse Sheets response as JSON');
+  }
   if (json.status !== 'ok') throw new Error(json.errors?.[0]?.message || 'Sheets error');
 
   const { cols, rows } = json.table;
@@ -187,7 +202,12 @@ async function fetchCatalogFromSheet(sheetId, sheetName) {
   const text = await response.text();
   const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
   if (!jsonStr) throw new Error('Invalid catalog response');
-  const json = JSON.parse(jsonStr);
+  let json;
+  try {
+    json = JSON.parse(jsonStr);
+  } catch {
+    throw new Error('Failed to parse Catalog response as JSON');
+  }
   if (json.status !== 'ok') throw new Error('Catalog error');
   const { cols, rows } = json.table;
   const colTypes = cols.map(c => c.type);
@@ -216,15 +236,15 @@ async function fetchCatalogFromSheet(sheetId, sheetName) {
 export async function fetchCatalog() {
   try {
     const parsed = await fetchCatalogFromSheet(CATALOG_SHEET_ID, CATALOG_SHEET_NAME);
-    setCache('catalog', parsed);
-    setCache('catalogIsFallback', false);
+    setCache(CATALOG_CACHE_KEY, parsed);
+    setCache(CATALOG_FALLBACK_FLAG_KEY, false);
     return { data: parsed, isFallback: false };
   } catch (err) {
     console.warn('Official Catalog fetch failed, trying fallback:', err.message);
     try {
       const parsed = await fetchCatalogFromSheet(SHEET_ID, 'Catalog');
-      setCache('catalog', parsed);
-      setCache('catalogIsFallback', true);
+      setCache(CATALOG_CACHE_KEY, parsed);
+      setCache(CATALOG_FALLBACK_FLAG_KEY, true);
       return { data: parsed, isFallback: true };
     } catch (fallbackErr) {
       console.warn('Fallback Catalog fetch failed too:', fallbackErr.message);

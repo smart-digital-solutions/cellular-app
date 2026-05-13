@@ -79,7 +79,7 @@ export const FALLBACK_FAQ = [
 ];
 
 export const FALLBACK_SETTINGS = {
-  app_title: 'סלולאטור',
+  app_title: 'סלולטור',
   vat_rate: '18',
   lease_months: '24',
   contact_name: 'מנהל סלולר',

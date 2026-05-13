@@ -1,5 +1,5 @@
 // =============================================================
-//  config.js — הגדרות מרכזיות לאפליקציית סלולאטור
+//  config.js — הגדרות מרכזיות לאפליקציית סלולטור
 // =============================================================
 
 export const SHEET_ID = '1kL5cL3S_m79mNXg0k9wZxFURQuK4VuHiMtnX7qhM6YA';
@@ -24,3 +24,7 @@ export const CATALOG_SHEET_NAME = 'טבלאות מחירים בחתך דגם מ�
 export const LEASE_MONTHS = 24;
 
 export const CACHE_DURATION_MINUTES = 30;
+
+// מפתח מטמון לקטלוג הממשלתי
+export const CATALOG_CACHE_KEY = 'catalog';
+export const CATALOG_FALLBACK_FLAG_KEY = 'catalogIsFallback';
