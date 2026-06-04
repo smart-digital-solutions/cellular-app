@@ -1,36 +1,47 @@
 import { Moon, Sun } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAppData } from '../useAppData';
 
 export default function ThemeToggle() {
   const { settings } = useAppData();
   
-  // Track if user manually overrode the theme
-  const [hasManualOverride, setHasManualOverride] = useState(() => {
-    return localStorage.getItem('theme_override') !== null;
-  });
-
-  // Initialize state
+  // Determine the effective theme on first render.
+  // Priority: 1) User's manual override (localStorage)
+  //           2) The DOM's current dark class (set by the inline script in index.html)
+  //           3) settings.default_theme from Google Sheets / fallback
   const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem('theme_override');
-    if (savedTheme) {
-      return savedTheme === 'dark';
+    try {
+      const savedTheme = localStorage.getItem('theme_override');
+      if (savedTheme) return savedTheme === 'dark';
+    } catch {
+      // localStorage might be blocked (strict incognito)
     }
-    const defaultTheme = settings?.default_theme?.toUpperCase();
-    return defaultTheme !== 'LIGHT';
+    // Trust the inline script's decision — it already read settings.csv at build time
+    return document.documentElement.classList.contains('dark');
   });
 
-  // Listen to changes from Google Sheets (when fetch completes)
+  // Track if user manually overrode the theme
+  const [hasManualOverride] = useState(() => {
+    try {
+      return localStorage.getItem('theme_override') !== null;
+    } catch {
+      return false;
+    }
+  });
+
+  // When Google Sheets data arrives and user hasn't manually overridden,
+  // sync to the sheet's default_theme value.
   useEffect(() => {
-    if (!hasManualOverride) {
-      const defaultTheme = settings?.default_theme?.toUpperCase();
-      setIsDark(defaultTheme !== 'LIGHT');
+    if (!hasManualOverride && settings?.default_theme) {
+      const sheetTheme = settings.default_theme.trim().toUpperCase();
+      const shouldBeDark = sheetTheme !== 'LIGHT';
+      setIsDark(shouldBeDark);
     }
   }, [settings?.default_theme, hasManualOverride]);
 
-  // Apply DOM changes
+  // Apply DOM changes — this is the SINGLE source of truth for the class
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = document.documentElement;
     if (isDark) {
       root.classList.add('dark');
     } else {
@@ -38,12 +49,17 @@ export default function ThemeToggle() {
     }
   }, [isDark]);
 
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    setHasManualOverride(true);
-    localStorage.setItem('theme_override', newTheme ? 'dark' : 'light');
-  };
+  const toggleTheme = useCallback(() => {
+    setIsDark(prev => {
+      const newTheme = !prev;
+      try {
+        localStorage.setItem('theme_override', newTheme ? 'dark' : 'light');
+      } catch {
+        // localStorage blocked — toggle still works for this session
+      }
+      return newTheme;
+    });
+  }, []);
 
   return (
     <button
