@@ -59,7 +59,7 @@ const ImportantNotesScreen = ({ importantNotes = [] }) => {
           return (
             <div 
               key={note.id} 
-              className={`rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg ${theme.wrapper} bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm`}
+              className={`rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg hover-lift ${theme.wrapper} bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm`}
             >
               <div className="flex items-start gap-4">
                 <div className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${theme.iconBg}`}>

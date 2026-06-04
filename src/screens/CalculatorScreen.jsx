@@ -35,7 +35,7 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
 
   return (
     <div className="space-y-4 animate-omega-smooth relative z-10" style={{ color: 'var(--clr-text-1)' }}>
-      <div className="premium-glass text-sm p-4 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-4 border border-white/40 shadow-xl relative z-10 mb-1 transition-shadow duration-300 hover:shadow-2xl">
+      <div className="premium-glass text-sm p-4 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-4 border border-white/40 shadow-xl relative z-10 mb-1 transition-shadow duration-300 hover:shadow-2xl hover-lift">
         <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] p-3 rounded-xl shadow-lg shrink-0 flex items-center justify-center">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
@@ -57,7 +57,7 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10 items-start">
         <div className="flex flex-col gap-4 relative z-10">
-          <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative group flex flex-col transition-shadow duration-300 hover:shadow-2xl will-change-xform ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
+          <section className={`premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative group flex flex-col transition-shadow duration-300 hover:shadow-2xl hover-lift will-change-xform ${activeStep === 1 ? 'z-[60]' : 'z-10'}`}>
             <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#4F46E5] to-[#818CF8]"></div>
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-indigo-50 dark:bg-indigo-900/20 p-2.5 rounded-xl"><Building className="w-5 h-5 text-[#4F46E5]" /></div>
@@ -84,7 +84,7 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
 
           {selectedTier && (
             <div className={`animate-omega-spring relative ${activeStep === 2 ? 'z-[60]' : 'z-0'}`}>
-              <section className="premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative flex flex-col transition-shadow duration-300 hover:shadow-2xl will-change-xform">
+              <section className="premium-glass p-5 rounded-[1.5rem] omega-shadow border border-white/50 relative flex flex-col transition-shadow duration-300 hover:shadow-2xl hover-lift will-change-xform">
                 <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-[#06B6D4] to-[#38BDF8]"></div>
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-3">
@@ -122,7 +122,7 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
         </div>
 
         {/* RIGHT COLUMN: Receipt / Image */}
-        <div className="relative rounded-[1.5rem] shadow-2xl border border-white/10 group min-h-[400px] lg:min-h-[500px] h-full flex flex-col sticky top-24 bg-[#0B1120] overflow-hidden">
+        <div className="relative rounded-[1.5rem] shadow-2xl border border-white/10 group min-h-[400px] lg:min-h-[500px] h-full flex flex-col sticky top-24 bg-[#0B1120] overflow-hidden hover-lift">
           <img
             src={heroImage}
             alt=""
@@ -167,8 +167,8 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
                   <div className="pt-1">
                     <div className="text-xl text-white font-black">השתתפות אישית חודשית</div>
                     <div className="text-[10px] text-slate-400 mb-2 font-medium">חיוב בכרטיס האשראי (כולל מע&quot;מ)</div>
-                    <div className={`text-5xl font-black tracking-tighter ${employeePayment === 0 ? 'text-emerald-400' : 'text-white'}`}>
-                      {employeePayment.toFixed(2)} <span className="text-2xl font-bold ml-1 text-slate-400">₪</span>
+                    <div className={`text-5xl font-black tracking-tighter ${employeePayment === 0 ? 'text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300' : 'text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 drop-shadow-md'}`}>
+                      {employeePayment.toFixed(2)} <span className={`text-2xl font-bold ml-1 ${employeePayment === 0 ? 'text-cyan-200' : 'text-slate-400'}`}>₪</span>
                     </div>
                   </div>
                 </div>

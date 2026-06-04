@@ -12,6 +12,7 @@ import FaqScreen from './screens/FaqScreen';
 import ImportantNotesScreen from './screens/ImportantNotesScreen';
 import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
 import SplashScreen from './screens/SplashScreen';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // ── Navigation config ──────────────────────────────────────
 const ALL_TABS_MAP = {
@@ -161,12 +162,14 @@ export default function App() {
 
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
-        {activeTab === 'calculator'  && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
-        {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
-        {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-        {activeTab === 'guide'       && <GuideScreen guide={guide} />}
-        {activeTab === 'faq'         && <FaqScreen faq={faq} />}
-        {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
+        <ErrorBoundary key={activeTab}>
+          {activeTab === 'calculator'  && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
+          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
+          {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
+          {activeTab === 'guide'       && <GuideScreen guide={guide} />}
+          {activeTab === 'faq'         && <FaqScreen faq={faq} />}
+          {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
+        </ErrorBoundary>
       </main>
 
       {/* ── Footer ── */}
@@ -206,11 +209,11 @@ export default function App() {
 
       {/* ── Mobile bottom nav ── */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl border-t border-white/10 px-2 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 overflow-x-auto overflow-y-hidden"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.85)] backdrop-blur-2xl border-t border-slate-700/50 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.15)]"
         role="navigation"
         aria-label="ניווט תחתון"
       >
-        <div className="flex justify-between min-w-max px-2">
+        <div className="flex justify-around items-end w-full px-1">
           {visibleTabs.map(tab => (
             <button
               key={tab.id}
@@ -218,12 +221,14 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               aria-label={tab.label}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 min-h-[52px] px-3 transition-colors ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}
+              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 active:scale-95 ${activeTab === tab.id ? 'text-white scale-105' : 'text-slate-400 hover:text-slate-200'}`}
             >
-              <div className={`p-2 rounded-xl transition-all duration-200 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-lg' : ''}`}>
+              <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.4)]' : 'bg-transparent'}`}>
                 <tab.icon className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span className="text-[10px] font-bold whitespace-nowrap">{tab.mobileLabel}</span>
+              <span className={`text-[10px] whitespace-nowrap transition-all duration-300 ${activeTab === tab.id ? 'font-black' : 'font-semibold'}`}>
+                {tab.mobileLabel}
+              </span>
             </button>
           ))}
         </div>
