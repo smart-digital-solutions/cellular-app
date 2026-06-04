@@ -242,7 +242,7 @@ export async function fetchCatalog() {
   } catch (err) {
     console.warn('Official Catalog fetch failed, trying fallback:', err.message);
     try {
-      const parsed = await fetchCatalogFromSheet(SHEET_ID, 'Catalog');
+      const parsed = await fetchCatalogFromSheet(SHEET_ID, 'עלויות דגמי מכשירים ויתרה לסיום הליסינג');
       setCache(CATALOG_CACHE_KEY, parsed);
       setCache(CATALOG_FALLBACK_FLAG_KEY, true);
       return { data: parsed, isFallback: true };
