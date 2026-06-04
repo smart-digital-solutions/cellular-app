@@ -141,7 +141,26 @@
       </div>
     </noscript>
 
-    <div id="root"></div>
+    <div id="root">
+      <!-- ═══ Static Loading State — renders before JS, becomes the LCP element ═══
+           React replaces this content when it initializes (~1-2s later on slow connections).
+           Critical: keeps LCP fast on mobile by giving Lighthouse an early paint candidate. -->
+      <div id="static-splash" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;background:#0f172a">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid #334155;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px rgba(0,0,0,0.4);margin-bottom:24px">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f8fafc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </div>
+        <h1 style="color:#f8fafc;font-size:28px;font-weight:900;margin:0 0 20px;letter-spacing:-0.5px;font-family:system-ui,-apple-system,sans-serif;direction:rtl">
+          סלולטור <span style="background:linear-gradient(90deg,#818cf8,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">2026</span>
+        </h1>
+        <div style="width:192px;height:6px;background:#1e293b;border-radius:99px;overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,#6366f1,#22d3ee);border-radius:99px;animation:_lbar 0.4s ease-out forwards"></div>
+        </div>
+        <style>@keyframes _lbar{from{width:0}to{width:100%}}</style>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
     <!-- Google Analytics — deferred to end of body to not block LCP -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR6JHTZCP9"></script>
