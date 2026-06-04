@@ -4,13 +4,25 @@ import { ChevronDown } from 'lucide-react';
 const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups = false, onOpenChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
+  const wasOpenRef = useRef(false);
   const listboxId = React.useId();
+
+  const handleSetIsOpen = useCallback((val) => {
+    setIsOpen(val);
+    onOpenChange?.(val);
+  }, [onOpenChange]);
 
   const handleOptionSelect = useCallback((optId) => {
     onChange({ target: { value: optId } });
     handleSetIsOpen(false);
-    containerRef.current?.querySelector('button')?.focus();
   }, [onChange, handleSetIsOpen]);
+
+  useEffect(() => {
+    if (!isOpen && wasOpenRef.current) {
+      containerRef.current?.querySelector('button')?.focus();
+    }
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
