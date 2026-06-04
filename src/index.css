@@ -612,27 +612,23 @@ input, textarea, select {
 
 /* ====== CINEMATIC TRANSITIONS ====== */
 @keyframes splashExit {
-  0%   { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
+  0% { opacity: 1; transform: scale(1); filter: blur(0px); }
+  40% { opacity: 0.8; transform: scale(1.05); filter: blur(10px); }
+  100% { opacity: 0; transform: scale(1.1); filter: blur(20px); visibility: hidden; }
 }
 
 .animate-splash-exit {
-  animation: splashExit 0.3s ease-out forwards;
+  animation: splashExit 1.2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
 }
 
 @keyframes appReveal {
-  0%   { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
 }
 
 .animate-app-reveal {
-  animation: appReveal 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-/* Loading bar for SplashScreen — CSS-only, no JS timer */
-@keyframes loading-bar {
-  0%   { width: 0%; }
-  100% { width: 100%; }
+  animation: appReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.1s; /* Slight delay to let splash blur first */
 }
 
 @keyframes progress {
