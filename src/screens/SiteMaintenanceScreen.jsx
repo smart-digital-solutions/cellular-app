@@ -14,9 +14,9 @@ const SiteMaintenanceScreen = ({ title, message }) => {
 
       {/* Floating decorative icons */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <Settings className="absolute top-1/4 left-1/4 w-16 h-16 text-indigo-500/10 animate-[spin_10s_linear_infinite]" />
-        <Cog className="absolute bottom-1/3 right-1/4 w-24 h-24 text-cyan-500/10 animate-[spin_15s_linear_infinite_reverse]" />
-        <Server className="absolute top-1/3 right-1/3 w-12 h-12 text-amber-500/10 animate-bounce" style={{ animationDuration: '3s' }} />
+        <Settings className="absolute top-1/4 left-1/4 w-16 h-16 text-indigo-500/10 animate-[spin_10s_linear_infinite]" aria-hidden="true" />
+        <Cog className="absolute bottom-1/3 right-1/4 w-24 h-24 text-cyan-500/10 animate-[spin_15s_linear_infinite_reverse]" aria-hidden="true" />
+        <Server className="absolute top-1/3 right-1/3 w-12 h-12 text-amber-500/10 animate-bounce" style={{ animationDuration: '3s' }} aria-hidden="true" />
       </div>
 
       <div className="relative z-10 max-w-2xl w-full px-4">
@@ -30,8 +30,8 @@ const SiteMaintenanceScreen = ({ title, message }) => {
             <div className="absolute inset-0 bg-gradient-to-tr from-amber-400 to-orange-600 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 animate-pulse" />
             <div className="relative h-full w-full bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center shadow-xl dark:shadow-2xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-amber-500/10 to-transparent" />
-              <Wrench className="w-12 h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)] z-10" />
-              <Sparkles className="absolute top-4 right-4 w-4 h-4 text-amber-200 animate-ping" />
+              <Wrench className="w-12 h-12 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)] z-10" aria-hidden="true" />
+              <Sparkles className="absolute top-4 right-4 w-4 h-4 text-amber-200 animate-ping" aria-hidden="true" />
             </div>
           </div>
           

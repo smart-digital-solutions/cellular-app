@@ -55,8 +55,8 @@ const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
             <thead>
               <tr className="border-b" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)' }}>
                 <th className="p-4 font-black text-base" style={{ color: 'var(--clr-text-1)' }}>מחירון משוקלל</th>
-                <th className="p-4 border-r" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs font-bold mb-1 opacity-60">שבר מסך</div><div className="font-black text-[#4F46E5] text-sm">פעם ראשונה</div></th>
-                <th className="p-4 border-r" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs font-bold mb-1 opacity-60">שבר מסך</div><div className="font-black text-[#4F46E5] text-sm">פעם שנייה+</div></th>
+                <th className="p-4 border-r" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs font-bold mb-1 opacity-60">שבר מסך</div><div className="font-black text-indigo-700 dark:text-indigo-400 text-sm">פעם ראשונה</div></th>
+                <th className="p-4 border-r" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs font-bold mb-1 opacity-60">שבר מסך</div><div className="font-black text-indigo-700 dark:text-indigo-400 text-sm">פעם שנייה+</div></th>
                 <th className="p-4 border-r bg-red-50/50 dark:bg-red-900/10" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs text-red-500 font-bold mb-1">אובדן/גניבה</div><div className="font-black text-red-700 dark:text-red-400 text-sm">פעם ראשונה</div></th>
                 <th className="p-4 border-r bg-amber-50/50 dark:bg-amber-900/10" style={{ borderColor: 'var(--clr-border)' }}><div className="text-xs text-amber-600 font-bold mb-1">השבתה (טוטאלוס)</div><div className="font-black text-amber-700 dark:text-amber-400 text-sm">פעם ראשונה</div></th>
               </tr>

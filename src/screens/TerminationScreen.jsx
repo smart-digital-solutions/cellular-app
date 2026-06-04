@@ -33,8 +33,8 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
   return (
     <div className={`animate-in fade-in max-w-4xl mx-auto relative ${activeStep === 3 ? 'z-50' : 'z-10'}`} style={{ color: 'var(--clr-text-1)' }}>
       <div className="text-center mb-10 pt-4">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-[#4F46E5] dark:text-indigo-300 font-bold text-xs mb-4 border border-indigo-100 dark:border-indigo-800">
-          <Receipt className="w-3.5 h-3.5" /> מחשבון סיום מוקדם
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold text-xs mb-4 border border-indigo-100 dark:border-indigo-800">
+          <Receipt className="w-3.5 h-3.5" aria-hidden="true" /> מחשבון סיום מוקדם
         </div>
         <h2 className="text-4xl font-black mb-3" style={{ color: 'var(--clr-text-1)' }}>
           חישוב יתרת <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ליסינג</span>
@@ -48,10 +48,12 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
         <div className="space-y-6">
           <div className={`border rounded-[1.5rem] p-6 shadow-xl relative overflow-visible ${activeStep === 3 ? 'z-50' : 'z-10'}`} style={{ backgroundColor: 'var(--clr-surface)', borderColor: 'var(--clr-border)' }}>
             <div className="absolute top-0 right-0 w-2 h-full bg-[#4F46E5]"></div>
-            <h3 className="font-black text-xl mb-5 flex items-center gap-2" style={{ color: 'var(--clr-text-1)' }}>
-              <Smartphone className="w-5 h-5 text-[#4F46E5]" /> בחירת מכשיר ליסינג
+            <h3 id="term-device-label" className="font-black text-xl mb-5 flex items-center gap-2" style={{ color: 'var(--clr-text-1)' }}>
+              <Smartphone className="w-5 h-5 text-indigo-700 dark:text-indigo-400" aria-hidden="true" /> בחירת מכשיר ליסינג
             </h3>
             <OmegaSelect
+              ariaLabelledBy="term-device-label"
+              id="term-device-select"
               value={selectedTermDevice}
               onChange={(e) => setSelectedTermDevice(e.target.value)}
               options={groupedCatalog}
@@ -63,11 +65,12 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
 
           <div className="border rounded-[1.5rem] p-6 shadow-xl relative overflow-hidden" style={{ backgroundColor: 'var(--clr-surface)', borderColor: 'var(--clr-border)' }}>
             <div className="absolute top-0 right-0 w-2 h-full bg-[#06B6D4]"></div>
-            <h3 className="font-black text-xl mb-5 flex items-center gap-2" style={{ color: 'var(--clr-text-1)' }}>
-              <CalendarDays className="w-5 h-5 text-[#06B6D4]" /> מתי קיבלת את המכשיר?
-            </h3>
+            <label htmlFor="receipt-date-input" className="font-black text-xl mb-5 flex items-center gap-2" style={{ color: 'var(--clr-text-1)' }}>
+              <CalendarDays className="w-5 h-5 text-cyan-700 dark:text-cyan-400" aria-hidden="true" /> מתי קיבלת את המכשיר?
+            </label>
             <div className="relative">
               <input
+                id="receipt-date-input"
                 type="month"
                 aria-label="תאריך קבלת המכשיר"
                 value={receiptDate}
@@ -76,7 +79,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                 className="w-full border text-base rounded-2xl focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500 block p-4 pe-11 font-bold transition-all"
                 style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-1)' }}
               />
-              <CalendarDays className="w-5 h-5 text-slate-400 absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <CalendarDays className="w-5 h-5 text-slate-400 absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
             </div>
             {monthsElapsed !== null && (
               <div className="mt-4 flex items-center justify-between text-sm font-bold p-3 rounded-xl border" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-2)' }}>
@@ -90,10 +93,10 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
         <div className="bg-white/90 dark:bg-[#0B1120] backdrop-blur-xl rounded-[2rem] p-8 shadow-xl dark:shadow-2xl relative overflow-hidden text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 sticky top-28 transition-colors duration-300">
           <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#4F46E5]/10 to-[#06B6D4]/10 pointer-events-none"></div>
           <div className="flex flex-col gap-4 mb-6">
-            <h3 className="text-xl font-black flex items-center gap-2"><Receipt className="w-5 h-5 text-[#06B6D4]" /> סיכום לתשלום</h3>
+            <h3 className="text-xl font-black flex items-center gap-2"><Receipt className="w-5 h-5 text-cyan-700 dark:text-cyan-400" aria-hidden="true" /> סיכום לתשלום</h3>
             {catalogIsFallback && (
               <div className="bg-amber-500/20 border border-amber-500/40 rounded-xl p-3 flex items-start gap-2 text-amber-200">
-                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-amber-400" />
+                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-amber-400" aria-hidden="true" />
                 <div className="text-sm">
                   <span className="font-bold block mb-1">שימו לב: סכום משוערך בלבד</span>
                   הנתונים נשאבים כעת מגיליון הגיבוי מאחר והקובץ הממשלתי הרשמי אינו זמין. יש לבדוק ולאמת את הסכומים מול אמרכלות המשרד לפני ביצוע כל רכישה או התנתקות.
@@ -104,12 +107,12 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
 
           {!termDevice || !receiptDate ? (
             <div className="text-center py-10 opacity-50">
-              <Calculator className="w-12 h-12 mx-auto mb-3 opacity-20" />
+              <Calculator className="w-12 h-12 mx-auto mb-3 opacity-20" aria-hidden="true" />
               <p className="font-bold">בחר מכשיר ותאריך קבלה לחישוב יתרת הליסינג</p>
             </div>
           ) : isLeaseExpired ? (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30"><CheckCircle2 className="w-8 h-8" /></div>
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30"><CheckCircle2 className="w-8 h-8" aria-hidden="true" /></div>
               <h4 className="text-2xl font-black text-emerald-600 dark:text-white mb-2">תקופת הליסינג הסתיימה!</h4>
               <p className="text-slate-600 dark:text-slate-300 text-sm">עברו {monthsElapsed} חודשים. אינך נדרש לשלם קנס על סיום התקשרות.</p>
             </div>
@@ -128,7 +131,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                 <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 shadow-sm relative overflow-hidden group mb-4">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
                   <div className="text-emerald-600 dark:text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר)
+                    <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר)
                   </div>
                   <div className="text-3xl font-black text-slate-900 dark:text-white">
                     {terminationPenalty.toFixed(2)} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
@@ -138,14 +141,14 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
 
                 {/* 2. Matrix value minus buyout value (Remaining months ONLY) */}
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו)</div>
+                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" aria-hidden="true" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו)</div>
                   <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
                   <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
                 </div>
 
                 {/* 3. Buyout value */}
                 <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" /> עלות רכישת המכשיר בסיום התקופה</div>
+                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" aria-hidden="true" /> עלות רכישת המכשיר בסיום התקופה</div>
                   <div className="text-xl font-black text-slate-800 dark:text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-500 dark:text-indigo-300">₪</span></div>
                 </div>
               </div>

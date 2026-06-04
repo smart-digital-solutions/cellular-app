@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups = false, onOpenChange }) => {
+const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups = false, onOpenChange, ariaLabelledBy, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const wasOpenRef = useRef(false);
   const listboxId = React.useId();
+  const buttonId = id || `omega-select-btn-${listboxId}`;
 
   const handleSetIsOpen = useCallback((val) => {
     setIsOpen(val);
@@ -89,7 +90,9 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls={listboxId}
-        aria-label={selectedOption ? selectedOption.label : placeholder}
+        aria-labelledby={ariaLabelledBy ? `${ariaLabelledBy} ${buttonId}` : undefined}
+        aria-label={!ariaLabelledBy ? (selectedOption ? selectedOption.label : placeholder) : undefined}
+        id={buttonId}
         className="w-full backdrop-blur-md border-2 py-4 px-5 rounded-[1.2rem] focus:ring-4 focus:ring-indigo-500/20 focus:border-[#4F46E5] font-bold text-base text-right flex justify-between items-center transition-all hover:border-indigo-300 cursor-pointer"
         style={{ backgroundColor: 'var(--clr-surface)', borderColor: 'var(--clr-border)' }}
       >

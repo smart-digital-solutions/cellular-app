@@ -5,7 +5,7 @@ const FaqScreen = ({ faq }) => (
   <div className="animate-in fade-in max-w-3xl mx-auto relative z-10" style={{ color: 'var(--clr-text-1)' }}>
     <div className="text-center mb-10 pt-4">
       <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-[#4F46E5] dark:text-indigo-300 font-bold text-xs mb-4 border border-indigo-100 dark:border-indigo-800">
-        <Megaphone className="w-3.5 h-3.5" /> עדכונים רגולטוריים
+        <Megaphone className="w-3.5 h-3.5" aria-hidden="true" /> עדכונים רגולטוריים
       </div>
       <h2 className="text-4xl font-black mb-3" style={{ color: 'var(--clr-text-1)' }}>
         הודעות <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">התכ&quot;ם</span>
@@ -20,7 +20,7 @@ const FaqScreen = ({ faq }) => (
       ))}
     </div>
     <div className="mt-8 border rounded-[1.5rem] p-5 flex items-start gap-3" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)' }}>
-      <Info className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+      <Info className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" aria-hidden="true" />
       <div>
         <div className="font-black text-indigo-700 dark:text-indigo-300 text-sm mb-1">קישור ישיר לאתר החשכ&quot;ל</div>
         <a
@@ -34,7 +34,7 @@ const FaqScreen = ({ faq }) => (
       </div>
     </div>
     <div className="mt-6 flex items-center justify-center gap-2 opacity-60 text-xs" style={{ color: 'var(--clr-text-3)' }}>
-      <Sparkles className="w-3.5 h-3.5" />
+      <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
       <span>הנתונים מתעדכנים בזמן אמת מגיליון הממשל</span>
     </div>
   </div>

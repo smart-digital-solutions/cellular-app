@@ -36,8 +36,8 @@ const SplashScreen = ({ className = '' }) => {
         <div className="relative mb-6 group">
           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-full blur-xl opacity-20 dark:opacity-40 animate-pulse" />
           <div className="relative w-24 h-24 bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-full flex items-center justify-center shadow-xl dark:shadow-2xl">
-            <Smartphone className="w-10 h-10 text-slate-800 dark:text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            <Sparkles className="absolute top-4 right-4 w-4 h-4 text-cyan-500 dark:text-cyan-300 animate-ping" />
+            <Smartphone className="w-10 h-10 text-slate-800 dark:text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" aria-hidden="true" />
+            <Sparkles className="absolute top-4 right-4 w-4 h-4 text-cyan-500 dark:text-cyan-300 animate-ping" aria-hidden="true" />
           </div>
         </div>
 

@@ -2,7 +2,7 @@
   "name": "סלולטור 2026 - משרד התקשורת",
   "short_name": "סלולטור",
   "description": "מחשבון סלולר ממשלתי לניהול השתתפות עצמית, ליסינג ומחירון נזקים - מכרז 2026.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#0B1120",
   "theme_color": "#0B1120",
@@ -11,7 +11,7 @@
   "lang": "he",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "favicon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"

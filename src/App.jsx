@@ -12,6 +12,7 @@ import FaqScreen from './screens/FaqScreen';
 import ImportantNotesScreen from './screens/ImportantNotesScreen';
 import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
 import SplashScreen from './screens/SplashScreen';
+import AccessibilityStatementScreen from './screens/AccessibilityStatementScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
 
@@ -23,6 +24,7 @@ const ALL_TABS_MAP = {
   guide: { icon: BookOpen, label: 'מדריך והנחיות', mobileLabel: 'מדריך' },
   faq: { icon: HelpCircle, label: 'שאלות ותשובות', mobileLabel: 'שאלות' },
   important_notes: { icon: AlertTriangle, label: 'דגשים חשובים', mobileLabel: 'דגשים' },
+  accessibility: { icon: HelpCircle, label: 'הצהרת נגישות', mobileLabel: 'נגישות' },
 };
 
 export default function App() {
@@ -159,7 +161,7 @@ export default function App() {
           <button 
             type="button"
             onClick={() => window.location.href = window.location.pathname}
-            className="group relative flex items-center gap-3 cursor-pointer hover:opacity-100 transition-opacity text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full pr-1"
+            className="group relative flex items-center gap-3 cursor-pointer hover:opacity-100 transition-opacity text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-full pr-1"
           >
             <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white shrink-0 shadow-sm" aria-hidden="true">
               <Smartphone className="w-4 h-4" />
@@ -184,9 +186,9 @@ export default function App() {
                   onClick={() => setActiveTab(tab.id)}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                   aria-label={tab.label}
-                  className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-300 ${activeTab === tab.id ? 'bg-slate-800 text-white dark:bg-white dark:text-[#0B1120] scale-105 glow-active' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
+                  className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 ${activeTab === tab.id ? 'bg-slate-800 text-white dark:bg-white dark:text-[#0B1120] scale-105 glow-active' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                 >
-                  <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-cyan-400 dark:text-[#4F46E5]' : ''}`} aria-hidden="true" />
+                  <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-cyan-400 dark:text-indigo-400' : ''}`} aria-hidden="true" />
                   {tab.label}
                 </button>
               ))}
@@ -199,6 +201,11 @@ export default function App() {
       {/* Header spacer */}
       <div className={`transition-all duration-300 ${showAnnouncement ? 'pt-28 md:pt-32' : 'pt-16 md:pt-20'}`} />
 
+      {/* ARIA Live Region for Screen Reader Announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {activeTab ? `מסך ${ALL_TABS_MAP[activeTab]?.label || activeTab} פתוח עכשיו` : ''}
+      </div>
+
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         <ErrorBoundary>
@@ -208,6 +215,7 @@ export default function App() {
           <div className={activeTab === 'guide' ? 'block' : 'hidden'}><GuideScreen /></div>
           <div className={activeTab === 'faq' ? 'block' : 'hidden'}><FaqScreen faq={faq} /></div>
           <div className={activeTab === 'important_notes' ? 'block' : 'hidden'}><ImportantNotesScreen importantNotes={importantNotes} /></div>
+          <div className={activeTab === 'accessibility' ? 'block' : 'hidden'}><AccessibilityStatementScreen /></div>
         </ErrorBoundary>
       </main>
 
@@ -220,15 +228,15 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-right">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+              <Sparkles className="w-4 h-4 text-indigo-700 dark:text-indigo-400" />
               <span className="font-black text-slate-800 dark:text-white text-sm transition-colors duration-300">{settings.app_title}</span>
               <span className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800 transition-colors duration-300">{settings.app_version || 'v06.2026'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+              <div className="text-[10px] font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 transition-colors duration-300">
                 עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')} (מכרז 01-2024)
               </div>
-              <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border transition-colors duration-300 ${source === 'sheets' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/50'}`}>
+              <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border transition-colors duration-300 ${source === 'sheets' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 border-amber-100 dark:border-amber-800/50'}`}>
                 {source === 'sheets' ? 'LIVE' : 'OFFLINE'}
               </div>
               {loading && (
@@ -238,10 +246,19 @@ export default function App() {
               )}
             </div>
           </div>
-          <div className="text-sm font-medium text-slate-500 flex items-center gap-1">
-            אופיין ופותח ע״י{' '}
-            <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span>
-            {' '}| משרד התקשורת
+          <div className="text-sm font-medium text-slate-500 flex flex-col items-center sm:items-end gap-1">
+            <span>
+              אופיין ופותח ע״י{' '}
+              <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span>
+              {' '}| משרד התקשורת
+            </span>
+            <button 
+              type="button" 
+              onClick={() => setActiveTab('accessibility')}
+              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded px-1"
+            >
+              הצהרת נגישות
+            </button>
           </div>
         </div>
       </footer>
@@ -260,7 +277,7 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               aria-label={tab.label}
-              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 active:scale-95 ${activeTab === tab.id ? 'text-slate-900 dark:text-white scale-105' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
+              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:scale-95 ${activeTab === tab.id ? 'text-slate-900 dark:text-white scale-105' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
             >
               <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.2)] dark:shadow-[0_4px_12px_rgba(79,70,229,0.4)] text-white' : 'bg-transparent text-inherit'}`}>
                 <tab.icon className="w-5 h-5" aria-hidden="true" />
