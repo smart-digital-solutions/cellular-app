@@ -156,14 +156,18 @@ export default function App() {
         role="banner"
       >
         <div className="max-w-6xl mx-auto bg-white/80 dark:bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1rem] md:rounded-full border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl flex items-center justify-between px-4 py-2 transition-colors duration-300">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white" aria-hidden="true">
+          <button 
+            type="button"
+            onClick={() => window.location.href = window.location.pathname}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full pr-1"
+          >
+            <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white shrink-0" aria-hidden="true">
               <Smartphone className="w-4 h-4" />
             </div>
             <span className="font-black text-base text-slate-800 dark:text-white transition-colors duration-300" aria-label="סלולטור 2026">
               סלולטור <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">2026</span>
             </span>
-          </div>
+          </button>
           <div className="flex items-center gap-1">
             <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="ניווט ראשי">
               {visibleTabs.map(tab => (
@@ -191,13 +195,13 @@ export default function App() {
 
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
-        <ErrorBoundary key={activeTab}>
-          {activeTab === 'calculator'  && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
-          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
-          {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-          {activeTab === 'guide'       && <GuideScreen guide={guide} />}
-          {activeTab === 'faq'         && <FaqScreen faq={faq} />}
-          {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
+        <ErrorBoundary>
+          <div className={activeTab === 'calculator' ? 'block' : 'hidden'}><CalculatorScreen tiers={tiers} allDevices={allDevices} /></div>
+          <div className={activeTab === 'termination' ? 'block' : 'hidden'}><TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} /></div>
+          <div className={activeTab === 'maintenance' ? 'block' : 'hidden'}><MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} /></div>
+          <div className={activeTab === 'guide' ? 'block' : 'hidden'}><GuideScreen guide={guide} /></div>
+          <div className={activeTab === 'faq' ? 'block' : 'hidden'}><FaqScreen faq={faq} /></div>
+          <div className={activeTab === 'important_notes' ? 'block' : 'hidden'}><ImportantNotesScreen importantNotes={importantNotes} /></div>
         </ErrorBoundary>
       </main>
 

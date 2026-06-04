@@ -1,6 +1,26 @@
 import { Smartphone, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const SplashScreen = ({ className = '' }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const duration = 3400; // Finish slightly before the 3700ms unmount
+    const interval = 30; // Faster updates
+    let elapsed = 0;
+    
+    const timer = setInterval(() => {
+      elapsed += interval;
+      const percent = Math.min(100, Math.floor((elapsed / duration) * 100));
+      setProgress(percent);
+      if (elapsed >= duration) {
+        clearInterval(timer);
+      }
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 overflow-hidden transition-all duration-700 ${className}`} dir="rtl">
       
@@ -24,10 +44,17 @@ const SplashScreen = ({ className = '' }) => {
           סלולטור <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500 dark:from-indigo-400 dark:to-cyan-400">2026</span>
         </h1>
         
-        <p className="text-slate-500 dark:text-slate-400 font-medium text-sm mb-8 text-center w-full">טוען נתונים...</p>
-
-        <div className="w-48 h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mx-auto">
-          <div className="h-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-indigo-500 w-full animate-[progress_1.5s_ease-in-out_infinite]" style={{ backgroundSize: '200% 100%' }}></div>
+        <div className="flex flex-col items-center w-full mb-6">
+          <div className="flex justify-between w-48 text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 px-1" dir="rtl">
+            <span>טוען נתונים...</span>
+            <span className="tabular-nums text-indigo-600 dark:text-cyan-400">{progress}%</span>
+          </div>
+          <div className="w-48 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mx-auto" dir="ltr">
+            <div 
+              className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-75 ease-linear"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
         </div>
       </div>
       
@@ -40,10 +67,7 @@ const SplashScreen = ({ className = '' }) => {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        @keyframes progress {
-          0% { background-position: 100% 0; }
-          100% { background-position: -100% 0; }
-        }
+        /* removed fillProgress keyframes since we use inline styles now */
       `}} />
     </div>
   );
