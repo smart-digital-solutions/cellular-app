@@ -10,29 +10,50 @@ import MaintenanceScreen from './screens/MaintenanceScreen';
 import GuideScreen from './screens/GuideScreen';
 import FaqScreen from './screens/FaqScreen';
 import ImportantNotesScreen from './screens/ImportantNotesScreen';
+import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
 
 // ── Navigation config ──────────────────────────────────────
-const NAV_TABS = [
-  { id: 'calculator',  icon: Calculator, label: 'מחשבון עלויות' },
-  { id: 'termination', icon: Receipt,     label: 'מחשבון סיום ליסינג' },
-  { id: 'maintenance', icon: Wrench,      label: 'מחירון נזקים' },
-  { id: 'guide',       icon: BookOpen,    label: 'מדריך והנחיות' },
-  { id: 'faq',         icon: HelpCircle,  label: 'שאלות ותשובות' },
-  { id: 'important_notes', icon: AlertTriangle, label: 'דגשים חשובים' },
-];
-const MOBILE_TABS = [
-  { id: 'calculator',  icon: Calculator, label: 'עלויות' },
-  { id: 'termination', icon: Receipt,    label: 'סיום ליסינג' },
-  { id: 'maintenance', icon: Wrench,     label: 'נזקים' },
-  { id: 'guide',       icon: BookOpen,   label: 'מדריך' },
-  { id: 'faq',         icon: HelpCircle, label: 'שאלות' },
-  { id: 'important_notes', icon: AlertTriangle, label: 'דגשים' },
-];
+const ALL_TABS_MAP = {
+  calculator: { icon: Calculator, label: 'מחשבון עלויות', mobileLabel: 'עלויות' },
+  termination: { icon: Receipt, label: 'מחשבון סיום ליסינג', mobileLabel: 'סיום ליסינג' },
+  maintenance: { icon: Wrench, label: 'מחירון נזקים', mobileLabel: 'נזקים' },
+  guide: { icon: BookOpen, label: 'מדריך והנחיות', mobileLabel: 'מדריך' },
+  faq: { icon: HelpCircle, label: 'שאלות ותשובות', mobileLabel: 'שאלות' },
+  important_notes: { icon: AlertTriangle, label: 'דגשים חשובים', mobileLabel: 'דגשים' },
+};
 
 export default function App() {
   const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading } = useAppData();
-  const [activeTab, setActiveTab] = useState('calculator');
+  const [activeTab, setActiveTab] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
+
+  // Dynamic Navigation based on Settings
+  const visibleTabs = useMemo(() => {
+    if (!settings) return [];
+    return Object.entries(ALL_TABS_MAP).map(([id, defaultData]) => {
+      const activeStr = settings[`nav_${id}_active`];
+      const isActive = activeStr === undefined || String(activeStr).toUpperCase() === 'TRUE';
+      const order = parseInt(settings[`nav_${id}_order`]) || 99;
+      const label = settings[`nav_${id}_label`] || defaultData.label;
+      return {
+        id,
+        icon: defaultData.icon,
+        label,
+        mobileLabel: defaultData.mobileLabel, // We could allow overriding mobile label too, but let's keep it simple
+        order,
+        isActive
+      };
+    }).filter(t => t.isActive).sort((a, b) => a.order - b.order);
+  }, [settings]);
+
+  // Set default active tab on load or when settings change
+  useEffect(() => {
+    if (visibleTabs.length > 0) {
+      if (!visibleTabs.find(t => t.id === activeTab)) {
+        setActiveTab(visibleTabs[0].id);
+      }
+    }
+  }, [visibleTabs, activeTab]);
 
   // Merge catalog + local special devices (BYOD / כשר / אביזרים)
   const allDevices = useMemo(() => {
@@ -58,6 +79,14 @@ export default function App() {
   const showAnnouncement = settings.show_announcement === 'TRUE'
     && settings.announcement_text
     && !announcementDismissed;
+
+  // Global Maintenance Mode check
+  const isSiteActive = settings.site_active === undefined || String(settings.site_active).toUpperCase() === 'TRUE';
+  
+  // Show maintenance screen if not active (and avoid flashing it if we are still initially loading from cache)
+  if (!isSiteActive) {
+    return <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />;
+  }
 
   return (
     <div
@@ -96,7 +125,7 @@ export default function App() {
             </span>
           </div>
           <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="ניווט ראשי">
-            {NAV_TABS.map(tab => (
+            {visibleTabs.map(tab => (
               <button
                 key={tab.id}
                 id={`tab-btn-${tab.id}`}
@@ -164,24 +193,24 @@ export default function App() {
 
       {/* ── Mobile bottom nav ── */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl border-t border-white/10 px-2 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl border-t border-white/10 px-2 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 overflow-x-auto overflow-y-hidden"
         role="navigation"
         aria-label="ניווט תחתון"
       >
-        <div className="flex justify-between">
-          {MOBILE_TABS.map(tab => (
+        <div className="flex justify-between min-w-max px-2">
+          {visibleTabs.map(tab => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               aria-label={tab.label}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 min-h-[52px] transition-colors ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 min-h-[52px] px-3 transition-colors ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}
             >
               <div className={`p-2 rounded-xl transition-all duration-200 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-lg' : ''}`}>
                 <tab.icon className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span className="text-[10px] font-bold">{tab.label}</span>
+              <span className="text-[10px] font-bold whitespace-nowrap">{tab.mobileLabel}</span>
             </button>
           ))}
         </div>
