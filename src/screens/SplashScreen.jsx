@@ -1,8 +1,8 @@
 import { Smartphone, Sparkles } from 'lucide-react';
 
-const SplashScreen = () => {
+const SplashScreen = ({ className = '' }) => {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900 overflow-hidden" dir="rtl">
+    <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900 overflow-hidden ${className}`} dir="rtl">
       
       {/* Animated Background Elements */}
       <div className="absolute top-1/4 left-1/4 w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '3s' }} />

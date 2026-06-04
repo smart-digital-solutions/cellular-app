@@ -88,6 +88,9 @@ export default function App() {
     && settings.announcement_text
     && !announcementDismissed;
 
+  const [renderSplash, setRenderSplash] = useState(true);
+  const [fadeSplash, setFadeSplash] = useState(false);
+
   // Global Maintenance Mode check
   const siteActiveStr = String(settings.site_active || 'TRUE').trim().toUpperCase();
   const isSiteActive = siteActiveStr === 'TRUE' || siteActiveStr === '1' || siteActiveStr === 'YES' || siteActiveStr === 'פעיל' || siteActiveStr === 'כן';
@@ -96,22 +99,40 @@ export default function App() {
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const shouldShowMaintenance = !isSiteActive && !isLocalhost;
   
-  // Show splash screen on initial data load to prevent UI flashing, or to enforce minimum splash time
-  if ((loading && !lastUpdated) || showMinimumSplash) {
-    return <SplashScreen />;
-  }
+  // Splash screen logic
+  const isSplashActive = (loading && !lastUpdated) || showMinimumSplash;
 
-  // Show maintenance screen if not active (and not on localhost)
-  if (shouldShowMaintenance) {
-    return <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />;
+  useEffect(() => {
+    if (!isSplashActive) {
+      setFadeSplash(true);
+      const timer = setTimeout(() => {
+        setRenderSplash(false);
+      }, 1200); // 1.2s for splashExit animation
+      return () => clearTimeout(timer);
+    } else {
+      setRenderSplash(true);
+      setFadeSplash(false);
+    }
+  }, [isSplashActive]);
+
+  if (shouldShowMaintenance && !renderSplash) {
+    return (
+      <div className="animate-app-reveal">
+        <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />
+      </div>
+    );
   }
 
   return (
-    <div
-      className="min-h-screen text-right relative flex flex-col mesh-gradient-bg"
-      dir="rtl"
-      style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
-    >
+    <>
+      {renderSplash && <SplashScreen className={fadeSplash ? "animate-splash-exit pointer-events-none" : ""} />}
+      
+      {!shouldShowMaintenance && (
+        <div
+          className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : 'opacity-0'}`}
+          dir="rtl"
+          style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
+        >
       {/* Dot-grid overlay */}
       <div
         className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply"
@@ -238,5 +259,7 @@ export default function App() {
         </div>
       </nav>
     </div>
+    )}
+    </>
   );
 }
