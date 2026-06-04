@@ -2,41 +2,47 @@
 //  useAppData.js — Custom Hook לטעינת כל נתוני האפליקציה
 // =============================================================
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { loadAllData, clearCache, getCachedAll } from './sheetsService';
 
 export function useAppData() {
-  const [data, setData] = useState(getCachedAll);
-  const [loading, setLoading] = useState(true);
+  const cachedData = getCachedAll();
+  // If we have cached data, start with loading=false so the UI renders instantly
+  // without any extra re-render cycle.
+  const [data, setData] = useState(cachedData);
+  const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
   const fetchData = useCallback(async (forceRefresh = false) => {
-    setLoading(true);
-    if (forceRefresh) clearCache();
+    if (forceRefresh) {
+      setLoading(true);
+      clearCache();
+    }
     try {
       const result = await loadAllData();
-      setData(result);
-      setLastUpdated(new Date());
+      // Use startTransition so React deprioritises this state update —
+      // it will not block user interactions or LCP rendering.
+      startTransition(() => {
+        setData(result);
+        setLastUpdated(new Date());
+        setLoading(false);
+      });
     } catch (err) {
       console.error('useAppData: unexpected error', err);
-      // במקרה של שגיאה נשארים עם נתוני המטמון (או ה-fallback) - לא דורסים אותם!
-    } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // Delay data fetching to after the initial render (LCP completed) to prevent blocking the main thread.
-    const runFetch = () => {
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        window.requestIdleCallback(() => fetchData(), { timeout: 2000 });
-      } else {
-        setTimeout(() => fetchData(), 1500);
-      }
-    };
-
-    runFetch();
+    // Defer data fetching until the browser is idle — completely off
+    // the critical render path. Falls back to 2s delay if no rIC support.
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(() => fetchData(), { timeout: 3000 });
+    } else {
+      setTimeout(() => fetchData(), 2000);
+    }
   }, [fetchData]);
 
-  return { ...(data || getCachedAll() || {}), loading, lastUpdated, refresh: () => fetchData(true) };
+  return { ...(data || {}), loading, lastUpdated, refresh: () => fetchData(true) };
 }
+

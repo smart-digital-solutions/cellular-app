@@ -6,18 +6,18 @@ import { useAppData } from './useAppData';
 import AnnouncementBanner from './components/AnnouncementBanner';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
+// Static imports — shown immediately on load (no waterfall)
+import CalculatorScreen from './screens/CalculatorScreen';
+import SplashScreen from './screens/SplashScreen';
 
-// Lazy-load screens — only CalculatorScreen is needed at startup
-const CalculatorScreen = lazy(() => import('./screens/CalculatorScreen'));
+// Lazy-load secondary screens — only loaded when the user clicks their tab
 const TerminationScreen = lazy(() => import('./screens/TerminationScreen'));
 const MaintenanceScreen = lazy(() => import('./screens/MaintenanceScreen'));
 const GuideScreen = lazy(() => import('./screens/GuideScreen'));
 const FaqScreen = lazy(() => import('./screens/FaqScreen'));
 const ImportantNotesScreen = lazy(() => import('./screens/ImportantNotesScreen'));
 const SiteMaintenanceScreen = lazy(() => import('./screens/SiteMaintenanceScreen'));
-const SplashScreen = lazy(() => import('./screens/SplashScreen'));
 const AccessibilityStatementScreen = lazy(() => import('./screens/AccessibilityStatementScreen'));
-
 
 // ── Navigation config ──────────────────────────────────────
 const ALL_TABS_MAP = {
@@ -136,9 +136,7 @@ export default function App() {
   return (
     <>
       {renderSplash && (
-        <Suspense fallback={null}>
-          <SplashScreen className={fadeSplash ? "animate-splash-exit pointer-events-none" : ""} />
-        </Suspense>
+        <SplashScreen className={fadeSplash ? "animate-splash-exit pointer-events-none" : ""} />
       )}
       
       {!shouldShowMaintenance && (
