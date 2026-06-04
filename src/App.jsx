@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  Calculator, BookOpen, HelpCircle, Receipt, Wrench, Smartphone, Sparkles
+  Calculator, BookOpen, HelpCircle, Receipt, Wrench,
+  Smartphone, Sparkles, AlertTriangle
 } from 'lucide-react';
 import { useAppData } from './useAppData';
 import AnnouncementBanner from './components/AnnouncementBanner';
@@ -9,25 +10,33 @@ import TerminationScreen from './screens/TerminationScreen';
 import MaintenanceScreen from './screens/MaintenanceScreen';
 import GuideScreen from './screens/GuideScreen';
 import FaqScreen from './screens/FaqScreen';
+import ImportantNotesScreen from './screens/ImportantNotesScreen';
 
 // ── Navigation config ──────────────────────────────────────
 const NAV_TABS = [
-  { id: 'calculator',  icon: Calculator, label: 'מחשבון עלויות' },
-  { id: 'termination', icon: Receipt,     label: 'מחשבון סיום ליסינג' },
-  { id: 'maintenance', icon: Wrench,      label: 'מחירון נזקים' },
-  { id: 'guide',       icon: BookOpen,    label: 'מדריך והנחיות' },
-  { id: 'faq',         icon: HelpCircle,  label: 'שאלות ותשובות' },
+  { id: 'calculator',      icon: Calculator,    label: 'מחשבון עלויות' },
+  { id: 'termination',     icon: Receipt,       label: 'מחשבון סיום ליסינג' },
+  { id: 'maintenance',     icon: Wrench,        label: 'מחירון נזקים' },
+  { id: 'guide',           icon: BookOpen,      label: 'מדריך והנחיות' },
+  { id: 'faq',             icon: HelpCircle,    label: 'שאלות ותשובות' },
+  { id: 'importantNotes',  icon: AlertTriangle, label: 'דגשים חשובים' },
 ];
 const MOBILE_TABS = [
-  { id: 'calculator',  icon: Calculator, label: 'עלויות' },
-  { id: 'termination', icon: Receipt,    label: 'סיום ליסינג' },
-  { id: 'maintenance', icon: Wrench,     label: 'נזקים' },
-  { id: 'guide',       icon: BookOpen,   label: 'מדריך' },
-  { id: 'faq',         icon: HelpCircle, label: 'שאלות' },
+  { id: 'calculator',      icon: Calculator,    label: 'עלויות' },
+  { id: 'termination',     icon: Receipt,       label: 'סיום ליסינג' },
+  { id: 'maintenance',     icon: Wrench,        label: 'נזקים' },
+  { id: 'guide',           icon: BookOpen,      label: 'מדריך' },
+  { id: 'faq',             icon: HelpCircle,    label: 'שאלות' },
+  { id: 'importantNotes',  icon: AlertTriangle, label: 'דגשים' },
 ];
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, source, loading } = useAppData();
+  const {
+    tiers, devices, maintenance, faq, settings,
+    catalog, catalogIsFallback, source, loading,
+    guide, importantNotes, terminationRules,
+  } = useAppData();
+
   const [activeTab, setActiveTab] = useState('calculator');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
 
@@ -55,6 +64,8 @@ export default function App() {
   const showAnnouncement = settings.show_announcement === 'TRUE'
     && settings.announcement_text
     && !announcementDismissed;
+
+  const appVersion = settings.app_version || 'v06.2026';
 
   return (
     <div
@@ -101,9 +112,24 @@ export default function App() {
                 onClick={() => setActiveTab(tab.id)}
                 aria-current={activeTab === tab.id ? 'page' : undefined}
                 aria-label={tab.label}
-                className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all ${activeTab === tab.id ? 'bg-white text-[#0B1120] scale-105 glow-active' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+                className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all ${
+                  activeTab === tab.id
+                    ? tab.id === 'importantNotes'
+                      ? 'bg-amber-400 text-[#0B1120] scale-105 shadow-lg'
+                      : 'bg-white text-[#0B1120] scale-105 glow-active'
+                    : tab.id === 'importantNotes'
+                      ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-500/10'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-[#4F46E5]' : ''}`} aria-hidden="true" />
+                <tab.icon
+                  className={`w-4 h-4 ${
+                    activeTab === tab.id
+                      ? tab.id === 'importantNotes' ? 'text-[#0B1120]' : 'text-[#4F46E5]'
+                      : tab.id === 'importantNotes' ? 'text-amber-400' : ''
+                  }`}
+                  aria-hidden="true"
+                />
                 {tab.label}
               </button>
             ))}
@@ -116,11 +142,12 @@ export default function App() {
 
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
-        {activeTab === 'calculator'  && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
-        {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} />}
-        {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-        {activeTab === 'guide'       && <GuideScreen />}
-        {activeTab === 'faq'         && <FaqScreen faq={faq} />}
+        {activeTab === 'calculator'     && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
+        {activeTab === 'termination'    && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
+        {activeTab === 'maintenance'    && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
+        {activeTab === 'guide'          && <GuideScreen guide={guide} />}
+        {activeTab === 'faq'            && <FaqScreen faq={faq} />}
+        {activeTab === 'importantNotes' && <ImportantNotesScreen importantNotes={importantNotes} />}
       </main>
 
       {/* ── Footer ── */}
@@ -134,7 +161,9 @@ export default function App() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#4F46E5]" />
               <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
-              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
+              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">
+                {appVersion}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
@@ -153,14 +182,14 @@ export default function App() {
           <div className="text-sm font-medium text-slate-500 flex items-center gap-1">
             אופיין ופותח ע״י{' '}
             <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span>
-            {' '}| משרד התקשורת
+            {' '}| משרד התקשורת | מכרז 01-2024
           </div>
         </div>
       </footer>
 
       {/* ── Mobile bottom nav ── */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl border-t border-white/10 px-2 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.9)] backdrop-blur-xl border-t border-white/10 px-1 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50"
         role="navigation"
         aria-label="ניווט תחתון"
       >
@@ -172,12 +201,22 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               aria-label={tab.label}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 min-h-[52px] transition-colors ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}
+              className={`flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[52px] transition-colors ${
+                activeTab === tab.id
+                  ? tab.id === 'importantNotes' ? 'text-amber-400' : 'text-white'
+                  : tab.id === 'importantNotes' ? 'text-amber-600' : 'text-slate-400'
+              }`}
             >
-              <div className={`p-2 rounded-xl transition-all duration-200 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-lg' : ''}`}>
+              <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+                activeTab === tab.id
+                  ? tab.id === 'importantNotes'
+                    ? 'bg-amber-500/20 shadow-lg'
+                    : 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-lg'
+                  : ''
+              }`}>
                 <tab.icon className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span className="text-[10px] font-bold">{tab.label}</span>
+              <span className="text-[9px] font-bold">{tab.label}</span>
             </button>
           ))}
         </div>

@@ -15,6 +15,9 @@ export const SHEET_NAMES = {
   MAINTENANCE: 'maintenance',
   FAQ: 'faq',
   SETTINGS: 'settings',
+  GUIDE: 'guide',
+  IMPORTANT_NOTES: 'important_notes',
+  TERMINATION_RULES: 'termination_rules',
 };
 
 // גיליון קטלוג המכשירים הממשלתי (מנהל הרכש)

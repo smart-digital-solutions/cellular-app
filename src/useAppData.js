@@ -1,37 +1,62 @@
 // =============================================================
-//  useAppData.js — Custom Hook לטעינת כל נתוני האפליקציה
+//  useAppData.js — Custom hook לטעינת כל נתוני האפליקציה
+//  ארכיטקטורת SWR: רנדור מיידי מ-cache → עדכון ברקע מ-Sheets
 // =============================================================
 
 import { useState, useEffect, useCallback } from 'react';
-import { loadAllData, clearCache, getCachedAll } from './sheetsService';
+import { getCachedAll, loadAllData, clearCache } from './sheetsService';
 
 export function useAppData() {
-  const [data, setData] = useState(getCachedAll);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(() => getCachedAll());
+  const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  const fetchData = useCallback(async (forceRefresh = false) => {
+  const fetchFresh = useCallback(async () => {
     setLoading(true);
-    if (forceRefresh) clearCache();
     try {
-      const result = await loadAllData();
-      setData(result);
+      const fresh = await loadAllData();
+      setData(prev => ({ ...prev, ...fresh }));
       setLastUpdated(new Date());
     } catch (err) {
-      console.error('useAppData: unexpected error', err);
-      // במקרה של שגיאה נשארים עם נתוני המטמון (או ה-fallback) - לא דורסים אותם!
+      console.warn('useAppData: fetch failed, keeping cached/fallback data', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // Use a microtask to avoid synchronous state updates during the effect's execution phase
-    // which can trigger the 'set-state-in-effect' lint warning/error.
-    Promise.resolve().then(() => {
-      fetchData();
-    });
-  }, [fetchData]);
+    fetchFresh();
+  }, [fetchFresh]);
 
-  return { ...data, loading, lastUpdated, refresh: () => fetchData(true) };
+  const refresh = useCallback(() => {
+    clearCache();
+    fetchFresh();
+  }, [fetchFresh]);
+
+  return {
+    // ── נתוני מחשבון ──
+    tiers:    data.tiers,
+    devices:  data.devices,
+    // ── מחירון נזקים ──
+    maintenance: data.maintenance,
+    // ── שאלות ותשובות ──
+    faq: data.faq,
+    // ── הגדרות גלובליות ──
+    settings: data.settings,
+    // ── 🆕 מדריך והנחיות (דינמי מ-Sheets) ──
+    guide: data.guide,
+    // ── 🆕 דגשים חשובים (דינמי מ-Sheets) ──
+    importantNotes: data.importantNotes,
+    // ── 🆕 כללי סיום ליסינג (דינמי מ-Sheets) ──
+    terminationRules: data.terminationRules,
+    // ── קטלוג ממשלתי ──
+    catalog: data.catalog,
+    catalogIsFallback: data.catalogIsFallback,
+    // ── מצב ──
+    source: data.source,
+    errors: data.errors,
+    loading,
+    lastUpdated,
+    refresh,
+  };
 }

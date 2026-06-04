@@ -2,12 +2,18 @@
 //  sheetsService.js — שירות גישה ל-Google Sheets
 //  שימוש ב-gviz/tq endpoint (ציבורי, ללא API Key)
 //  + Cache חכם ב-localStorage
+//  מכרז 01-2024 | עודכן: 06.2026
 // =============================================================
 
-import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES } from './config';
+import {
+  SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME,
+  GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY,
+  CACHE_DURATION_MINUTES
+} from './config';
 import {
   FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
-  FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG
+  FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG,
+  FALLBACK_GUIDE, FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES,
 } from './fallbackData';
 
 const CACHE_PREFIX = 'cellular_app_';
@@ -20,14 +26,8 @@ function getCached(key) {
     const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
     const { data, timestamp } = JSON.parse(raw);
-    // SWR: return stale data immediately; background fetch will refresh.
-    // After CACHE_DURATION_MINUTES the entry is considered stale — still
-    // returned here so the UI renders instantly, but flagged so callers
-    // can decide to re-fetch. For simplicity we always return and rely on
-    // the useAppData mount-time fetch to keep data fresh.
     const ageMinutes = (Date.now() - timestamp) / 60_000;
     if (ageMinutes > CACHE_DURATION_MINUTES) {
-      // Remove stale entry so next cold-start fetches from the network
       localStorage.removeItem(CACHE_PREFIX + key);
       return null;
     }
@@ -53,13 +53,16 @@ export function clearCache() {
 
 export function getCachedAll() {
   return {
-    tiers: getCached(SHEET_NAMES.TIERS) || FALLBACK_TIERS,
-    devices: getCached(SHEET_NAMES.DEVICES) || FALLBACK_DEVICES,
-    maintenance: getCached(SHEET_NAMES.MAINTENANCE) || FALLBACK_MAINTENANCE,
-    faq: getCached(SHEET_NAMES.FAQ) || FALLBACK_FAQ,
-    settings: getCached(SHEET_NAMES.SETTINGS) || FALLBACK_SETTINGS,
-    catalog: getCached(CATALOG_CACHE_KEY) || FALLBACK_CATALOG,
-    catalogIsFallback: getCached(CATALOG_FALLBACK_FLAG_KEY) ?? true,
+    tiers:            getCached(SHEET_NAMES.TIERS)            || FALLBACK_TIERS,
+    devices:          getCached(SHEET_NAMES.DEVICES)          || FALLBACK_DEVICES,
+    maintenance:      getCached(SHEET_NAMES.MAINTENANCE)      || FALLBACK_MAINTENANCE,
+    faq:              getCached(SHEET_NAMES.FAQ)              || FALLBACK_FAQ,
+    settings:         getCached(SHEET_NAMES.SETTINGS)         || FALLBACK_SETTINGS,
+    guide:            getCached(SHEET_NAMES.GUIDE)            || FALLBACK_GUIDE,
+    importantNotes:   getCached(SHEET_NAMES.IMPORTANT_NOTES)  || FALLBACK_IMPORTANT_NOTES,
+    terminationRules: getCached(SHEET_NAMES.TERMINATION_RULES)|| FALLBACK_TERMINATION_RULES,
+    catalog:          getCached(CATALOG_CACHE_KEY)            || FALLBACK_CATALOG,
+    catalogIsFallback: getCached(CATALOG_FALLBACK_FLAG_KEY)   ?? true,
     source: 'cache',
     errors: [],
   };
@@ -74,16 +77,11 @@ async function fetchSheet(sheetName) {
     throw new Error('SHEET_ID_NOT_CONFIGURED');
   }
 
-  // הסרנו את החסימה של המטמון. אנחנו תמיד רוצים למשוך נתונים טריים מגוגל (SWR)
-  // const cached = getCached(sheetName);
-  // if (cached) return cached;
-
   const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-  // Google מחזיר JSONP-like — חייבים לנקות
   const text = await response.text();
   const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
   if (!jsonStr) throw new Error('Invalid response format');
@@ -98,7 +96,7 @@ async function fetchSheet(sheetName) {
 
   const { cols, rows } = json.table;
   const headers = cols.map(c => c.label || c.id);
-  const colTypes = cols.map(c => c.type); // 'number' | 'string' | 'boolean'
+  const colTypes = cols.map(c => c.type);
 
   const data = rows
     .map(row => {
@@ -110,13 +108,10 @@ async function fetchSheet(sheetName) {
         const rawF = cell?.f;
 
         if (rawV !== null && rawV !== undefined) {
-          // ערך מספרי/בוליאני תקין
           obj[h] = rawV;
         } else if (colType === 'string' && rawF !== null && rawF !== undefined) {
-          // עמודת טקסט — f הוא הערך עצמו
           obj[h] = rawF;
         } else if (rawF !== null && rawF !== undefined && rawF !== '') {
-          // עמודה מספרית עם תא טקסטואלי — gviz שם אותו ב-f
           obj[h] = String(rawF);
         } else {
           obj[h] = '';
@@ -131,7 +126,7 @@ async function fetchSheet(sheetName) {
 }
 
 // ──────────────────────────────────────────────
-//  Catalog Fetch — גיליון ממשלתי חיצוני (קריאה בלבד)
+//  Catalog Fetch — גיליון ממשלתי חיצוני
 // ──────────────────────────────────────────────
 function getCatalogCategory(manufacturer, model) {
   const mfr = String(manufacturer).toUpperCase();
@@ -144,8 +139,6 @@ function getCatalogCategory(manufacturer, model) {
 }
 
 function parseCatalog(rows) {
-  // החלק הראשון של הגיליון הממשלתי מכיל כותרות ושורת חודשים.
-  // אנחנו מחפשים את השורה שמתחילה את הנתונים (אחרי שורת "יצרן").
   const headerRowIdx = rows.findIndex(row => {
     const v = String(row['B'] || row['יצרן'] || '').trim();
     return v === 'יצרן';
@@ -167,18 +160,13 @@ function parseCatalog(rows) {
       const buyout = parseFloat(String(r['F'] || 0).replace(/,/g, '')) || 0;
       const listPrice = parseFloat(String(r['G'] || 0).replace(/,/g, '')) || 0;
       const mTier = String(r['H'] || '').trim();
-      
-      // הוספת שם היצרן לתווית לחיפוש קל יותר
       const label = storage ? `${manufacturer} ${model} (${storage}GB)` : `${manufacturer} ${model}`;
       const id = `cat_${idx}_${manufacturer.replace(/[^a-zA-Z]/g, '').toLowerCase()}`;
-      
-      // מטריצת קנסות יציאה מוקדמת (חודשים 1 עד 24)
-      // בגיליון הממשלתי: חודש 24 הוא עמודה K, חודש 1 הוא עמודה AH
+
       const monthlyMatrix = {};
       const colIds = ['AH','AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L','K'];
       colIds.forEach((colId, i) => {
-        const monthNum = i + 1;
-        monthlyMatrix[monthNum] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;
+        monthlyMatrix[i + 1] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;
       });
 
       return {
@@ -203,11 +191,7 @@ async function fetchCatalogFromSheet(sheetId, sheetName) {
   const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
   if (!jsonStr) throw new Error('Invalid catalog response');
   let json;
-  try {
-    json = JSON.parse(jsonStr);
-  } catch {
-    throw new Error('Failed to parse Catalog response as JSON');
-  }
+  try { json = JSON.parse(jsonStr); } catch { throw new Error('Failed to parse Catalog response as JSON'); }
   if (json.status !== 'ok') throw new Error('Catalog error');
   const { cols, rows } = json.table;
   const colTypes = cols.map(c => c.type);
@@ -222,11 +206,8 @@ async function fetchCatalogFromSheet(sheetId, sheetName) {
       if (rawV !== null && rawV !== undefined) val = rawV;
       else if (colTypes[i] === 'string' && rawF != null) val = rawF;
       else if (rawF !== null && rawF !== undefined && rawF !== '') val = String(rawF);
-      
       obj[h] = val;
-      if (c.id) {
-        obj[c.id] = val;
-      }
+      if (c.id) obj[c.id] = val;
     });
     return obj;
   });
@@ -256,12 +237,14 @@ export async function fetchCatalog() {
 // ──────────────────────────────────────────────
 //  Parsers — ממירים שורות גולמיות למבנה הנכון
 // ──────────────────────────────────────────────
+const isActiveRow = r => {
+  const val = String(r.isActive ?? 'TRUE').toUpperCase();
+  return val === 'TRUE' || val === '1';
+};
+
 function parseTiers(rows) {
   return rows
-    .filter(r => {
-      const val = String(r.isActive ?? 'TRUE').toUpperCase();
-      return val === 'TRUE' || val === '1';
-    })
+    .filter(isActiveRow)
     .map(r => ({
       id: String(r.id || '').trim(),
       label: String(r.label || '').trim(),
@@ -273,10 +256,7 @@ function parseTiers(rows) {
 
 function parseDevices(rows) {
   return rows
-    .filter(r => {
-      const val = String(r.isActive ?? 'TRUE').toUpperCase();
-      return val === 'TRUE' || val === '1';
-    })
+    .filter(isActiveRow)
     .map(r => ({
       id: String(r.id || '').trim(),
       label: String(r.label || '').trim(),
@@ -288,10 +268,7 @@ function parseDevices(rows) {
 
 function parseMaintenance(rows) {
   return rows
-    .filter(r => {
-      const val = String(r.isActive ?? 'TRUE').toUpperCase();
-      return val === 'TRUE' || val === '1';
-    })
+    .filter(isActiveRow)
     .map(r => ({
       tier: String(r.tier || '').trim(),
       screen1: String(r.screen1 || '').trim(),
@@ -303,13 +280,11 @@ function parseMaintenance(rows) {
 
 function parseFaq(rows) {
   return rows
-    .filter(r => {
-      const val = String(r.isActive ?? 'TRUE').toUpperCase();
-      return val === 'TRUE' || val === '1';
-    })
+    .filter(isActiveRow)
     .map(r => ({
       question: String(r.question || '').trim(),
       answer: String(r.answer || '').trim(),
+      type: String(r.type || 'qa').trim().toLowerCase(),
       order: parseInt(r.order) || 999,
     }))
     .filter(r => r.question && r.answer)
@@ -326,8 +301,60 @@ function parseSettings(rows) {
 }
 
 // ──────────────────────────────────────────────
+//  🆕 Parsers חדשים — guide / important_notes / termination_rules
+// ──────────────────────────────────────────────
+function parseGuide(rows) {
+  return rows
+    .filter(isActiveRow)
+    .map(r => ({
+      id:       String(r.id || '').trim(),
+      section:  String(r.section || '').trim(),
+      title:    String(r.title || '').trim(),
+      subtitle: String(r.subtitle || '').trim(),
+      // items: pipe-separated in Sheet → array
+      items:    String(r.items || '').split('|').map(s => s.trim()).filter(Boolean),
+      footer:   String(r.footer || '').trim(),
+      style:    String(r.style || 'light').trim(),
+      icon:     String(r.icon || 'Info').trim(),
+      badge:    String(r.badge || '').trim(),
+      order:    parseInt(r.order) || 999,
+    }))
+    .filter(r => r.id && r.title)
+    .sort((a, b) => a.order - b.order);
+}
+
+function parseImportantNotes(rows) {
+  return rows
+    .filter(isActiveRow)
+    .map(r => ({
+      id:       String(r.id || '').trim(),
+      title:    String(r.title || '').trim(),
+      content:  String(r.content || '').trim(),
+      severity: String(r.severity || 'info').trim().toLowerCase(),
+      icon:     String(r.icon || 'Info').trim(),
+      order:    parseInt(r.order) || 999,
+    }))
+    .filter(r => r.id && r.title)
+    .sort((a, b) => a.order - b.order);
+}
+
+function parseTerminationRules(rows) {
+  return rows
+    .filter(isActiveRow)
+    .map(r => ({
+      id:       String(r.id || '').trim(),
+      title:    String(r.title || '').trim(),
+      content:  String(r.content || '').trim(),
+      category: String(r.category || '').trim(),
+      icon:     String(r.icon || 'Info').trim(),
+      order:    parseInt(r.order) || 999,
+    }))
+    .filter(r => r.id && r.title)
+    .sort((a, b) => a.order - b.order);
+}
+
+// ──────────────────────────────────────────────
 //  Public API — מחזיר את כל הנתונים
-//  עם Fallback אוטומטי לנתוני ברירת מחדל
 // ──────────────────────────────────────────────
 export async function loadAllData() {
   const isConfigured = SHEET_ID && SHEET_ID !== 'YOUR_GOOGLE_SHEET_ID_HERE';
@@ -337,6 +364,8 @@ export async function loadAllData() {
       tiers: FALLBACK_TIERS, devices: FALLBACK_DEVICES,
       maintenance: FALLBACK_MAINTENANCE, faq: FALLBACK_FAQ,
       settings: FALLBACK_SETTINGS, catalog: FALLBACK_CATALOG,
+      guide: FALLBACK_GUIDE, importantNotes: FALLBACK_IMPORTANT_NOTES,
+      terminationRules: FALLBACK_TERMINATION_RULES,
       source: 'fallback',
     };
   }
@@ -348,6 +377,9 @@ export async function loadAllData() {
       fetchSheet(SHEET_NAMES.MAINTENANCE),
       fetchSheet(SHEET_NAMES.FAQ),
       fetchSheet(SHEET_NAMES.SETTINGS),
+      fetchSheet(SHEET_NAMES.GUIDE),
+      fetchSheet(SHEET_NAMES.IMPORTANT_NOTES),
+      fetchSheet(SHEET_NAMES.TERMINATION_RULES),
     ]),
     fetchCatalog().catch(e => { console.warn('Catalog fetch failed:', e.message); return null; }),
   ]);
@@ -361,14 +393,17 @@ export async function loadAllData() {
   };
 
   return {
-    tiers: getOrFallback(results[0], parseTiers, FALLBACK_TIERS),
-    devices: getOrFallback(results[1], parseDevices, FALLBACK_DEVICES),
-    maintenance: getOrFallback(results[2], parseMaintenance, FALLBACK_MAINTENANCE),
-    faq: getOrFallback(results[3], parseFaq, FALLBACK_FAQ),
-    settings: results[4].status === 'fulfilled' ? parseSettings(results[4].value) : FALLBACK_SETTINGS,
-    catalog: (catalogResult && catalogResult.data && catalogResult.data.length > 0) ? catalogResult.data : FALLBACK_CATALOG,
+    tiers:            getOrFallback(results[0], parseTiers,            FALLBACK_TIERS),
+    devices:          getOrFallback(results[1], parseDevices,          FALLBACK_DEVICES),
+    maintenance:      getOrFallback(results[2], parseMaintenance,      FALLBACK_MAINTENANCE),
+    faq:              getOrFallback(results[3], parseFaq,              FALLBACK_FAQ),
+    settings:         results[4].status === 'fulfilled' ? parseSettings(results[4].value) : FALLBACK_SETTINGS,
+    guide:            getOrFallback(results[5], parseGuide,            FALLBACK_GUIDE),
+    importantNotes:   getOrFallback(results[6], parseImportantNotes,   FALLBACK_IMPORTANT_NOTES),
+    terminationRules: getOrFallback(results[7], parseTerminationRules, FALLBACK_TERMINATION_RULES),
+    catalog: (catalogResult?.data?.length > 0) ? catalogResult.data : FALLBACK_CATALOG,
     catalogIsFallback: catalogResult ? catalogResult.isFallback : true,
-    source: results.every(r => r.status === 'fulfilled') ? 'sheets' : 'partial',
+    source: results.slice(0, 5).every(r => r.status === 'fulfilled') ? 'sheets' : 'partial',
     errors: results.filter(r => r.status === 'rejected').map(r => r.reason?.message),
   };
 }
