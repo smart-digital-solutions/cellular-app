@@ -159,14 +159,19 @@ export default function App() {
           <button 
             type="button"
             onClick={() => window.location.href = window.location.pathname}
-            title="טעינה מחדש של המערכת"
-            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full pr-1"
+            className="group relative flex items-center gap-3 cursor-pointer hover:opacity-100 transition-opacity text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full pr-1"
           >
-            <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white shrink-0" aria-hidden="true">
+            <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white shrink-0 shadow-sm" aria-hidden="true">
               <Smartphone className="w-4 h-4" />
             </div>
             <span className="font-black text-base text-slate-800 dark:text-white transition-colors duration-300" aria-label="סלולטור 2026">
               סלולטור <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">2026</span>
+            </span>
+
+            {/* Custom Styled Tooltip */}
+            <span className="absolute top-[calc(100%+0.75rem)] right-0 md:right-1/2 md:translate-x-1/2 w-max px-3 py-1.5 bg-slate-800 dark:bg-slate-700 text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-xl border border-slate-700 dark:border-slate-600 scale-95 group-hover:scale-100 z-[100]
+            after:content-[''] after:absolute after:-top-2 after:right-6 md:after:right-1/2 md:after:translate-x-1/2 after:border-[6px] after:border-transparent after:border-b-slate-800 dark:after:border-b-slate-700">
+              טעינה מחדש של המערכת
             </span>
           </button>
           <div className="flex items-center gap-1">
