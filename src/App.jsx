@@ -30,7 +30,7 @@ export default function App() {
   const [showMinimumSplash, setShowMinimumSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowMinimumSplash(false), 2500);
+    const timer = setTimeout(() => setShowMinimumSplash(false), 3700);
     return () => clearTimeout(timer);
   }, []);
 
