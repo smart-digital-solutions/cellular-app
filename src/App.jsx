@@ -11,6 +11,7 @@ import GuideScreen from './screens/GuideScreen';
 import FaqScreen from './screens/FaqScreen';
 import ImportantNotesScreen from './screens/ImportantNotesScreen';
 import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
+import SplashScreen from './screens/SplashScreen';
 
 // ── Navigation config ──────────────────────────────────────
 const ALL_TABS_MAP = {
@@ -23,7 +24,7 @@ const ALL_TABS_MAP = {
 };
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading, lastUpdated } = useAppData();
   const [activeTab, setActiveTab] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
 
@@ -84,7 +85,12 @@ export default function App() {
   const siteActiveStr = String(settings.site_active || 'TRUE').trim().toUpperCase();
   const isSiteActive = siteActiveStr === 'TRUE' || siteActiveStr === '1' || siteActiveStr === 'YES' || siteActiveStr === 'פעיל' || siteActiveStr === 'כן';
   
-  // Show maintenance screen if not active (and avoid flashing it if we are still initially loading from cache)
+  // Show splash screen on initial data load to prevent UI flashing
+  if (loading && !lastUpdated) {
+    return <SplashScreen />;
+  }
+
+  // Show maintenance screen if not active
   if (!isSiteActive) {
     return <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />;
   }

@@ -39,7 +39,7 @@ const SiteMaintenanceScreen = ({ title, message }) => {
             {title || 'האתר בשידרוגים'}
           </h1>
           
-          <p className="text-slate-400 text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto font-medium">
+          <p className="text-slate-400 text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto font-medium whitespace-pre-wrap">
             {message || 'אנו עורכים כעת עדכוני מערכת. נשוב לפעילות בהקדם. עמכם הסליחה.'}
           </p>
 
