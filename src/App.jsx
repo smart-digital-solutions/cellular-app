@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  Calculator, BookOpen, HelpCircle, Receipt, Wrench, Smartphone, Sparkles
+  Calculator, BookOpen, HelpCircle, Receipt, Wrench, Smartphone, Sparkles, AlertTriangle
 } from 'lucide-react';
 import { useAppData } from './useAppData';
 import AnnouncementBanner from './components/AnnouncementBanner';
@@ -9,6 +9,7 @@ import TerminationScreen from './screens/TerminationScreen';
 import MaintenanceScreen from './screens/MaintenanceScreen';
 import GuideScreen from './screens/GuideScreen';
 import FaqScreen from './screens/FaqScreen';
+import ImportantNotesScreen from './screens/ImportantNotesScreen';
 
 // ── Navigation config ──────────────────────────────────────
 const NAV_TABS = [
@@ -17,6 +18,7 @@ const NAV_TABS = [
   { id: 'maintenance', icon: Wrench,      label: 'מחירון נזקים' },
   { id: 'guide',       icon: BookOpen,    label: 'מדריך והנחיות' },
   { id: 'faq',         icon: HelpCircle,  label: 'שאלות ותשובות' },
+  { id: 'important_notes', icon: AlertTriangle, label: 'דגשים חשובים' },
 ];
 const MOBILE_TABS = [
   { id: 'calculator',  icon: Calculator, label: 'עלויות' },
@@ -24,10 +26,11 @@ const MOBILE_TABS = [
   { id: 'maintenance', icon: Wrench,     label: 'נזקים' },
   { id: 'guide',       icon: BookOpen,   label: 'מדריך' },
   { id: 'faq',         icon: HelpCircle, label: 'שאלות' },
+  { id: 'important_notes', icon: AlertTriangle, label: 'דגשים' },
 ];
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, source, loading } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading } = useAppData();
   const [activeTab, setActiveTab] = useState('calculator');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
 
@@ -117,10 +120,11 @@ export default function App() {
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         {activeTab === 'calculator'  && <CalculatorScreen  tiers={tiers} allDevices={allDevices} />}
-        {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} />}
+        {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
         {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-        {activeTab === 'guide'       && <GuideScreen />}
+        {activeTab === 'guide'       && <GuideScreen guide={guide} />}
         {activeTab === 'faq'         && <FaqScreen faq={faq} />}
+        {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
       </main>
 
       {/* ── Footer ── */}
@@ -134,11 +138,11 @@ export default function App() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#4F46E5]" />
               <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
-              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">v1.5</span>
+              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">{settings.app_version || 'v06.2026'}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
-                עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')}
+                עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')} (מכרז 01-2024)
               </div>
               <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border ${source === 'sheets' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
                 {source === 'sheets' ? 'LIVE' : 'OFFLINE'}

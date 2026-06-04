@@ -1,0 +1,26 @@
+﻿id,label,category,totalCost,isActive
+sim_only,מסלול ללא מכשיר (SIM Only),מסלולים אישיים (BYOD),11.06,TRUE
+sim_only_repair,מסלול SIM Only + שירות תיקונים,מסלולים אישיים (BYOD),18.12,TRUE
+ip17_256,Apple iPhone 17 (256GB),Apple iPhone - סדרת 17,73.56,TRUE
+ip17_air_256,Apple iPhone 17 Air (256GB),Apple iPhone - סדרת 17,74.78,TRUE
+ip17_pro_256,Apple iPhone 17 Pro (256GB),Apple iPhone - סדרת 17,90.49,TRUE
+ip17_pro_512,Apple iPhone 17 Pro (512GB),Apple iPhone - סדרת 17,98.07,TRUE
+ip17_promax_256,Apple iPhone 17 Pro Max (256GB),Apple iPhone - סדרת 17,93.06,TRUE
+ip17_promax_512,Apple iPhone 17 Pro Max (512GB),Apple iPhone - סדרת 17,103.76,TRUE
+ip17_promax_1t,Apple iPhone 17 Pro Max (1TB),Apple iPhone - סדרת 17,113.51,TRUE
+s25_fe_256,Samsung Galaxy S25 FE (256GB),Samsung Galaxy - סדרת S25,74,TRUE
+s25_256,Samsung Galaxy S25 (256GB),Samsung Galaxy - סדרת S25,82.34,TRUE
+s25_plus_256,Samsung Galaxy S25 Plus (256GB),Samsung Galaxy - סדרת S25,88.62,TRUE
+s25_plus_512,Samsung Galaxy S25 Plus (512GB),Samsung Galaxy - סדרת S25,95.6,TRUE
+s25_ultra_256,Samsung Galaxy S25 Ultra (256GB),Samsung Galaxy - סדרת S25,105,TRUE
+s25_ultra_512,Samsung Galaxy S25 Ultra (512GB),Samsung Galaxy - סדרת S25,112.93,TRUE
+s25_ultra_1t,Samsung Galaxy S25 Ultra (1TB),Samsung Galaxy - סדרת S25,130.52,TRUE
+zflip7_256,Samsung Galaxy Z Flip 7 (256GB),Samsung Galaxy - מתקפלים (Z),95.61,TRUE
+zflip7_512,Samsung Galaxy Z Flip 7 (512GB),Samsung Galaxy - מתקפלים (Z),107.1,TRUE
+zfold7_256,Samsung Galaxy Z Fold 7 (256GB),Samsung Galaxy - מתקפלים (Z),150.83,TRUE
+zfold7_512,Samsung Galaxy Z Fold 7 (512GB),Samsung Galaxy - מתקפלים (Z),157.42,TRUE
+a26_128,Samsung Galaxy A26 5G (128GB),Samsung Galaxy - סדרת A,49.48,TRUE
+a36_128,Samsung Galaxy A36 5G (128GB),Samsung Galaxy - סדרת A,52.24,TRUE
+a56_256,Samsung Galaxy A56 5G (256GB),Samsung Galaxy - סדרת A,60.49,TRUE
+kosher_phone,מכשיר כשר מאושר ועדה (שיחות בלבד),מכשירים כשרים (לחצנים),26.2,TRUE
+galaxy_buds4_pro,Samsung Galaxy Buds 4 Pro (אוזניות),אביזרים,26,TRUE
