@@ -7,7 +7,8 @@
 import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES } from './config';
 import {
   FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
-  FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG
+  FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG,
+  FALLBACK_GUIDE, FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES
 } from './fallbackData';
 
 const CACHE_PREFIX = 'cellular_app_';
@@ -58,6 +59,9 @@ export function getCachedAll() {
     maintenance: getCached(SHEET_NAMES.MAINTENANCE) || FALLBACK_MAINTENANCE,
     faq: getCached(SHEET_NAMES.FAQ) || FALLBACK_FAQ,
     settings: getCached(SHEET_NAMES.SETTINGS) || FALLBACK_SETTINGS,
+    guide: getCached(SHEET_NAMES.GUIDE) || FALLBACK_GUIDE,
+    importantNotes: getCached(SHEET_NAMES.IMPORTANT_NOTES) || FALLBACK_IMPORTANT_NOTES,
+    terminationRules: getCached(SHEET_NAMES.TERMINATION_RULES) || FALLBACK_TERMINATION_RULES,
     catalog: getCached(CATALOG_CACHE_KEY) || FALLBACK_CATALOG,
     catalogIsFallback: getCached(CATALOG_FALLBACK_FLAG_KEY) ?? true,
     source: 'cache',
@@ -316,6 +320,61 @@ function parseFaq(rows) {
     .sort((a, b) => a.order - b.order);
 }
 
+function parseGuide(rows) {
+  return rows
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
+    .map(r => ({
+      id: String(r.id || '').trim(),
+      section: String(r.section || '').trim(),
+      title: String(r.title || '').trim(),
+      subtitle: String(r.subtitle || '').trim(),
+      items: String(r.items || '').split('|').map(s => s.trim()).filter(Boolean),
+      footer: String(r.footer || '').trim(),
+      style: String(r.style || '').trim(),
+      icon: String(r.icon || '').trim(),
+      badge: String(r.badge || '').trim(),
+      order: parseInt(r.order) || 999,
+    }))
+    .sort((a, b) => a.order - b.order);
+}
+
+function parseImportantNotes(rows) {
+  return rows
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
+    .map(r => ({
+      id: String(r.id || '').trim(),
+      title: String(r.title || '').trim(),
+      content: String(r.content || '').trim(),
+      severity: String(r.severity || '').trim(),
+      icon: String(r.icon || '').trim(),
+      order: parseInt(r.order) || 999,
+    }))
+    .sort((a, b) => a.order - b.order);
+}
+
+function parseTerminationRules(rows) {
+  return rows
+    .filter(r => {
+      const val = String(r.isActive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1';
+    })
+    .map(r => ({
+      id: String(r.id || '').trim(),
+      title: String(r.title || '').trim(),
+      content: String(r.content || '').trim(),
+      category: String(r.category || '').trim(),
+      icon: String(r.icon || '').trim(),
+      order: parseInt(r.order) || 999,
+    }))
+    .sort((a, b) => a.order - b.order);
+}
+
 function parseSettings(rows) {
   const settings = { ...FALLBACK_SETTINGS };
   rows.forEach(r => {
@@ -337,6 +396,8 @@ export async function loadAllData() {
       tiers: FALLBACK_TIERS, devices: FALLBACK_DEVICES,
       maintenance: FALLBACK_MAINTENANCE, faq: FALLBACK_FAQ,
       settings: FALLBACK_SETTINGS, catalog: FALLBACK_CATALOG,
+      guide: FALLBACK_GUIDE, importantNotes: FALLBACK_IMPORTANT_NOTES,
+      terminationRules: FALLBACK_TERMINATION_RULES,
       source: 'fallback',
     };
   }
@@ -348,6 +409,9 @@ export async function loadAllData() {
       fetchSheet(SHEET_NAMES.MAINTENANCE),
       fetchSheet(SHEET_NAMES.FAQ),
       fetchSheet(SHEET_NAMES.SETTINGS),
+      fetchSheet(SHEET_NAMES.GUIDE),
+      fetchSheet(SHEET_NAMES.IMPORTANT_NOTES),
+      fetchSheet(SHEET_NAMES.TERMINATION_RULES),
     ]),
     fetchCatalog().catch(e => { console.warn('Catalog fetch failed:', e.message); return null; }),
   ]);
@@ -366,6 +430,9 @@ export async function loadAllData() {
     maintenance: getOrFallback(results[2], parseMaintenance, FALLBACK_MAINTENANCE),
     faq: getOrFallback(results[3], parseFaq, FALLBACK_FAQ),
     settings: results[4].status === 'fulfilled' ? parseSettings(results[4].value) : FALLBACK_SETTINGS,
+    guide: getOrFallback(results[5], parseGuide, FALLBACK_GUIDE),
+    importantNotes: getOrFallback(results[6], parseImportantNotes, FALLBACK_IMPORTANT_NOTES),
+    terminationRules: getOrFallback(results[7], parseTerminationRules, FALLBACK_TERMINATION_RULES),
     catalog: (catalogResult && catalogResult.data && catalogResult.data.length > 0) ? catalogResult.data : FALLBACK_CATALOG,
     catalogIsFallback: catalogResult ? catalogResult.isFallback : true,
     source: results.every(r => r.status === 'fulfilled') ? 'sheets' : 'partial',
