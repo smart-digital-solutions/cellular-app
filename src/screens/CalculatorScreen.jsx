@@ -146,11 +146,11 @@ const CalculatorScreen = ({ tiers, allDevices }) => {
                 <div className="mt-6 space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-slate-100 dark:bg-white/5 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-inner">
-                      <span className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase tracking-wider">דירוג</span>
+                      <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-0.5 uppercase tracking-wider">דירוג</span>
                       <span className="font-bold text-sm text-slate-900 dark:text-white leading-tight">{currentTier.label}</span>
                     </div>
                     <div className="bg-slate-100 dark:bg-white/5 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-inner">
-                      <span className="block text-[10px] font-bold text-slate-500 mb-0.5 uppercase tracking-wider">מכשיר</span>
+                      <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-0.5 uppercase tracking-wider">מכשיר</span>
                       <span className="font-bold text-sm text-slate-900 dark:text-white leading-tight block truncate">{currentDevice.label}</span>
                     </div>
                   </div>

@@ -69,7 +69,9 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
             <div className="relative">
               <input
                 type="month"
+                aria-label="תאריך קבלת המכשיר"
                 value={receiptDate}
+                max={new Date().toISOString().slice(0, 7)}
                 onChange={(e) => setReceiptDate(e.target.value)}
                 className="w-full border text-base rounded-2xl focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500 block p-4 pe-11 font-bold transition-all"
                 style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-1)' }}
@@ -109,16 +111,16 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30"><CheckCircle2 className="w-8 h-8" /></div>
               <h4 className="text-2xl font-black text-emerald-600 dark:text-white mb-2">תקופת הליסינג הסתיימה!</h4>
-              <p className="text-slate-300 text-sm">עברו {monthsElapsed} חודשים. אינך נדרש לשלם קנס על סיום התקשרות.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">עברו {monthsElapsed} חודשים. אינך נדרש לשלם קנס על סיום התקשרות.</p>
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex justify-between items-center pb-4 border-b border-white/10">
-                <span className="text-slate-400 font-medium">עלות חודשית</span>
+              <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">עלות חודשית</span>
                 <span className="font-bold">{termDevice.totalCost.toFixed(2)} ₪</span>
               </div>
-              <div className="flex justify-between items-center pb-4 border-b border-white/10">
-                <span className="text-slate-400 font-medium">חודשים שנותרו לתשלום</span>
+              <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">חודשים שנותרו לתשלום</span>
                 <span className="font-black text-amber-400 text-lg">{monthsRemaining} חודשים</span>
               </div>
               <div className="pt-2">
@@ -131,14 +133,14 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                   <div className="text-3xl font-black text-slate-900 dark:text-white">
                     {terminationPenalty.toFixed(2)} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
                   </div>
-                  <div className="mt-2 text-[10px] text-slate-500 font-medium">* הסכום נלקח ישירות ממטריצת החודשים באקסל.</div>
+                  <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום נלקח ישירות ממטריצת החודשים באקסל.</div>
                 </div>
 
                 {/* 2. Matrix value minus buyout value (Remaining months ONLY) */}
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
                   <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו)</div>
                   <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
-                  <div className="mt-2 text-[10px] text-slate-500 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
+                  <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
                 </div>
 
                 {/* 3. Buyout value */}

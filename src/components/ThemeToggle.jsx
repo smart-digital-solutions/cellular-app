@@ -1,9 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
-import { useAppData } from '../useAppData';
 
-export default function ThemeToggle() {
-  const { settings } = useAppData();
+export default function ThemeToggle({ defaultTheme }) {
   
   // Determine the effective theme on first render.
   // Priority: 1) User's manual override (localStorage)
@@ -32,12 +30,12 @@ export default function ThemeToggle() {
   // When Google Sheets data arrives and user hasn't manually overridden,
   // sync to the sheet's default_theme value.
   useEffect(() => {
-    if (!hasManualOverride && settings?.default_theme) {
-      const sheetTheme = settings.default_theme.trim().toUpperCase();
+    if (!hasManualOverride && defaultTheme) {
+      const sheetTheme = defaultTheme.trim().toUpperCase();
       const shouldBeDark = sheetTheme !== 'LIGHT';
       setIsDark(shouldBeDark);
     }
-  }, [settings?.default_theme, hasManualOverride]);
+  }, [defaultTheme, hasManualOverride]);
 
   // Apply DOM changes — this is the SINGLE source of truth for the class
   useEffect(() => {

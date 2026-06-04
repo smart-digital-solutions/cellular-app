@@ -33,5 +33,5 @@ export function useAppData() {
     });
   }, [fetchData]);
 
-  return { ...data, loading, lastUpdated, refresh: () => fetchData(true) };
+  return { ...(data || getCachedAll() || {}), loading, lastUpdated, refresh: () => fetchData(true) };
 }

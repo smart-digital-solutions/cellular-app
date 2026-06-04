@@ -16,14 +16,14 @@ const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 max-w-6xl mx-auto relative z-10" style={{ color: 'var(--clr-text-1)' }}>
-      <div className="relative rounded-[2rem] bg-white/90 dark:bg-[#0B1120] text-slate-900 dark:text-white p-6 sm:p-10 shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 backdrop-blur-md transition-colors duration-300">
+      <div className="relative z-50 rounded-[2rem] bg-white/90 dark:bg-[#0B1120] text-slate-900 dark:text-white p-6 sm:p-10 shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 backdrop-blur-md transition-colors duration-300">
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 pointer-events-none"></div>
         <div className="relative z-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/10 dark:bg-white/10 text-slate-800 dark:text-white font-bold text-xs mb-4">
             <Wrench className="w-3.5 h-3.5" /> שקיפות מלאה
           </div>
           <h2 className="text-3xl font-black mb-4">מחירון תחזוקה והשתתפות בנזקים</h2>
-          <p className="text-slate-300 text-base leading-relaxed mb-8 max-w-3xl">
+          <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8 max-w-3xl">
             מסלול הליסינג כולל שירות תיקונים. במקרי קיצון של אובדן/גניבה/השבתה, קיימת השתתפות עצמית לפי מחירון המכרז (כולל מע&quot;מ 18%).
           </p>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">

@@ -20,9 +20,35 @@
         try {
           var saved = null;
           try { saved = localStorage.getItem('theme_override'); } catch(e) {}
-          var def = '__DEFAULT_THEME__';
+          
+          var def = 'DARK'; // Fallback default
+          
+          // Try to read the live default theme from Google Sheets cache to prevent flash
+          try {
+            var settingsCache = localStorage.getItem('cellular_app_settings');
+            if (settingsCache) {
+              var parsed = JSON.parse(settingsCache);
+              if (parsed && Array.isArray(parsed.data)) {
+                for (var i = 0; i < parsed.data.length; i++) {
+                  var row = parsed.data[i];
+                  var k = row.key !== undefined ? row.key : row['A'];
+                  var v = row.value !== undefined ? row.value : row['B'];
+                  if (k && k.trim() === 'default_theme' && v) {
+                    var cachedDef = v.trim().toUpperCase();
+                    if (cachedDef === 'LIGHT' || cachedDef === 'DARK') {
+                      def = cachedDef;
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          } catch(e) {}
+
           if (saved === 'dark' || (!saved && def !== 'LIGHT')) {
             document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
           }
         } catch (e) {}
       })();
@@ -87,16 +113,41 @@
 
     <!-- Favicon & PWA -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0B1120" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="סלולטור" />
+    
+    <style>
+      .skip-link {
+        position: absolute;
+        inset-inline-start: -100%;
+        top: 1rem;
+        z-index: 9999;
+        padding: 8px 16px;
+        background: #4F46E5;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: inset-inline-start 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .skip-link:focus {
+        inset-inline-start: 1rem;
+      }
+    </style>
   </head>
-  <body>
     <!-- Skip to main content (WCAG 2.2 AA) -->
+    <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
 
+    <noscript>
+      <div style="padding: 20px; text-align: center; background: #fff; color: #000; z-index: 9999; position: relative;">
+        יש להפעיל JavaScript כדי להשתמש במערכת זו.
+      </div>
+    </noscript>
 
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

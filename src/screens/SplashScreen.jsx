@@ -66,10 +66,6 @@ const SplashScreen = ({ className = '' }) => {
           <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500 dark:from-indigo-400 dark:to-cyan-400">דינה שרון</span> | משרד התקשורת
         </div>
       </div>
-
-      <style dangerouslySetInnerHTML={{__html: `
-        /* removed fillProgress keyframes since we use inline styles now */
-      `}} />
     </div>
   );
 };

@@ -32,7 +32,7 @@ const AccordionItem = ({ question, answer }) => {
         style={{ display: 'grid', gridTemplateRows: isOpen ? '1fr' : '0fr', transition: 'grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)' }}
       >
         <div style={{ overflow: 'hidden' }}>
-          <div className="px-5 pb-5 pt-0 leading-relaxed text-sm" style={{ color: 'var(--clr-text-2)' }}>
+          <div className="px-5 pb-5 pt-0 leading-relaxed text-sm whitespace-pre-line" style={{ color: 'var(--clr-text-2)' }}>
             <div className="h-px w-full mb-4" style={{ backgroundColor: 'var(--clr-border)' }}></div>{answer}
           </div>
         </div>

@@ -67,7 +67,7 @@ const ImportantNotesScreen = ({ importantNotes = [] }) => {
                 </div>
                 <div>
                   <h3 className={`text-lg font-black mb-2 ${theme.title}`}>{note.title}</h3>
-                  <p className={`text-sm leading-relaxed ${theme.text}`}>
+                  <p className={`text-sm leading-relaxed whitespace-pre-line ${theme.text}`}>
                     {note.content}
                   </p>
                 </div>

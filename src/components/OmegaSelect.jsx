@@ -15,7 +15,9 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) handleSetIsOpen(false);
     };
-    const handleKeyDown = (e) => { if (e.key === 'Escape') handleSetIsOpen(false); };
+    const handleKeyDown = (e) => { 
+      if (e.key === 'Escape') handleSetIsOpen(false); 
+    };
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -23,6 +25,40 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleSetIsOpen]);
+
+  const handleListboxKeyDown = (e) => {
+    const options = Array.from(containerRef.current?.querySelectorAll('[role="option"]') || []);
+    if (!options.length) return;
+    
+    const currentIndex = options.indexOf(document.activeElement);
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0;
+      options[nextIndex]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1;
+      options[prevIndex]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      options[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      options[options.length - 1]?.focus();
+    }
+  };
+
+  const handleButtonKeyDown = (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleSetIsOpen(true);
+      setTimeout(() => {
+        const firstOption = containerRef.current?.querySelector('[role="option"][aria-selected="true"]') || containerRef.current?.querySelector('[role="option"]');
+        if (firstOption) firstOption.focus();
+      }, 50);
+    }
+  };
 
   const selectedOption = groups
     ? Object.values(options).flat().find(opt => opt.id === value)
@@ -36,6 +72,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
       <button
         type="button"
         onClick={() => handleSetIsOpen(!isOpen)}
+        onKeyDown={handleButtonKeyDown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls={listboxId}
@@ -58,6 +95,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
           id={listboxId}
           role="listbox"
           aria-label={placeholder}
+          onKeyDown={handleListboxKeyDown}
           className="absolute top-full left-0 right-0 mt-2 z-[999] premium-glass rounded-[1.5rem] border border-slate-200 dark:border-white/40 shadow-xl dark:shadow-2xl animate-in fade-in duration-200 max-h-[260px] overflow-y-auto custom-scrollbar"
           style={{ animation: '0.25s cubic-bezier(0.34,1.56,0.64,1) both scale-in', backgroundColor: 'var(--clr-surface)' }}
         >
@@ -70,9 +108,9 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                     key={opt.id}
                     role="option"
                     aria-selected={opt.id === value}
-                    tabIndex={0}
-                    onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); }}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); } }}
+                    tabIndex={isOpen ? 0 : -1}
+                    onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); } }}
                     className={`w-full px-5 py-3.5 text-right flex justify-between items-center transition-colors group border-b last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-indigo-50/70 dark:hover:bg-indigo-900/20'}`}
                     style={{ borderColor: 'var(--clr-border)' }}
                   >
@@ -92,9 +130,9 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                 key={opt.id}
                 role="option"
                 aria-selected={opt.id === value}
-                tabIndex={0}
-                onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); }}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); } }}
+                tabIndex={isOpen ? 0 : -1}
+                onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); } }}
                 className={`w-full px-5 py-4 text-right flex justify-between items-center transition-colors group border-b last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-indigo-50/70 dark:hover:bg-indigo-900/20'}`}
                 style={{ borderColor: 'var(--clr-border)' }}
               >
