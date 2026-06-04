@@ -209,13 +209,13 @@ export default function App() {
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         <ErrorBoundary>
-          <div className={activeTab === 'calculator' ? 'block' : 'hidden'}><CalculatorScreen tiers={tiers} allDevices={allDevices} /></div>
-          <div className={activeTab === 'termination' ? 'block' : 'hidden'}><TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} /></div>
-          <div className={activeTab === 'maintenance' ? 'block' : 'hidden'}><MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} /></div>
-          <div className={activeTab === 'guide' ? 'block' : 'hidden'}><GuideScreen /></div>
-          <div className={activeTab === 'faq' ? 'block' : 'hidden'}><FaqScreen faq={faq} /></div>
-          <div className={activeTab === 'important_notes' ? 'block' : 'hidden'}><ImportantNotesScreen importantNotes={importantNotes} /></div>
-          <div className={activeTab === 'accessibility' ? 'block' : 'hidden'}><AccessibilityStatementScreen /></div>
+          {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} />}
+          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
+          {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
+          {activeTab === 'guide' && <GuideScreen />}
+          {activeTab === 'faq' && <FaqScreen faq={faq} />}
+          {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
+          {activeTab === 'accessibility' && <AccessibilityStatementScreen />}
         </ErrorBoundary>
       </main>
 

@@ -52,7 +52,7 @@
 
     --clr-text-1: oklch(15% 0.015 250);
     --clr-text-2: oklch(40% 0.015 250);
-    --clr-text-3: oklch(60% 0.01  250);
+    --clr-text-3: oklch(48% 0.01  250);
 
     /* Spring motion curves */
     --ease-ui:     cubic-bezier(0.4,  0,    0.2,  1);
@@ -81,7 +81,7 @@
     --clr-border:    oklch(30% 0.015 250 / 0.5);
     --clr-text-1:    oklch(95% 0.005 250);
     --clr-text-2:    oklch(70% 0.01  250);
-    --clr-text-3:    oklch(50% 0.01  250);
+    --clr-text-3:    oklch(72% 0.01  250);
 
     /* Glassmorphism tokens for Dark Mode */
     --surface-glass: rgba(15, 23, 42, 0.75);
@@ -246,7 +246,7 @@
     background: var(--primary-omega);
     --clr-text-1: oklch(15% 0.015 250);
     --clr-text-2: oklch(40% 0.015 250);
-    --clr-text-3: oklch(60% 0.01  250);
+    --clr-text-3: oklch(48% 0.01  250);
 
     /* Spring motion curves */
     --ease-ui:     cubic-bezier(0.4,  0,    0.2,  1);
@@ -275,7 +275,7 @@
     --clr-border:    oklch(30% 0.015 250 / 0.5);
     --clr-text-1:    oklch(95% 0.005 250);
     --clr-text-2:    oklch(70% 0.01  250);
-    --clr-text-3:    oklch(50% 0.01  250);
+    --clr-text-3:    oklch(72% 0.01  250);
 
     /* Glassmorphism tokens for Dark Mode */
     --surface-glass: rgba(15, 23, 42, 0.75);
