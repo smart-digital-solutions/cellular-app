@@ -5,18 +5,19 @@ const SplashScreen = ({ className = '' }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const duration = 3400; // Finish slightly before the 3700ms unmount
-    const interval = 30; // Faster updates
-    let elapsed = 0;
+    // 3000ms ensures we hit 100% comfortably before the 3700ms minimum splash screen duration
+    const duration = 3000; 
+    const startTime = Date.now();
     
     const timer = setInterval(() => {
-      elapsed += interval;
-      const percent = Math.min(100, Math.floor((elapsed / duration) * 100));
+      const currentElapsed = Date.now() - startTime;
+      const percent = Math.min(100, Math.floor((currentElapsed / duration) * 100));
       setProgress(percent);
-      if (elapsed >= duration) {
+      
+      if (currentElapsed >= duration) {
         clearInterval(timer);
       }
-    }, interval);
+    }, 30);
 
     return () => clearInterval(timer);
   }, []);
