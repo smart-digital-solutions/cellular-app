@@ -1,20 +1,23 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import {
   Calculator, BookOpen, HelpCircle, Receipt, Wrench, Smartphone, Sparkles, AlertTriangle
 } from 'lucide-react';
 import { useAppData } from './useAppData';
 import AnnouncementBanner from './components/AnnouncementBanner';
-import CalculatorScreen from './screens/CalculatorScreen';
-import TerminationScreen from './screens/TerminationScreen';
-import MaintenanceScreen from './screens/MaintenanceScreen';
-import GuideScreen from './screens/GuideScreen';
-import FaqScreen from './screens/FaqScreen';
-import ImportantNotesScreen from './screens/ImportantNotesScreen';
-import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
-import SplashScreen from './screens/SplashScreen';
-import AccessibilityStatementScreen from './screens/AccessibilityStatementScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
+
+// Lazy-load screens — only CalculatorScreen is needed at startup
+const CalculatorScreen = lazy(() => import('./screens/CalculatorScreen'));
+const TerminationScreen = lazy(() => import('./screens/TerminationScreen'));
+const MaintenanceScreen = lazy(() => import('./screens/MaintenanceScreen'));
+const GuideScreen = lazy(() => import('./screens/GuideScreen'));
+const FaqScreen = lazy(() => import('./screens/FaqScreen'));
+const ImportantNotesScreen = lazy(() => import('./screens/ImportantNotesScreen'));
+const SiteMaintenanceScreen = lazy(() => import('./screens/SiteMaintenanceScreen'));
+const SplashScreen = lazy(() => import('./screens/SplashScreen'));
+const AccessibilityStatementScreen = lazy(() => import('./screens/AccessibilityStatementScreen'));
+
 
 // ── Navigation config ──────────────────────────────────────
 const ALL_TABS_MAP = {
@@ -34,7 +37,9 @@ export default function App() {
   const [showMinimumSplash, setShowMinimumSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowMinimumSplash(false), 3700);
+    // Minimal splash: only 400ms to allow critical CSS to paint, then reveal app.
+    // Previously was 3700ms which caused catastrophic LCP scores.
+    const timer = setTimeout(() => setShowMinimumSplash(false), 400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -110,7 +115,7 @@ export default function App() {
       setFadeSplash(true);
       const timer = setTimeout(() => {
         setRenderSplash(false);
-      }, 1200); // 1.2s for splashExit animation
+      }, 300); // 300ms fade-out — fast enough to not hurt LCP
       return () => clearTimeout(timer);
     } else {
       setRenderSplash(true);
@@ -120,15 +125,21 @@ export default function App() {
 
   if (shouldShowMaintenance && !renderSplash) {
     return (
-      <div className="animate-app-reveal">
-        <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />
-      </div>
+      <Suspense fallback={null}>
+        <div className="animate-app-reveal">
+          <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />
+        </div>
+      </Suspense>
     );
   }
 
   return (
     <>
-      {renderSplash && <SplashScreen className={fadeSplash ? "animate-splash-exit pointer-events-none" : ""} />}
+      {renderSplash && (
+        <Suspense fallback={null}>
+          <SplashScreen className={fadeSplash ? "animate-splash-exit pointer-events-none" : ""} />
+        </Suspense>
+      )}
       
       {!shouldShowMaintenance && (
         <div
@@ -209,13 +220,15 @@ export default function App() {
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         <ErrorBoundary>
-          {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} />}
-          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
-          {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-          {activeTab === 'guide' && <GuideScreen />}
-          {activeTab === 'faq' && <FaqScreen faq={faq} />}
-          {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
-          {activeTab === 'accessibility' && <AccessibilityStatementScreen />}
+          <Suspense fallback={<div className="animate-pulse h-96 rounded-2xl bg-slate-100 dark:bg-slate-800/50 m-4" />}>
+            {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} />}
+            {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
+            {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
+            {activeTab === 'guide' && <GuideScreen />}
+            {activeTab === 'faq' && <FaqScreen faq={faq} />}
+            {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
+            {activeTab === 'accessibility' && <AccessibilityStatementScreen />}
+          </Suspense>
         </ErrorBoundary>
       </main>
 

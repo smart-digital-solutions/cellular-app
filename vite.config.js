@@ -10,5 +10,23 @@ export default defineConfig({
       month: '2-digit',
       day: '2-digit'
     }))
-  }
+  },
+  build: {
+    target: 'es2020',
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        // manualChunks as function — required by Vite 8 / rolldown
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor';
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons';
+          }
+        },
+      },
+    },
+  },
 })
+
