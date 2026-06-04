@@ -81,7 +81,8 @@ export default function App() {
     && !announcementDismissed;
 
   // Global Maintenance Mode check
-  const isSiteActive = settings.site_active === undefined || String(settings.site_active).toUpperCase() === 'TRUE';
+  const siteActiveStr = String(settings.site_active || 'TRUE').trim().toUpperCase();
+  const isSiteActive = siteActiveStr === 'TRUE' || siteActiveStr === '1' || siteActiveStr === 'YES' || siteActiveStr === 'פעיל' || siteActiveStr === 'כן';
   
   // Show maintenance screen if not active (and avoid flashing it if we are still initially loading from cache)
   if (!isSiteActive) {
