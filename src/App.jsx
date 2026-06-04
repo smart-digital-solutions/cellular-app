@@ -159,6 +159,7 @@ export default function App() {
           <button 
             type="button"
             onClick={() => window.location.href = window.location.pathname}
+            title="טעינה מחדש של המערכת"
             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity text-right focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full pr-1"
           >
             <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white shrink-0" aria-hidden="true">
