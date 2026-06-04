@@ -26,7 +26,7 @@ const ALL_TABS_MAP = {
 };
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading, lastUpdated } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, importantNotes, terminationRules, source, loading, lastUpdated } = useAppData();
   const [activeTab, setActiveTab] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
   const [showMinimumSplash, setShowMinimumSplash] = useState(true);

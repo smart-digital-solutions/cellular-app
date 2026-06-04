@@ -6,10 +6,11 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
   const containerRef = useRef(null);
   const listboxId = React.useId();
 
-  const handleSetIsOpen = useCallback((val) => {
-    setIsOpen(val);
-    onOpenChange?.(val);
-  }, [onOpenChange]);
+  const handleOptionSelect = useCallback((optId) => {
+    onChange({ target: { value: optId } });
+    handleSetIsOpen(false);
+    containerRef.current?.querySelector('button')?.focus();
+  }, [onChange, handleSetIsOpen]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -109,8 +110,8 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                     role="option"
                     aria-selected={opt.id === value}
                     tabIndex={isOpen ? 0 : -1}
-                    onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); }}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); } }}
+                    onClick={() => handleOptionSelect(opt.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionSelect(opt.id); } }}
                     className={`w-full px-5 py-3.5 text-right flex justify-between items-center transition-colors group border-b last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-indigo-50/70 dark:hover:bg-indigo-900/20'}`}
                     style={{ borderColor: 'var(--clr-border)' }}
                   >
@@ -131,8 +132,8 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                 role="option"
                 aria-selected={opt.id === value}
                 tabIndex={isOpen ? 0 : -1}
-                onClick={() => { onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); }}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange({ target: { value: opt.id } }); handleSetIsOpen(false); containerRef.current?.querySelector('button').focus(); } }}
+                onClick={() => handleOptionSelect(opt.id)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionSelect(opt.id); } }}
                 className={`w-full px-5 py-4 text-right flex justify-between items-center transition-colors group border-b last:border-0 cursor-pointer ${opt.id === value ? 'bg-indigo-50 dark:bg-indigo-900/30' : 'hover:bg-indigo-50/70 dark:hover:bg-indigo-900/20'}`}
                 style={{ borderColor: 'var(--clr-border)' }}
               >
