@@ -169,8 +169,8 @@ export default function App() {
             </span>
 
             {/* Custom Styled Tooltip */}
-            <span className="absolute top-[calc(100%+0.75rem)] right-0 md:right-1/2 md:translate-x-1/2 w-max px-3 py-1.5 bg-slate-800 dark:bg-slate-700 text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-xl border border-slate-700 dark:border-slate-600 scale-95 group-hover:scale-100 z-[100]
-            after:content-[''] after:absolute after:-top-2 after:right-6 md:after:right-1/2 md:after:translate-x-1/2 after:border-[6px] after:border-transparent after:border-b-slate-800 dark:after:border-b-slate-700">
+            <span className="absolute top-[calc(100%+0.75rem)] right-0 md:right-1/2 md:translate-x-1/2 w-max px-3 py-1.5 bg-slate-800 text-white dark:bg-white dark:text-slate-800 text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-xl scale-95 group-hover:scale-100 z-[100]
+            after:content-[''] after:absolute after:-top-2 after:right-6 md:after:right-1/2 md:after:translate-x-1/2 after:border-[6px] after:border-transparent after:border-b-slate-800 dark:after:border-b-white">
               טעינה מחדש של המערכת
             </span>
           </button>
