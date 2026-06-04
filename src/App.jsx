@@ -92,13 +92,17 @@ export default function App() {
   const siteActiveStr = String(settings.site_active || 'TRUE').trim().toUpperCase();
   const isSiteActive = siteActiveStr === 'TRUE' || siteActiveStr === '1' || siteActiveStr === 'YES' || siteActiveStr === 'פעיל' || siteActiveStr === 'כן';
   
+  // Allow local development to bypass maintenance mode
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const shouldShowMaintenance = !isSiteActive && !isLocalhost;
+  
   // Show splash screen on initial data load to prevent UI flashing, or to enforce minimum splash time
   if ((loading && !lastUpdated) || showMinimumSplash) {
     return <SplashScreen />;
   }
 
-  // Show maintenance screen if not active
-  if (!isSiteActive) {
+  // Show maintenance screen if not active (and not on localhost)
+  if (shouldShowMaintenance) {
     return <SiteMaintenanceScreen title={settings.maintenance_title} message={settings.maintenance_message} />;
   }
 
