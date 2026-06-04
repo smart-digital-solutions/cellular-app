@@ -141,7 +141,7 @@ export default function App() {
       
       {!shouldShowMaintenance && (
         <div
-          className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : 'opacity-0'} ${renderSplash ? 'h-screen overflow-hidden' : ''}`}
+          className="min-h-screen text-right relative flex flex-col mesh-gradient-bg"
           dir="rtl"
           style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
         >

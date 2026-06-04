@@ -91,6 +91,8 @@
     <!-- ═══ Fonts — Preconnect + Preload (prevents FOUT) ═══ -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Hero image preload — starts downloading before React loads, critical for LCP -->
+    <link rel="preload" as="image" href="./cellular-hero.webp" fetchpriority="high" type="image/webp" />
     <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&family=Assistant:wght@300;400;600;800&display=swap" />
     <link rel="stylesheet"

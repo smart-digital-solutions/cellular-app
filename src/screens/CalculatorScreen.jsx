@@ -4,7 +4,8 @@ import {
   CheckCircle2, CreditCard, Sparkles, ShieldAlert
 } from 'lucide-react';
 import OmegaSelect from '../components/OmegaSelect';
-import heroImage from '../assets/cellular-hero.webp';
+// Hero image from public/ — static URL allows preloading from index.html before React loads
+const heroImage = `${import.meta.env.BASE_URL}cellular-hero.webp`;
 
 const CalculatorScreen = ({ tiers, allDevices }) => {
   const [selectedTier, setSelectedTier] = useState('');
