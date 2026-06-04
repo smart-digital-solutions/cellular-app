@@ -14,6 +14,19 @@
       gtag('config', 'G-LR6JHTZCP9');
     </script>
 
+    <!-- ═══ Prevent Flash of Wrong Theme ═══ -->
+    <script>
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('theme_override');
+          // Fallback settings currently default to DARK
+          if (savedTheme === 'dark' || !savedTheme) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- ═══ SEO ═══ -->
     <title>סלולטור 2026 | מחשבון סלולר ממשלתי</title>
     <meta name="description" content="סימולטור סלולר ממשלתי רשמי — בדוק את ההשתתפות העצמית החודשית שלך לפי דרגת זכאות, מחשבון יתרת ליסינג, מחירון נזקים ומדריך מכרז 2026." />

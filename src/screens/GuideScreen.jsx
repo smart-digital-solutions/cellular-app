@@ -23,20 +23,20 @@ const GuideScreen = () => (
         <div className="mt-6 border rounded-xl p-4" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)' }}><span className="font-bold text-xs" style={{ color: 'var(--clr-text-2)' }}>מוקצה לעובדים הזכאים רק לחבילת סלולר ללא מכשיר, בהתאם לשיקול דעת המשרד.<br />סטודנטים ואזרחים ותיקים עודכנו למדרג מסד (88.50 ₪/חודש).</span></div>
       </div>
 
-      <div className="lg:col-span-2 relative rounded-[2rem] bg-[#0B1120] p-6 sm:p-10 flex flex-col h-full shadow-2xl border border-white/10">
+      <div className="lg:col-span-2 relative rounded-[2rem] bg-white/90 dark:bg-[#0B1120] p-6 sm:p-10 flex flex-col h-full shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 transition-colors duration-300">
         <div className="flex flex-col-reverse sm:flex-row justify-between items-start mb-6 gap-4">
           <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"><Smartphone className="w-6 h-6 text-white" /></div>
-          <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold border border-white/20">המסלול המומלץ והמקיף ביותר</span>
+          <span className="px-3 py-1 rounded-full bg-indigo-50 dark:bg-white/10 text-indigo-700 dark:text-white text-xs font-bold border border-indigo-200 dark:border-white/20">המסלול המומלץ והמקיף ביותר</span>
         </div>
-        <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">תוכנית ליסינג מלאה (24 חודשים)</h3>
-        <p className="text-slate-400 font-medium mb-6 text-sm">המסלול מכיל מעטפת שירותים אבסולוטית לכל תקופת ההתקשרות:</p>
+        <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2">תוכנית ליסינג מלאה (24 חודשים)</h3>
+        <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 text-sm">המסלול מכיל מעטפת שירותים אבסולוטית לכל תקופת ההתקשרות:</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 flex-grow">
-          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-emerald-500/20 shrink-0 mt-0.5"><Phone className="w-4 h-4 text-emerald-400" /></div><span className="text-slate-200 text-sm">7,500 דקות + 7,500 הודעות SMS</span></li>
-          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-emerald-500/20 shrink-0 mt-0.5"><Globe2 className="w-4 h-4 text-emerald-400" /></div><span className="text-slate-200 text-sm">נפח גלישה עצום בארץ: <strong>1 טרה-בייט (1TB)</strong></span></li>
-          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-indigo-500/20 shrink-0 mt-0.5"><Plug className="w-4 h-4 text-indigo-400" /></div><span className="text-slate-200 text-sm">המכשיר מסופק עם <strong>מטען קיר מתנה</strong></span></li>
-          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-cyan-500/20 shrink-0 mt-0.5"><Globe2 className="w-4 h-4 text-cyan-400" /></div><span className="text-slate-200 text-sm">חבילת חו&quot;ל מובנית (10GB + 50 דק&apos;)</span></li>
-          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-blue-500/20 shrink-0 mt-0.5"><Wrench className="w-4 h-4 text-blue-400" /></div><span className="text-slate-200 text-sm">שירות תיקונים מקיף לכל 24 החודשים</span></li>
-          <li className="flex items-start gap-3 sm:col-span-2 mt-2"><div className="p-1.5 rounded-full bg-pink-500/20 shrink-0 mt-0.5"><ShieldAlert className="w-4 h-4 text-pink-400" /></div><span className="text-white font-bold text-sm">חובה: מופעל צימוד סים (SIM Pairing) טכנולוגי - קו נעול למכשיר.</span></li>
+          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 shrink-0 mt-0.5"><Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /></div><span className="text-slate-800 dark:text-slate-200 text-sm">7,500 דקות + 7,500 הודעות SMS</span></li>
+          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 shrink-0 mt-0.5"><Globe2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /></div><span className="text-slate-800 dark:text-slate-200 text-sm">נפח גלישה עצום בארץ: <strong>1 טרה-בייט (1TB)</strong></span></li>
+          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 shrink-0 mt-0.5"><Plug className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /></div><span className="text-slate-800 dark:text-slate-200 text-sm">המכשיר מסופק עם <strong>מטען קיר מתנה</strong></span></li>
+          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 shrink-0 mt-0.5"><Globe2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /></div><span className="text-slate-800 dark:text-slate-200 text-sm">חבילת חו&quot;ל מובנית (10GB + 50 דק&apos;)</span></li>
+          <li className="flex items-start gap-3"><div className="p-1.5 rounded-full bg-blue-100 dark:bg-blue-500/20 shrink-0 mt-0.5"><Wrench className="w-4 h-4 text-blue-600 dark:text-blue-400" /></div><span className="text-slate-800 dark:text-slate-200 text-sm">שירות תיקונים מקיף לכל 24 החודשים</span></li>
+          <li className="flex items-start gap-3 sm:col-span-2 mt-2"><div className="p-1.5 rounded-full bg-pink-100 dark:bg-pink-500/20 shrink-0 mt-0.5"><ShieldAlert className="w-4 h-4 text-pink-600 dark:text-pink-400" /></div><span className="text-slate-900 dark:text-white font-bold text-sm">חובה: מופעל צימוד סים (SIM Pairing) טכנולוגי - קו נעול למכשיר.</span></li>
         </div>
       </div>
     </section>
@@ -49,24 +49,24 @@ const GuideScreen = () => (
       </div>
     </section>
 
-    <section className="relative rounded-[2rem] overflow-hidden shadow-xl bg-[#0B1120] border border-cyan-900/30 p-6 sm:p-10">
-      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 font-bold text-xs mb-5 border border-cyan-500/20"><Globe2 className="w-3.5 h-3.5" /> עדכון גרסה 1.5 — שירותי חו&quot;ל</div>
-      <h3 className="text-2xl font-black text-white mb-6">חבילות Roaming — ארכיטקטורה חדשה</h3>
+    <section className="relative rounded-[2rem] overflow-hidden shadow-xl bg-slate-50 dark:bg-[#0B1120] border border-cyan-200 dark:border-cyan-900/30 p-6 sm:p-10 transition-colors duration-300">
+      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 font-bold text-xs mb-5 border border-cyan-200 dark:border-cyan-500/20"><Globe2 className="w-3.5 h-3.5" /> עדכון גרסה 1.5 — שירותי חו&quot;ל</div>
+      <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">חבילות Roaming — ארכיטקטורה חדשה</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-          <div className="p-2.5 rounded-xl bg-cyan-500/20 w-fit mb-3"><Globe2 className="w-5 h-5 text-cyan-400" /></div>
-          <h4 className="font-black text-white text-sm mb-2">חבילות גלישה גמישות</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">חבילות גלישה בסיסיות: 5GB ב-5 ₪, 20GB ב-13 ₪. ללא הגבלת ימי תוקף.</p>
+        <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-5 shadow-sm dark:shadow-none">
+          <div className="p-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-500/20 w-fit mb-3"><Globe2 className="w-5 h-5 text-cyan-600 dark:text-cyan-400" /></div>
+          <h4 className="font-black text-slate-900 dark:text-white text-sm mb-2">חבילות גלישה גמישות</h4>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">חבילות גלישה בסיסיות: 5GB ב-5 ₪, 20GB ב-13 ₪. ללא הגבלת ימי תוקף.</p>
         </div>
-        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5">
-          <div className="p-2.5 rounded-xl bg-emerald-500/20 w-fit mb-3"><CheckCircle2 className="w-5 h-5 text-emerald-400" /></div>
-          <h4 className="font-black text-white text-sm mb-2">Zero-Rating באפליקציות שירות</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">WhatsApp, Facebook, Instagram, Waze, Google Maps — הגלישה <strong className="text-white">אינה יורדת</strong> מנפח החבילה.</p>
+        <div className="bg-white dark:bg-emerald-500/10 border border-slate-200 dark:border-emerald-500/20 rounded-2xl p-5 shadow-sm dark:shadow-none">
+          <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 w-fit mb-3"><CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /></div>
+          <h4 className="font-black text-slate-900 dark:text-white text-sm mb-2">Zero-Rating באפליקציות שירות</h4>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">WhatsApp, Facebook, Instagram, Waze, Google Maps — הגלישה <strong className="text-slate-900 dark:text-white">אינה יורדת</strong> מנפח החבילה.</p>
         </div>
-        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-5">
-          <div className="p-2.5 rounded-xl bg-red-500/20 w-fit mb-3"><ShieldAlert className="w-5 h-5 text-red-400" /></div>
-          <h4 className="font-black text-white text-sm mb-2">חסימה אוטומטית (Hard Stop)</h4>
-          <p className="text-slate-400 text-xs leading-relaxed">בסיום נפח גלישת חו&quot;ל — הגלישה נחסמת אוטומטית. לא תצברו חיובים נסתרים.</p>
+        <div className="bg-white dark:bg-red-500/10 border border-slate-200 dark:border-red-500/20 rounded-2xl p-5 shadow-sm dark:shadow-none">
+          <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-500/20 w-fit mb-3"><ShieldAlert className="w-5 h-5 text-red-600 dark:text-red-400" /></div>
+          <h4 className="font-black text-slate-900 dark:text-white text-sm mb-2">חסימה אוטומטית (Hard Stop)</h4>
+          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">בסיום נפח גלישת חו&quot;ל — הגלישה נחסמת אוטומטית. לא תצברו חיובים נסתרים.</p>
         </div>
       </div>
     </section>

@@ -39,8 +39,8 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
         <h2 className="text-4xl font-black mb-3" style={{ color: 'var(--clr-text-1)' }}>
           חישוב יתרת <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ליסינג</span>
         </h2>
-        <p className="text-sm font-medium max-w-xl mx-auto opacity-80" style={{ color: 'var(--clr-text-2)' }}>
-          סיום התקשרות לפני תום 24 חודשים דורש תשלום קנס בגין החודשים שנותרו, או לחילופין רכישת המכשיר בעלות מופחתת מראש.
+        <p className="text-base font-semibold max-w-4xl mx-auto" style={{ color: 'var(--clr-text-2)' }}>
+          סיום ההתקשרות טרם השלמת 24 חודשים מלאים, יחייב את העובד בתשלום בגין יתרת החודשים שנותרו עד לתום תקופה זו.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
           </div>
         </div>
 
-        <div className="bg-[#0B1120] rounded-[2rem] p-8 shadow-2xl relative overflow-hidden text-white border border-white/10 sticky top-28">
+        <div className="bg-white/90 dark:bg-[#0B1120] backdrop-blur-xl rounded-[2rem] p-8 shadow-xl dark:shadow-2xl relative overflow-hidden text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 sticky top-28 transition-colors duration-300">
           <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#4F46E5]/10 to-[#06B6D4]/10 pointer-events-none"></div>
           <div className="flex flex-col gap-4 mb-6">
             <h3 className="text-xl font-black flex items-center gap-2"><Receipt className="w-5 h-5 text-[#06B6D4]" /> סיכום לתשלום</h3>
@@ -108,7 +108,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
           ) : isLeaseExpired ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30"><CheckCircle2 className="w-8 h-8" /></div>
-              <h4 className="text-2xl font-black text-white mb-2">תקופת הליסינג הסתיימה!</h4>
+              <h4 className="text-2xl font-black text-emerald-600 dark:text-white mb-2">תקופת הליסינג הסתיימה!</h4>
               <p className="text-slate-300 text-sm">עברו {monthsElapsed} חודשים. אינך נדרש לשלם קנס על סיום התקשרות.</p>
             </div>
           ) : (
@@ -122,23 +122,29 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                 <span className="font-black text-amber-400 text-lg">{monthsRemaining} חודשים</span>
               </div>
               <div className="pt-2">
-                <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-red-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> תשלום לסיום תקופת ההתחייבות והחזרת המכשיר (ללא רכישה)</div>
-                  <div className="text-3xl font-black text-white">{terminationPenalty.toFixed(2)} <span className="text-lg text-red-300">₪</span></div>
-                </div>
-                <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" /> עלות רכישת מכשיר בסוף תקופה</div>
-                  <div className="text-xl font-black text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-300">₪</span></div>
-                </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 mt-6 shadow-lg backdrop-blur-sm relative overflow-hidden group">
+                {/* 1. Matrix value (Total including buyout) */}
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 shadow-sm relative overflow-hidden group mb-4">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
-                  <div className="text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" /> תשלום לסיום תקופת ההתחייבות + רכישת המכשיר
+                  <div className="text-emerald-600 dark:text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר)
                   </div>
-                  <div className="text-3xl font-black text-white">
-                    {(terminationPenalty + termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-emerald-300">₪</span>
+                  <div className="text-3xl font-black text-slate-900 dark:text-white">
+                    {terminationPenalty.toFixed(2)} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
                   </div>
-                  <div className="mt-2 text-[10px] text-slate-400 font-medium">* הסכום כולל את פירעון יתרת חודשי הליסינג ואת עלות הרכישה הסופית.</div>
+                  <div className="mt-2 text-[10px] text-slate-500 font-medium">* הסכום נלקח ישירות ממטריצת החודשים באקסל.</div>
+                </div>
+
+                {/* 2. Matrix value minus buyout value (Remaining months ONLY) */}
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
+                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו)</div>
+                  <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
+                  <div className="mt-2 text-[10px] text-slate-500 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
+                </div>
+
+                {/* 3. Buyout value */}
+                <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
+                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" /> עלות רכישת המכשיר בסיום התקופה</div>
+                  <div className="text-xl font-black text-slate-800 dark:text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-500 dark:text-indigo-300">₪</span></div>
                 </div>
               </div>
             </div>

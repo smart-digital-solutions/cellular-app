@@ -13,6 +13,7 @@ import ImportantNotesScreen from './screens/ImportantNotesScreen';
 import SiteMaintenanceScreen from './screens/SiteMaintenanceScreen';
 import SplashScreen from './screens/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
+import ThemeToggle from './components/ThemeToggle';
 
 // ── Navigation config ──────────────────────────────────────
 const ALL_TABS_MAP = {
@@ -129,7 +130,7 @@ export default function App() {
       
       {!shouldShowMaintenance && (
         <div
-          className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : 'opacity-0'}`}
+          className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : 'opacity-0'} ${renderSplash ? 'h-screen overflow-hidden' : ''}`}
           dir="rtl"
           style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
         >
@@ -154,31 +155,34 @@ export default function App() {
         style={{ top: showAnnouncement ? '44px' : '0', transition: 'top 0.3s cubic-bezier(0.4,0,0.2,1)' }}
         role="banner"
       >
-        <div className="max-w-6xl mx-auto bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1rem] md:rounded-full border border-white/10 shadow-2xl flex items-center justify-between px-4 py-2">
+        <div className="max-w-6xl mx-auto bg-white/80 dark:bg-[rgba(15,23,42,0.85)] backdrop-blur-xl rounded-[1rem] md:rounded-full border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl flex items-center justify-between px-4 py-2 transition-colors duration-300">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] rounded-full flex items-center justify-center text-white" aria-hidden="true">
               <Smartphone className="w-4 h-4" />
             </div>
-            <span className="font-black text-base text-white" aria-label="סלולטור 2026">
+            <span className="font-black text-base text-slate-800 dark:text-white transition-colors duration-300" aria-label="סלולטור 2026">
               סלולטור <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">2026</span>
             </span>
           </div>
-          <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="ניווט ראשי">
-            {visibleTabs.map(tab => (
-              <button
-                key={tab.id}
-                id={`tab-btn-${tab.id}`}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                aria-current={activeTab === tab.id ? 'page' : undefined}
-                aria-label={tab.label}
-                className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all ${activeTab === tab.id ? 'bg-white text-[#0B1120] scale-105 glow-active' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
-              >
-                <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-[#4F46E5]' : ''}`} aria-hidden="true" />
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+          <div className="flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="ניווט ראשי">
+              {visibleTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  id={`tab-btn-${tab.id}`}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
+                  aria-label={tab.label}
+                  className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-300 ${activeTab === tab.id ? 'bg-slate-800 text-white dark:bg-white dark:text-[#0B1120] scale-105 glow-active' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
+                >
+                  <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-cyan-400 dark:text-[#4F46E5]' : ''}`} aria-hidden="true" />
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -199,7 +203,7 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer
-        className="mt-auto backdrop-blur-lg border-t py-6 relative z-10 pb-24 md:pb-8"
+        className="mt-auto backdrop-blur-lg border-t py-4 relative z-10 pb-20 md:pb-6"
         role="contentinfo"
         style={{ backgroundColor: 'var(--clr-surface)', borderColor: 'var(--clr-border)' }}
       >
@@ -207,18 +211,18 @@ export default function App() {
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-right">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#4F46E5]" />
-              <span className="font-black text-slate-800 text-sm">{settings.app_title}</span>
-              <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200">{settings.app_version || 'v06.2026'}</span>
+              <span className="font-black text-slate-800 dark:text-white text-sm transition-colors duration-300">{settings.app_title}</span>
+              <span className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800 transition-colors duration-300">{settings.app_version || 'v06.2026'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+              <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 transition-colors duration-300">
                 עודכן ב: {typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toLocaleDateString('he-IL')} (מכרז 01-2024)
               </div>
-              <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border ${source === 'sheets' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+              <div className={`text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border transition-colors duration-300 ${source === 'sheets' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/50' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/50'}`}>
                 {source === 'sheets' ? 'LIVE' : 'OFFLINE'}
               </div>
               {loading && (
-                <div className="text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border bg-indigo-50 text-indigo-500 border-indigo-100 animate-pulse">
+                <div className="text-[9px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400 border-indigo-100 dark:border-indigo-800/50 animate-pulse transition-colors duration-300">
                   מעדכן...
                 </div>
               )}
@@ -234,7 +238,7 @@ export default function App() {
 
       {/* ── Mobile bottom nav ── */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(15,23,42,0.85)] backdrop-blur-2xl border-t border-slate-700/50 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.15)]"
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-[rgba(15,23,42,0.85)] backdrop-blur-2xl border-t border-slate-200 dark:border-slate-700/50 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.15)] transition-colors duration-300"
         role="navigation"
         aria-label="ניווט תחתון"
       >
@@ -246,9 +250,9 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               aria-label={tab.label}
-              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 active:scale-95 ${activeTab === tab.id ? 'text-white scale-105' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 active:scale-95 ${activeTab === tab.id ? 'text-slate-900 dark:text-white scale-105' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
             >
-              <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.4)]' : 'bg-transparent'}`}>
+              <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.2)] dark:shadow-[0_4px_12px_rgba(79,70,229,0.4)] text-white' : 'bg-transparent text-inherit'}`}>
                 <tab.icon className="w-5 h-5" aria-hidden="true" />
               </div>
               <span className={`text-[10px] whitespace-nowrap transition-all duration-300 ${activeTab === tab.id ? 'font-black' : 'font-semibold'}`}>

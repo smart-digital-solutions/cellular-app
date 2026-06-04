@@ -92,6 +92,7 @@ export const FALLBACK_SETTINGS = {
   partner_name: 'פרטנר',
   palphone_percent: '60',
   palphone_name: 'פלאפון',
+  default_theme: 'DARK'
 };
 
 // נתוני גיבוי לקטלוג הממשלתי — מתעדכן אוטומטית מהגיליון הממשלתי בזמן אמת

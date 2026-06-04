@@ -58,7 +58,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
           id={listboxId}
           role="listbox"
           aria-label={placeholder}
-          className="absolute top-full left-0 right-0 mt-2 z-[999] premium-glass rounded-[1.5rem] border border-white/40 shadow-2xl animate-in fade-in duration-200 max-h-[260px] overflow-y-auto custom-scrollbar"
+          className="absolute top-full left-0 right-0 mt-2 z-[999] premium-glass rounded-[1.5rem] border border-slate-200 dark:border-white/40 shadow-xl dark:shadow-2xl animate-in fade-in duration-200 max-h-[260px] overflow-y-auto custom-scrollbar"
           style={{ animation: '0.25s cubic-bezier(0.34,1.56,0.64,1) both scale-in', backgroundColor: 'var(--clr-surface)' }}
         >
           {groups ? (

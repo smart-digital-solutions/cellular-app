@@ -74,16 +74,18 @@
   }
 
   /* Dark mode override */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --clr-bg:        oklch(12% 0.01 250);
-      --clr-surface:   oklch(16% 0.012 250);
-      --clr-surface-2: oklch(20% 0.012 250);
-      --clr-border:    oklch(30% 0.015 250 / 0.5);
-      --clr-text-1:    oklch(95% 0.005 250);
-      --clr-text-2:    oklch(70% 0.01  250);
-      --clr-text-3:    oklch(50% 0.01  250);
-    }
+  html.dark {
+    --clr-bg:        oklch(12% 0.01 250);
+    --clr-surface:   oklch(16% 0.012 250);
+    --clr-surface-2: oklch(20% 0.012 250);
+    --clr-border:    oklch(30% 0.015 250 / 0.5);
+    --clr-text-1:    oklch(95% 0.005 250);
+    --clr-text-2:    oklch(70% 0.01  250);
+    --clr-text-3:    oklch(50% 0.01  250);
+
+    /* Glassmorphism tokens for Dark Mode */
+    --surface-glass: rgba(15, 23, 42, 0.75);
+    --border-glass:  rgba(255, 255, 255, 0.08);
   }
 
   /* ── Reset & Base ── */
