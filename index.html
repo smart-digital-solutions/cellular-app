@@ -18,12 +18,23 @@
     <script>
       (function() {
         try {
-          var savedTheme = localStorage.getItem('theme_override');
-          var defaultTheme = '__DEFAULT_THEME__'; // Injected by Vite at build time
-          if (savedTheme === 'dark' || (!savedTheme && defaultTheme !== 'LIGHT')) {
-            document.documentElement.classList.add('dark');
+          var savedTheme = null;
+          try {
+            savedTheme = localStorage.getItem('theme_override');
+          } catch (e) {
+            // localStorage might throw in strict incognito mode
           }
-        } catch (e) {}
+          var defaultTheme = '__DEFAULT_THEME__'; // Injected by Vite at build time
+          console.log('[Theme Debug] savedTheme:', savedTheme, 'defaultTheme:', defaultTheme);
+          if (savedTheme === 'dark' || (!savedTheme && defaultTheme !== 'LIGHT')) {
+            console.log('[Theme Debug] Applying dark mode');
+            document.documentElement.classList.add('dark');
+          } else {
+            console.log('[Theme Debug] Keeping light mode');
+          }
+        } catch (e) {
+          console.error('[Theme Debug] Error applying theme:', e);
+        }
       })();
     </script>
 
