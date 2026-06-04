@@ -135,11 +135,12 @@ export default function App() {
       )}
       
       {!shouldShowMaintenance && (
-        <div
-          className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : (renderSplash ? 'opacity-0' : '')} ${renderSplash ? 'h-screen overflow-hidden' : ''}`}
-          dir="rtl"
-          style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
-        >
+        <>
+          <div
+            className={`min-h-screen text-right relative flex flex-col mesh-gradient-bg ${fadeSplash ? 'animate-app-reveal' : (renderSplash ? 'opacity-0' : '')} ${renderSplash ? 'h-screen overflow-hidden' : ''}`}
+            dir="rtl"
+            style={{ backgroundColor: 'var(--clr-bg)', color: 'var(--clr-text-1)' }}
+          >
       {/* Dot-grid overlay */}
       <div
         className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply"
@@ -267,34 +268,37 @@ export default function App() {
         </div>
       </footer>
 
-      {/* ── Mobile bottom nav ── */}
-      <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-[rgba(15,23,42,0.85)] backdrop-blur-2xl border-t border-slate-200 dark:border-slate-700/50 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.15)] transition-colors duration-300"
-        role="navigation"
-        aria-label="ניווט תחתון"
-      >
-        <div className="flex justify-around items-end w-full px-1">
-          {visibleTabs.map(tab => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              aria-current={activeTab === tab.id ? 'page' : undefined}
-              aria-label={tab.label}
-              className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:scale-95 ${activeTab === tab.id ? 'text-slate-900 dark:text-white scale-105' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
-            >
-              <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.2)] dark:shadow-[0_4px_12px_rgba(79,70,229,0.4)] text-white' : 'bg-transparent text-inherit'}`}>
-                <tab.icon className="w-5 h-5" aria-hidden="true" />
-              </div>
-              <span className={`text-[10px] whitespace-nowrap transition-all duration-300 ${activeTab === tab.id ? 'font-black' : 'font-semibold'}`}>
-                {tab.mobileLabel}
-              </span>
-            </button>
-          ))}
-        </div>
-      </nav>
-    </div>
-    )}
+          </div>
+
+          {/* ── Mobile bottom nav ── */}
+          <nav
+            className={`md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-[rgba(15,23,42,0.85)] backdrop-blur-2xl border-t border-slate-200 dark:border-slate-700/50 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-2 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.15)] transition-colors duration-300 ${fadeSplash ? 'animate-app-reveal' : (renderSplash ? 'opacity-0' : '')}`}
+            role="navigation"
+            aria-label="ניווט תחתון"
+            dir="rtl"
+          >
+            <div className="flex justify-around items-end w-full px-1">
+              {visibleTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
+                  aria-label={tab.label}
+                  className={`relative flex-1 flex flex-col items-center justify-center gap-1 min-h-[50px] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:scale-95 ${activeTab === tab.id ? 'text-slate-900 dark:text-white scale-105' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
+                >
+                  <div className={`p-1.5 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] shadow-[0_4px_12px_rgba(79,70,229,0.2)] dark:shadow-[0_4px_12px_rgba(79,70,229,0.4)] text-white' : 'bg-transparent text-inherit'}`}>
+                    <tab.icon className="w-5 h-5" aria-hidden="true" />
+                  </div>
+                  <span className={`text-[10px] whitespace-nowrap transition-all duration-300 ${activeTab === tab.id ? 'font-black' : 'font-semibold'}`}>
+                    {tab.mobileLabel}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </nav>
+        </>
+      )}
     </>
   );
 }
