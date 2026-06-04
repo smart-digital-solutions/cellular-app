@@ -113,9 +113,16 @@ export default function App() {
   useEffect(() => {
     if (!isSplashActive) {
       setFadeSplash(true);
+      
+      const staticSplash = document.getElementById('static-splash');
+      if (staticSplash) {
+        staticSplash.style.opacity = '0';
+      }
+
       const timer = setTimeout(() => {
         setRenderSplash(false);
-      }, 300); // 300ms fade-out — fast enough to not hurt LCP
+        if (staticSplash) staticSplash.remove();
+      }, 300); // 300ms fade-out
       return () => clearTimeout(timer);
     } else {
       setRenderSplash(true);
