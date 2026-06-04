@@ -27,13 +27,10 @@ export default function App() {
   const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, guide, importantNotes, terminationRules, source, loading, lastUpdated } = useAppData();
   const [activeTab, setActiveTab] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
-  const [minSplashTimeElapsed, setMinSplashTimeElapsed] = useState(false);
+  const [showMinimumSplash, setShowMinimumSplash] = useState(true);
 
-  // Guarantee splash screen shows for at least 2.5 seconds for effect
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setMinSplashTimeElapsed(true);
-    }, 2500);
+    const timer = setTimeout(() => setShowMinimumSplash(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -49,7 +46,7 @@ export default function App() {
         id,
         icon: defaultData.icon,
         label,
-        mobileLabel: defaultData.mobileLabel,
+        mobileLabel: defaultData.mobileLabel, // We could allow overriding mobile label too, but let's keep it simple
         order,
         isActive
       };
@@ -94,9 +91,8 @@ export default function App() {
   const siteActiveStr = String(settings.site_active || 'TRUE').trim().toUpperCase();
   const isSiteActive = siteActiveStr === 'TRUE' || siteActiveStr === '1' || siteActiveStr === 'YES' || siteActiveStr === 'פעיל' || siteActiveStr === 'כן';
   
-  // Show splash screen on initial data load, OR if minimum aesthetic time hasn't passed
-  const isInitialLoad = loading && !lastUpdated;
-  if (isInitialLoad || !minSplashTimeElapsed) {
+  // Show splash screen on initial data load to prevent UI flashing, or to enforce minimum splash time
+  if ((loading && !lastUpdated) || showMinimumSplash) {
     return <SplashScreen />;
   }
 

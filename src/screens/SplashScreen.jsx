@@ -31,15 +31,15 @@ const SplashScreen = () => {
         </div>
       </div>
       
-      {/* Credit Footer */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-both">
-        <div className="text-xs font-medium text-slate-400 flex items-center gap-1 bg-slate-900/50 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
-          אופיין ופותח ע״י{' '}
-          <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span>
-          {' '}| משרד התקשורת
-        </div>
+      {/* Footer credit */}
+      <div className="absolute bottom-8 left-0 right-0 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+        <p className="text-sm font-medium text-slate-500 flex items-center justify-center gap-1">
+            אופיין ופותח ע״י{' '}
+            <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">דינה שרון</span>
+            {' '}| משרד התקשורת
+        </p>
       </div>
-      
+
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes progress {
           0% { background-position: 100% 0; }
