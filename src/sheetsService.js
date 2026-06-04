@@ -113,17 +113,18 @@ async function fetchSheet(sheetName) {
         const rawV = cell?.v;
         const rawF = cell?.f;
 
+        let val = '';
         if (rawV !== null && rawV !== undefined) {
-          // ערך מספרי/בוליאני תקין
-          obj[h] = rawV;
+          val = rawV;
         } else if (colType === 'string' && rawF !== null && rawF !== undefined) {
-          // עמודת טקסט — f הוא הערך עצמו
-          obj[h] = rawF;
+          val = rawF;
         } else if (rawF !== null && rawF !== undefined && rawF !== '') {
-          // עמודה מספרית עם תא טקסטואלי — gviz שם אותו ב-f
-          obj[h] = String(rawF);
-        } else {
-          obj[h] = '';
+          val = String(rawF);
+        }
+        
+        obj[h] = val;
+        if (cols[i] && cols[i].id) {
+          obj[cols[i].id] = val;
         }
       });
       return obj;
@@ -378,8 +379,12 @@ function parseTerminationRules(rows) {
 function parseSettings(rows) {
   const settings = { ...FALLBACK_SETTINGS };
   rows.forEach(r => {
-    const key = String(r.key || '').trim();
-    if (key) settings[key] = String(r.value ?? '').trim();
+    // Fallback to column A and B if header row is missing/renamed
+    const rawKey = r.key !== undefined ? r.key : r['A'];
+    const rawVal = r.value !== undefined ? r.value : r['B'];
+    
+    const key = String(rawKey || '').trim();
+    if (key) settings[key] = String(rawVal ?? '').trim();
   });
   return settings;
 }
