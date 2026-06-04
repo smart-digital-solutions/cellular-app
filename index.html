@@ -19,8 +19,8 @@
       (function() {
         try {
           var savedTheme = localStorage.getItem('theme_override');
-          // Fallback settings currently default to DARK
-          if (savedTheme === 'dark' || !savedTheme) {
+          var defaultTheme = '__DEFAULT_THEME__'; // Injected by Vite at build time
+          if (savedTheme === 'dark' || (!savedTheme && defaultTheme !== 'LIGHT')) {
             document.documentElement.classList.add('dark');
           }
         } catch (e) {}
