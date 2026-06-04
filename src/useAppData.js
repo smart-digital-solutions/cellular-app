@@ -26,11 +26,16 @@ export function useAppData() {
   }, []);
 
   useEffect(() => {
-    // Use a microtask to avoid synchronous state updates during the effect's execution phase
-    // which can trigger the 'set-state-in-effect' lint warning/error.
-    Promise.resolve().then(() => {
-      fetchData();
-    });
+    // Delay data fetching to after the initial render (LCP completed) to prevent blocking the main thread.
+    const runFetch = () => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        window.requestIdleCallback(() => fetchData(), { timeout: 2000 });
+      } else {
+        setTimeout(() => fetchData(), 1500);
+      }
+    };
+
+    runFetch();
   }, [fetchData]);
 
   return { ...(data || getCachedAll() || {}), loading, lastUpdated, refresh: () => fetchData(true) };
