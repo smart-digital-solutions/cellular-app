@@ -109,8 +109,6 @@
     -moz-osx-font-smoothing: grayscale;
     /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
-    /* Prevent CLS from scrollbar appearing/disappearing */
-    scrollbar-gutter: stable;
   }
 
   /* RTL — Hebrew/Arabic logical properties */

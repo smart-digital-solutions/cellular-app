@@ -1,0 +1,8 @@
+id,label,category,totalCost,isActive
+sim_only,מסלול ללא מכשיר (SIM Only),מסלולים אישיים (BYOD),11.06,TRUE
+sim_only_repair,מסלול SIM Only + שירות תיקונים,מסלולים אישיים (BYOD),18.12,TRUE
+kosher_phone,מכשיר כשר מאושר ועדה (שיחות בלבד),מכשירים כשרים (לחצנים),26.20,TRUE
+galaxy_buds_core,Samsung Buds core (אוזניות),אביזרים,7.50,TRUE
+galaxy_buds3_fe,Samsung Buds 3 FE (אוזניות),אביזרים,17.80,TRUE
+apple_airpods4,Apple Airpods דור 4 (אוזניות),אביזרים,23.50,TRUE
+galaxy_buds4_pro,Samsung Galaxy Buds 4 Pro (אוזניות),אביזרים,26.00,TRUE

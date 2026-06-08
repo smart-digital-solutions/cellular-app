@@ -16,32 +16,14 @@ export const FALLBACK_TIERS = [
   { id: 'exception', label: "מדרג חריג (ללא השתתפות)", desc: "מכסה זמנית: חל\"ת, השעיה, שליחות. המכשיר ע\"ח פרטי.", allowance: 0, restrictToSimOnly: false },
 ];
 
-export const FALLBACK_DEVICES = [
+export const FALLBACK_ACCESSORIES = [
   { id: 'sim_only', label: 'מסלול ללא מכשיר (SIM Only)', category: 'מסלולים אישיים (BYOD)', totalCost: 11.06 },
   { id: 'sim_only_repair', label: 'מסלול SIM Only + שירות תיקונים', category: 'מסלולים אישיים (BYOD)', totalCost: 18.12 },
-  { id: 'ip17_256', label: 'Apple iPhone 17 (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 73.56 },
-  { id: 'ip17_air_256', label: 'Apple iPhone 17 Air (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 74.78 },
-  { id: 'ip17_pro_256', label: 'Apple iPhone 17 Pro (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 90.49 },
-  { id: 'ip17_pro_512', label: 'Apple iPhone 17 Pro (512GB)', category: 'Apple iPhone - סדרת 17', totalCost: 98.07 },
-  { id: 'ip17_promax_256', label: 'Apple iPhone 17 Pro Max (256GB)', category: 'Apple iPhone - סדרת 17', totalCost: 93.06 },
-  { id: 'ip17_promax_512', label: 'Apple iPhone 17 Pro Max (512GB)', category: 'Apple iPhone - סדרת 17', totalCost: 103.76 },
-  { id: 'ip17_promax_1t', label: 'Apple iPhone 17 Pro Max (1TB)', category: 'Apple iPhone - סדרת 17', totalCost: 113.51 },
-  { id: 's25_fe_256', label: 'Samsung Galaxy S25 FE (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 74.00 },
-  { id: 's25_256', label: 'Samsung Galaxy S25 (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 82.34 },
-  { id: 's25_plus_256', label: 'Samsung Galaxy S25 Plus (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 88.62 },
-  { id: 's25_plus_512', label: 'Samsung Galaxy S25 Plus (512GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 95.60 },
-  { id: 's25_ultra_256', label: 'Samsung Galaxy S25 Ultra (256GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 105.00 },
-  { id: 's25_ultra_512', label: 'Samsung Galaxy S25 Ultra (512GB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 112.93 },
-  { id: 's25_ultra_1t', label: 'Samsung Galaxy S25 Ultra (1TB)', category: 'Samsung Galaxy - סדרת S25', totalCost: 130.52 },
-  { id: 'zflip7_256', label: 'Samsung Galaxy Z Flip 7 (256GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 95.61 },
-  { id: 'zflip7_512', label: 'Samsung Galaxy Z Flip 7 (512GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 107.10 },
-  { id: 'zfold7_256', label: 'Samsung Galaxy Z Fold 7 (256GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 150.83 },
-  { id: 'zfold7_512', label: 'Samsung Galaxy Z Fold 7 (512GB)', category: 'Samsung Galaxy - מתקפלים (Z)', totalCost: 157.42 },
-  { id: 'a26_128', label: 'Samsung Galaxy A26 5G (128GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 49.48 },
-  { id: 'a36_128', label: 'Samsung Galaxy A36 5G (128GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 52.24 },
-  { id: 'a56_256', label: 'Samsung Galaxy A56 5G (256GB)', category: 'Samsung Galaxy - סדרת A', totalCost: 60.49 },
   { id: 'kosher_phone', label: 'מכשיר כשר מאושר ועדה (שיחות בלבד)', category: 'מכשירים כשרים (לחצנים)', totalCost: 26.20 },
-  // v1.5: אביזרים — הוספת Galaxy Buds 4 Pro
+  // v1.5: אביזרים — הוספת אוזניות מהמכרז
+  { id: 'galaxy_buds_core', label: 'Samsung Buds core (אוזניות)', category: 'אביזרים', totalCost: 7.50 },
+  { id: 'galaxy_buds3_fe', label: 'Samsung Buds 3 FE (אוזניות)', category: 'אביזרים', totalCost: 17.80 },
+  { id: 'apple_airpods4', label: 'Apple Airpods דור 4 (אוזניות)', category: 'אביזרים', totalCost: 23.50 },
   { id: 'galaxy_buds4_pro', label: 'Samsung Galaxy Buds 4 Pro (אוזניות)', category: 'אביזרים', totalCost: 26.00 },
 ];
 
@@ -129,12 +111,18 @@ export const FALLBACK_CATALOG = [
 
 
 export const FALLBACK_IMPORTANT_NOTES = [
-  { id: 'credit_card_required', title: 'חובת הזנת כרטיס אשראי אישי', content: 'כל עובד חייב להזין כרטיס אשראי במערכת. עובד שלא יסדיר אמצעי תשלום, ייחסם לביצוע שדרוג.', severity: 'danger', icon: 'credit-card', order: 1, isActive: true },
-  { id: 'tax_benefit', title: 'זקיפת הטבה למס', content: 'ככלל, תבוצע זקיפת הטבה בתלוש השכר של העובד על תוכנית הסלולר ועל ציוד נוסף (בהתאם להוראות תכ"ם ולחוק).', severity: 'warning', icon: 'receipt', order: 2, isActive: true },
-  { id: 'roaming_exceptions', title: 'חריגות גלישה בחו"ל', content: 'במקרה של סיום חבילת הגלישה בחו"ל, תופעל חסימה אוטומטית (Hard Stop) למניעת חיובים חורגים. באחריות העובד לרכוש חבילה נוספת במידת הצורך.', severity: 'info', icon: 'globe', order: 3, isActive: true },
-  { id: 'byod_policy', title: 'מדיניות BYOD (הבא מכשירך)', content: 'עובד רשאי להשתמש במכשיר פרטי (SIM Only) ולקבל החזר כספי. המכשיר חייב לתמוך בדרישות האבטחה של המשרד.', severity: 'info', icon: 'smartphone', order: 4, isActive: true },
-  { id: 'stolen_device', title: 'אובדן או גניבת מכשיר', content: 'יש לדווח באופן מיידי לחברת הסלולר ולחשב המשרד. במקרה של אובדן או גניבה, העובד יישא בהשתתפות עצמית לפי מחירון הנזקים.', severity: 'danger', icon: 'shield-alert', order: 5, isActive: true },
-  { id: 'private_calls', title: 'שיחות לחו"ל ושירותי פרימיום', content: 'שיחות לחו"ל ושירותי פרימיום חסומים כברירת מחדל. ניתן לפתוח את השירות באישור מיוחד מול חשבות המשרד, בכפוף לחיוב העובד.', severity: 'warning', icon: 'phone-call', order: 6, isActive: true }
+  { id: 'credit_card_required', title: 'חובת הזנת כרטיס אשראי אישי', content: 'חובה להזין כרטיס אשראי אישי במערכת. ללא הסדרת אמצעי תשלום - העובד ייחסם לכל שדרוג עתידי. החיוב באשראי יבוצע בגין עלות ההשתתפות האישית, חריגות, וכל שירות נוסף שאינו מכוסה על ידי המשרד.', severity: 'warning', icon: 'credit-card', order: 1, isActive: true },
+  { id: 'tax_benefit', title: 'זקיפת הטבה (שווי שימוש) בתלוש השכר', content: 'תבוצע זקיפת הטבה בתלוש השכר עבור תוכנית הסלולר (כולל מע"מ) ועבור ציוד קצה נוסף. המשמעות: הסכום ייחשב כהכנסה חייבת במס. מומלץ להתייעץ עם רכזי השכר של המשרד לגבי ההשפעה על תלוש השכר.', severity: 'info', icon: 'receipt', order: 2, isActive: true },
+  { id: 'overages_local', title: 'חריגות בארץ - חיוב באשראי אישי', content: 'כל חריגה מהמכסה החודשית בארץ תגרור חיוב ישיר מכרטיס האשראי האישי: • גלישה: 0.85 ₪ לכל GB חריגה • שיחות: 4.2 אגורות לכל דקה • SMS/MMS: 0.85 אגורה לכל הודעה', severity: 'danger', icon: 'alert-triangle', order: 3, isActive: true },
+  { id: 'international_prefix', title: 'שיחות לחו"ל מהארץ - קידומת 014 בלבד', content: 'חיוג לחו"ל במסגרת המכסה יתבצע אך ורק בקידומת 014 של בזק בינלאומי. חיוג בכל קידומת אחרת (012, 013 וכו\') יגרור חיובים כבדים ישירות מכרטיס האשראי של העובד - מחוץ למסגרת המכרז.', severity: 'danger', icon: 'phone-call', order: 4, isActive: true },
+  { id: 'delivery_fee', title: 'דמי שליחות וביטול הזמנה', content: 'עובדים ממדרג תיכון ומטה יחויבו ב-50.42 ₪ עבור משלוח המכשיר. ביטול שליחות שתואמה חייב להתבצע לפחות 2 ימי עסקים מראש. אי-ביטול בזמן יגרור חיוב מלא בעלות השליחות - גם אם המכשיר לא הגיע פיזית.', severity: 'warning', icon: 'truck', order: 5, isActive: true },
+  { id: 'cancellation_policy', title: 'ביטול עסקה - תנאים מחמירים', content: 'ביטול עסקה ייתאפשר תוך 14 ימי עסקים מיום האספקה, אך ורק אם: האריזה המקורית לא נפתחה, לא נעשה שום שימוש במכשיר. פתיחת האריזה מבטלת את הזכות לחרטה לחלוטין - גם אם המכשיר לא הופעל.', severity: 'warning', icon: 'package-x', order: 6, isActive: true },
+  { id: 'lost_device_refund', title: 'מציאת מכשיר אבוד - זכות להחזר', content: 'עובד ששילם דמי השתתפות עצמית על אובדן וקיבל מכשיר חלופי, ולאחר מכן מצא את המקורי - יכול להחזיר את המכשיר החלופי לספק ולקבל 75% החזר מדמי ההשתתפות ששילם.', severity: 'info', icon: 'search', order: 7, isActive: true },
+  { id: 'express_repair', title: 'תיקון אקספרס ועד הבית', content: 'תיקון מהיר (עד שעתיים) בתחנת שירות - תוספת עלות 65.60 ₪. תיקון במקום העבודה או מגורים - עלות 121.00 ₪. תשלומים אלו מבוצעים ישירות מכרטיס האשראי האישי ואינם חלק מכיסוי הביטוח הבסיסי.', severity: 'info', icon: 'wrench', order: 8, isActive: true },
+  { id: 'byod_insurance', title: 'ביטוח למכשיר פרטי (BYOD)', content: 'מסלול SIM ONLY מאפשר ביטוח למכשיר אישי בעלות 7.06 ₪ לחודש (למעט יבוא מקביל). הצטרפות לביטוח לאחר שחלפו 60 יום מרכישת המכשיר תגרור קנס בדיקה חד-פעמי של 75.60 ₪.', severity: 'info', icon: 'shield-alert', order: 9, isActive: true },
+  { id: 'roaming_exceptions', title: 'חריגות והתאפסות גלישה בחו"ל', content: 'לכל עובד בנק גלישה בחו"ל של 10GB בחודש המצטבר עד 120GB בשנה ומתאפס בכל שנה קלנדרית. בסיום הנפח תופעל חסימה אוטומטית (Hard Stop). ניתן לרכוש הרחבות באשראי אישי.', severity: 'info', icon: 'globe', order: 10, isActive: true },
+  { id: 'out_of_pocket', title: 'שירותים במימון אישי מלא (ללא השתתפות)', content: 'שירות מוגן "נתיב" (35.30 ₪), שלוחה לקו קיים/שעון (8.1 ₪), וקו גיבוי נפרד (85.2 ₪ לשנה) אינם נכללים במכסת ההשתתפות המשרדית ויחויבו במלואם מכרטיס האשראי האישי של העובד.', severity: 'danger', icon: 'alert-triangle', order: 11, isActive: true },
+  { id: 'charger_included', title: 'מטען קיר כלול בערכה', content: 'שימו לב: ערכת המכשיר שתסופק לכם כוללת מטען קיר בהספק 20W. אין צורך לרכוש מטען בנפרד אלא אם נדרש מטען נוסף.', severity: 'success', icon: 'plug', order: 12, isActive: true }
 ];
 
 export const FALLBACK_GUIDE = [

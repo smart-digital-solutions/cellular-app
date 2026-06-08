@@ -10,7 +10,7 @@ export const MAIN_SHEET_URL = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/edit`;
 export const CATALOG_SHEET_URL = `${GOOGLE_SHEETS_BASE_URL}/${CATALOG_SHEET_ID}/edit`;
 
 export const SHEET_NAMES = {
-  DEVICES: 'devices',
+  ACCESSORIES: 'accessories',
   TIERS: 'tiers',
   MAINTENANCE: 'maintenance',
   FAQ: 'faq',
@@ -26,6 +26,8 @@ export const CATALOG_SHEET_NAME = 'טבלאות מחירים בחתך דגם מ�
 // תקופת ליסינג בחודשים
 export const LEASE_MONTHS = 24;
 
+// מפתח לשמירת מטמון בדפדפן (localStorage)
+export const CACHE_PREFIX = 'cellular_app_v2_';
 export const CACHE_DURATION_MINUTES = 30;
 
 // מפתח מטמון לקטלוג הממשלתי

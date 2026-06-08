@@ -68,12 +68,16 @@ export default function App() {
     }
   }, [visibleTabs, activeTab]);
 
-  // Merge catalog + local special devices (BYOD / כשר / אביזרים)
+  const accessoriesList = useMemo(() => {
+    return devices.filter(d => d.category === 'אביזרים');
+  }, [devices]);
+
+  // Merge catalog + local special devices (BYOD / כשר)
   const allDevices = useMemo(() => {
     const localSpecial = devices.filter(d =>
-      ['מסלולים אישיים (BYOD)', 'מכשירים כשרים (לחצנים)', 'אביזרים'].includes(d.category)
+      ['מסלולים אישיים (BYOD)', 'מכשירים כשרים (לחצנים)'].includes(d.category)
     );
-    return catalog && catalog.length > 0 ? [...localSpecial, ...catalog] : devices;
+    return catalog && catalog.length > 0 ? [...localSpecial, ...catalog] : devices.filter(d => d.category !== 'אביזרים');
   }, [devices, catalog]);
 
   // Grouped catalog for Termination + Maintenance screens
@@ -214,7 +218,7 @@ export default function App() {
       {/* ── Main content ── */}
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         <ErrorBoundary>
-          {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} />}
+          {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} accessoriesList={accessoriesList} />}
           {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
           {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
           {activeTab === 'guide' && <GuideScreen />}
@@ -251,16 +255,17 @@ export default function App() {
               )}
             </div>
           </div>
-          <div className="text-sm font-medium text-slate-500 flex flex-col items-center sm:items-end gap-1">
+          <div className="text-sm font-medium text-slate-500 flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
             <span>
               אופיין ופותח ע״י{' '}
               <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">דינה שרון</span>
               {' '}| משרד התקשורת
             </span>
+            <span className="hidden sm:block text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
             <button 
               type="button" 
               onClick={() => setActiveTab('accessibility')}
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded px-1"
+              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-bold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded px-1 transition-colors"
             >
               הצהרת נגישות
             </button>

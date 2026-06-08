@@ -6,7 +6,7 @@
 
 import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES } from './config';
 import {
-  FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
+  FALLBACK_TIERS, FALLBACK_ACCESSORIES, FALLBACK_MAINTENANCE,
   FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG,
   FALLBACK_GUIDE, FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES
 } from './fallbackData';
@@ -55,7 +55,7 @@ export function clearCache() {
 export function getCachedAll() {
   return {
     tiers: getCached(SHEET_NAMES.TIERS) || FALLBACK_TIERS,
-    devices: getCached(SHEET_NAMES.DEVICES) || FALLBACK_DEVICES,
+    devices: getCached(SHEET_NAMES.ACCESSORIES) || FALLBACK_ACCESSORIES,
     maintenance: getCached(SHEET_NAMES.MAINTENANCE) || FALLBACK_MAINTENANCE,
     faq: getCached(SHEET_NAMES.FAQ) || FALLBACK_FAQ,
     settings: getCached(SHEET_NAMES.SETTINGS) || FALLBACK_SETTINGS,
@@ -398,7 +398,7 @@ export async function loadAllData() {
 
   if (!isConfigured) {
     return {
-      tiers: FALLBACK_TIERS, devices: FALLBACK_DEVICES,
+      tiers: FALLBACK_TIERS, devices: FALLBACK_ACCESSORIES,
       maintenance: FALLBACK_MAINTENANCE, faq: FALLBACK_FAQ,
       settings: FALLBACK_SETTINGS, catalog: FALLBACK_CATALOG,
       guide: FALLBACK_GUIDE, importantNotes: FALLBACK_IMPORTANT_NOTES,
@@ -410,7 +410,7 @@ export async function loadAllData() {
   const [results, catalogResult] = await Promise.all([
     Promise.allSettled([
       fetchSheet(SHEET_NAMES.TIERS),
-      fetchSheet(SHEET_NAMES.DEVICES),
+      fetchSheet(SHEET_NAMES.ACCESSORIES),
       fetchSheet(SHEET_NAMES.MAINTENANCE),
       fetchSheet(SHEET_NAMES.FAQ),
       fetchSheet(SHEET_NAMES.SETTINGS),
@@ -431,7 +431,7 @@ export async function loadAllData() {
 
   return {
     tiers: getOrFallback(results[0], parseTiers, FALLBACK_TIERS),
-    devices: getOrFallback(results[1], parseDevices, FALLBACK_DEVICES),
+    devices: getOrFallback(results[1], parseDevices, FALLBACK_ACCESSORIES),
     maintenance: getOrFallback(results[2], parseMaintenance, FALLBACK_MAINTENANCE),
     faq: getOrFallback(results[3], parseFaq, FALLBACK_FAQ),
     settings: results[4].status === 'fulfilled' ? parseSettings(results[4].value) : FALLBACK_SETTINGS,
