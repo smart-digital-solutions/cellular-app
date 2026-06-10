@@ -47,13 +47,11 @@ const CalculatorScreen = ({ tiers, allDevices, accessoriesList }) => {
           <Sparkles className="w-6 h-6 text-white" aria-hidden="true" />
         </div>
         <div className="flex-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-1 rounded-full bg-indigo-100/80 text-indigo-700 font-bold text-[10px] border border-indigo-200 w-max dark:bg-indigo-900/30 dark:text-indigo-300">
-            הדור הבא של ניהול סלולר
-          </div>
+
           <h2 className="font-black text-xl md:text-2xl mb-0.5 bg-clip-text text-transparent bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ברוכים הבאים לסלולטור</h2>
           <p className="leading-tight text-xs md:text-sm font-medium opacity-80 max-w-3xl mb-2" style={{ color: 'var(--clr-text-2)' }}>
-            הדרך החכמה והמדויקת ביותר למציאת המסלול המנצח במכרז הסלולר הממשלתי.<br />
-            שקיפות בזכאות, עלויות ליסינג והשתתפות עצמית עבור עובדי המדינה.
+            הכלי המוביל לבחירה פשוטה, נוחה ויעילה של המסלול המנצח במכרז הסלולר הממשלתי.<br />
+            שקיפות במכסת ההשתתפות, עלויות הליסינג וההשתתפות עצמית, עבור עובדי המדינה.
           </p>
           <div className="border rounded-lg p-2 flex items-center gap-2 animate-in slide-in-from-right duration-1000" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)' }}>
             <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" aria-hidden="true" />
@@ -235,18 +233,17 @@ const CalculatorScreen = ({ tiers, allDevices, accessoriesList }) => {
                   </div>
                   <div className="pt-1">
                     <div className="text-xl text-slate-900 dark:text-white font-black">השתתפות אישית חודשית</div>
-                    <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-2 font-medium">חיוב בכרטיס האשראי (כולל מע&quot;מ)</div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-2 font-medium">חיוב אמצעי התשלום של העובד (כולל מע&quot;מ)</div>
                     <div className={`text-5xl font-black tracking-tighter ${employeePayment === 0 ? 'text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500 dark:from-emerald-400 dark:to-cyan-300' : 'text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 drop-shadow-sm dark:drop-shadow-md'}`}>
                       {employeePayment.toFixed(2)} <span className={`text-2xl font-bold ml-1 ${employeePayment === 0 ? 'text-cyan-600 dark:text-cyan-200' : 'text-slate-500 dark:text-slate-400'}`}>₪</span>
                     </div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-medium">* המחיר המוצג כולל מע&quot;מ</div>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col h-full justify-end pb-4 animate-in fade-in duration-500">
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-200/80 dark:bg-white/10 backdrop-blur-md text-slate-800 dark:text-white font-bold text-[10px] mb-3 border border-slate-300 dark:border-white/20 w-max shadow-sm">
-                  <Smartphone className="w-3.5 h-3.5 text-cyan-700 dark:text-cyan-400" aria-hidden="true" /> נתוני 2026
-                </div>
+
                 <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight">
                   ממתין לנתונים<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">לסיכום העלויות</span>

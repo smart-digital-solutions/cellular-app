@@ -4,14 +4,14 @@
 //  + Cache חכם ב-localStorage
 // =============================================================
 
-import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES } from './config';
+import { SHEET_ID, SHEET_NAMES, CATALOG_SHEET_ID, CATALOG_SHEET_NAME, GOOGLE_SHEETS_BASE_URL, CATALOG_CACHE_KEY, CATALOG_FALLBACK_FLAG_KEY, CACHE_DURATION_MINUTES, CACHE_PREFIX } from './config';
 import {
   FALLBACK_TIERS, FALLBACK_ACCESSORIES, FALLBACK_MAINTENANCE,
   FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_CATALOG,
   FALLBACK_GUIDE, FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES
 } from './fallbackData';
 
-const CACHE_PREFIX = 'cellular_app_';
+// CACHE_PREFIX is imported from config.js — do not redefine here
 
 // ──────────────────────────────────────────────
 //  Cache helpers
@@ -50,9 +50,28 @@ export function clearCache() {
   Object.values(SHEET_NAMES).forEach(name => {
     localStorage.removeItem(CACHE_PREFIX + name);
   });
+  // נקה גם קאש הקטלוג
+  localStorage.removeItem(CACHE_PREFIX + CATALOG_CACHE_KEY);
+  localStorage.removeItem(CACHE_PREFIX + CATALOG_FALLBACK_FLAG_KEY);
+}
+
+// ניקוי מפתחות ישנים עם prefix ישן (cellular_app_ ולא cellular_app_v2_)
+// חשוב: מבטיח שנתונים ישנים לא יתקעו בדפדפן לנצח
+const OLD_PREFIX = 'cellular_app_';
+function clearLegacyCache() {
+  const keysToDelete = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(OLD_PREFIX) && !key.startsWith(CACHE_PREFIX)) {
+      keysToDelete.push(key);
+    }
+  }
+  keysToDelete.forEach(k => localStorage.removeItem(k));
 }
 
 export function getCachedAll() {
+  // ניקוי מפתחות ישנים בכל טעינה
+  try { clearLegacyCache(); } catch {}
   return {
     tiers: getCached(SHEET_NAMES.TIERS) || FALLBACK_TIERS,
     devices: getCached(SHEET_NAMES.ACCESSORIES) || FALLBACK_ACCESSORIES,
@@ -69,70 +88,72 @@ export function getCachedAll() {
   };
 }
 
+
 // ──────────────────────────────────────────────
 //  Core fetch — Google gviz/tq JSON endpoint
 //  לא דורש API Key! רק ה-Sheet חייב להיות ציבורי לצפייה
 // ──────────────────────────────────────────────
 async function fetchSheet(sheetName) {
-  if (!SHEET_ID || SHEET_ID === 'YOUR_GOOGLE_SHEET_ID_HERE') {
-    throw new Error('SHEET_ID_NOT_CONFIGURED');
-  }
-
-  // הסרנו את החסימה של המטמון. אנחנו תמיד רוצים למשוך נתונים טריים מגוגל (SWR)
-  // const cached = getCached(sheetName);
-  // if (cached) return cached;
-
-  const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
-
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-  // Google מחזיר JSONP-like — חייבים לנקות
-  const text = await response.text();
-  const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
-  if (!jsonStr) throw new Error('Invalid response format');
-
-  let json;
   try {
-    json = JSON.parse(jsonStr);
-  } catch {
-    throw new Error('Failed to parse Sheets response as JSON');
+    if (!SHEET_ID || SHEET_ID === 'YOUR_GOOGLE_SHEET_ID_HERE') {
+      throw new Error('SHEET_ID_NOT_CONFIGURED');
+    }
+
+    const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const text = await response.text();
+    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/)?.[1];
+    if (!jsonStr) throw new Error('Invalid response format');
+
+    let json;
+    try {
+      json = JSON.parse(jsonStr);
+    } catch {
+      throw new Error('Failed to parse Sheets response as JSON');
+    }
+    if (json.status !== 'ok') throw new Error(json.errors?.[0]?.message || 'Sheets error');
+
+    const { cols, rows } = json.table;
+    const headers = cols.map(c => c.label || c.id);
+    const colTypes = cols.map(c => c.type);
+
+    const data = rows
+      .map(row => {
+        const obj = {};
+        headers.forEach((h, i) => {
+          const cell = row.c[i];
+          const colType = colTypes[i];
+          const rawV = cell?.v;
+          const rawF = cell?.f;
+
+          let val = '';
+          if (rawV !== null && rawV !== undefined) {
+            val = rawV;
+          } else if (colType === 'string' && rawF !== null && rawF !== undefined) {
+            val = rawF;
+          } else if (rawF !== null && rawF !== undefined && rawF !== '') {
+            val = String(rawF);
+          }
+          
+          obj[h] = val;
+          if (cols[i] && cols[i].id) {
+            obj[cols[i].id] = val;
+          }
+        });
+        return obj;
+      })
+      .filter(row => Object.values(row).some(v => v !== '' && v !== null && v !== undefined));
+
+    console.log(`[Google Sheets] Succeeded fetching tab "${sheetName}":`, data.length, 'rows loaded.');
+    setCache(sheetName, data);
+    return data;
+  } catch (err) {
+    console.error(`[Google Sheets] Failed fetching tab "${sheetName}":`, err.message);
+    throw err;
   }
-  if (json.status !== 'ok') throw new Error(json.errors?.[0]?.message || 'Sheets error');
-
-  const { cols, rows } = json.table;
-  const headers = cols.map(c => c.label || c.id);
-  const colTypes = cols.map(c => c.type); // 'number' | 'string' | 'boolean'
-
-  const data = rows
-    .map(row => {
-      const obj = {};
-      headers.forEach((h, i) => {
-        const cell = row.c[i];
-        const colType = colTypes[i];
-        const rawV = cell?.v;
-        const rawF = cell?.f;
-
-        let val = '';
-        if (rawV !== null && rawV !== undefined) {
-          val = rawV;
-        } else if (colType === 'string' && rawF !== null && rawF !== undefined) {
-          val = rawF;
-        } else if (rawF !== null && rawF !== undefined && rawF !== '') {
-          val = String(rawF);
-        }
-        
-        obj[h] = val;
-        if (cols[i] && cols[i].id) {
-          obj[cols[i].id] = val;
-        }
-      });
-      return obj;
-    })
-    .filter(row => Object.values(row).some(v => v !== '' && v !== null && v !== undefined));
-
-  setCache(sheetName, data);
-  return data;
 }
 
 // ──────────────────────────────────────────────
@@ -178,9 +199,9 @@ function parseCatalog(rows) {
       const id = `cat_${idx}_${manufacturer.replace(/[^a-zA-Z]/g, '').toLowerCase()}`;
       
       // מטריצת קנסות יציאה מוקדמת (חודשים 1 עד 24)
-      // בגיליון הממשלתי: חודש 24 הוא עמודה K, חודש 1 הוא עמודה AH
+      // בגיליון הממשלתי: חודש 24 הוא עמודה L, חודש 1 הוא עמודה AI
       const monthlyMatrix = {};
-      const colIds = ['AH','AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L','K'];
+      const colIds = ['AI','AH','AG','AF','AE','AD','AC','AB','AA','Z','Y','X','W','V','U','T','S','R','Q','P','O','N','M','L'];
       colIds.forEach((colId, i) => {
         const monthNum = i + 1;
         monthlyMatrix[monthNum] = parseFloat(String(r[colId] || 0).replace(/,/g, '')) || 0;

@@ -16,7 +16,11 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
     if (!receiptDate) return null;
     const start = new Date(receiptDate);
     const now = new Date();
-    return Math.max(0, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
+    let diff = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+    if (now.getDate() < start.getDate()) {
+      diff--;
+    }
+    return Math.max(0, diff);
   }, [receiptDate]);
 
   const monthsRemaining = monthsElapsed !== null ? Math.max(0, 24 - monthsElapsed) : null;
@@ -25,17 +29,19 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
       ? termDevice.matrix[monthsRemaining]
       : parseFloat((termDevice.totalCost * monthsRemaining).toFixed(2)))
     : null;
-  const leaseEndDate = receiptDate
-    ? new Date(new Date(receiptDate).setMonth(new Date(receiptDate).getMonth() + 24))
-    : null;
+  
+  const leaseEndDate = useMemo(() => {
+    if (!receiptDate) return null;
+    const d = new Date(receiptDate);
+    d.setMonth(d.getMonth() + 24);
+    return d;
+  }, [receiptDate]);
   const isLeaseExpired = monthsElapsed !== null && monthsElapsed >= 24;
 
   return (
     <div className={`animate-in fade-in max-w-4xl mx-auto relative ${activeStep === 3 ? 'z-50' : 'z-10'}`} style={{ color: 'var(--clr-text-1)' }}>
       <div className="text-center mb-10 pt-4">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold text-xs mb-4 border border-indigo-100 dark:border-indigo-800">
-          <Receipt className="w-3.5 h-3.5" aria-hidden="true" /> מחשבון סיום מוקדם
-        </div>
+
         <h2 className="text-4xl font-black mb-3" style={{ color: 'var(--clr-text-1)' }}>
           חישוב יתרת <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#06B6D4]">ליסינג</span>
         </h2>
@@ -71,10 +77,10 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
             <div className="relative">
               <input
                 id="receipt-date-input"
-                type="month"
+                type="date"
                 aria-label="תאריך קבלת המכשיר"
                 value={receiptDate}
-                max={new Date().toISOString().slice(0, 7)}
+                max={new Date().toISOString().split('T')[0]}
                 onChange={(e) => setReceiptDate(e.target.value)}
                 className="w-full border text-base rounded-2xl focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500 block p-4 pe-11 font-bold transition-all"
                 style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-1)' }}
@@ -84,7 +90,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
             {monthsElapsed !== null && (
               <div className="mt-4 flex items-center justify-between text-sm font-bold p-3 rounded-xl border" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-2)' }}>
                 <span>חודשים שעברו: <span style={{ color: 'var(--clr-text-1)' }}>{monthsElapsed} מתוך 24</span></span>
-                {leaseEndDate && <span>סיום רשמי: <span style={{ color: 'var(--clr-text-1)' }}>{leaseEndDate.toLocaleDateString('he-IL', { month: '2-digit', year: 'numeric' })}</span></span>}
+                {leaseEndDate && <span>סיום רשמי: <span style={{ color: 'var(--clr-text-1)' }}>{leaseEndDate.toLocaleDateString('he-IL')}</span></span>}
               </div>
             )}
           </div>
@@ -119,7 +125,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
           ) : (
             <div className="space-y-6">
               <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
-                <span className="text-slate-600 dark:text-slate-400 font-medium">עלות חודשית</span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">עלות חודשית (כולל מע&quot;מ)</span>
                 <span className="font-bold">{termDevice.totalCost.toFixed(2)} ₪</span>
               </div>
               <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
@@ -131,7 +137,7 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                 <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 shadow-sm relative overflow-hidden group mb-4">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
                   <div className="text-emerald-600 dark:text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר)
+                    <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר ומע&quot;מ)
                   </div>
                   <div className="text-3xl font-black text-slate-900 dark:text-white">
                     {terminationPenalty.toFixed(2)} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
@@ -141,14 +147,14 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
 
                 {/* 2. Matrix value minus buyout value (Remaining months ONLY) */}
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" aria-hidden="true" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו)</div>
+                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" aria-hidden="true" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו, כולל מע&quot;מ)</div>
                   <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
                   <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
                 </div>
 
                 {/* 3. Buyout value */}
                 <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" aria-hidden="true" /> עלות רכישת המכשיר בסיום התקופה</div>
+                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" aria-hidden="true" /> עלות רכישת המכשיר בסיום התקופה (כולל מע&quot;מ)</div>
                   <div className="text-xl font-black text-slate-800 dark:text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-500 dark:text-indigo-300">₪</span></div>
                 </div>
               </div>

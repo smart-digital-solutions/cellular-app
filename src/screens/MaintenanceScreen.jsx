@@ -11,6 +11,20 @@ const checkTierMatch = (tier1, tier2) => {
   return n1 === n2 || n1.includes(n2) || n2.includes(n1);
 };
 
+const formatCurrency = (val) => {
+  if (typeof val !== 'string' && typeof val !== 'number') return val;
+  const s = String(val).trim();
+  if (!s) return s;
+  // If it has letters, %, or other non-numeric symbols, return as is
+  if (/[^\d.,₪\s\-]/.test(s)) return s;
+  
+  const num = parseFloat(s.replace(/,/g, '').replace(/₪/g, ''));
+  if (!isNaN(num)) {
+    return num.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₪';
+  }
+  return s;
+};
+
 const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
   const [selectedMaintDevice, setSelectedMaintDevice] = useState('');
 
@@ -19,12 +33,10 @@ const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
       <div className="relative z-50 rounded-[2rem] bg-white/90 dark:bg-[#0B1120] text-slate-900 dark:text-white p-6 sm:p-10 shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 backdrop-blur-md transition-colors duration-300">
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 pointer-events-none"></div>
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/10 dark:bg-white/10 text-slate-800 dark:text-white font-bold text-xs mb-4">
-            <Wrench className="w-3.5 h-3.5" /> שקיפות מלאה
-          </div>
+
           <h2 className="text-3xl font-black mb-4">מחירון תחזוקה והשתתפות בנזקים</h2>
           <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8 max-w-3xl">
-            מסלול הליסינג כולל שירות תיקונים. במקרי קיצון של אובדן/גניבה/השבתה, קיימת השתתפות עצמית לפי מחירון המכרז (כולל מע&quot;מ 18%).
+            מסלול הליסינג כולל שירות תיקונים. במקרים של אובדן/גניבה/השבתה, קיימת השתתפות עצמית לפי מחירון המכרז (כולל מע&quot;מ 18%).
           </p>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
             <label className="block text-cyan-400 text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -70,10 +82,10 @@ const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
                 return (
                   <tr key={idx} className={`transition-all duration-300 ${isHighlighted ? 'bg-cyan-50 dark:bg-cyan-900/20 z-10 relative shadow-[0_4px_20px_rgba(6,182,212,0.2)]' : 'hover:bg-slate-50 dark:hover:bg-white/5 hover:shadow-sm'}`}>
                     <td className={`p-4 font-black text-sm border-y-2 border-r-2 ${isHighlighted ? 'text-cyan-800 dark:text-cyan-300 border-cyan-400 rounded-r-xl' : 'border-y-transparent border-r-transparent'}`} style={{ color: isHighlighted ? undefined : 'var(--clr-text-1)', backgroundColor: isHighlighted ? undefined : 'var(--clr-surface-2)' }}>{row.tier}</td>
-                    <td className={`p-4 font-bold border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)', color: isHighlighted ? undefined : 'var(--clr-text-2)' }}>{row.screen1}</td>
-                    <td className={`p-4 font-bold border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)', color: isHighlighted ? undefined : 'var(--clr-text-2)' }}>{row.screen2}</td>
-                    <td className={`p-4 font-black border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'bg-red-50/20 dark:bg-red-900/5 text-red-600 dark:text-red-400 border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)' }}>{row.theft1}</td>
-                    <td className={`p-4 font-black border-r border-l-2 text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30 border-l-cyan-400 rounded-l-xl' : 'bg-amber-50/20 dark:bg-amber-900/5 text-amber-600 dark:text-amber-400 border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)' }}>{row.disable1}</td>
+                    <td className={`p-4 font-bold border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)', color: isHighlighted ? undefined : 'var(--clr-text-2)' }}>{formatCurrency(row.screen1)}</td>
+                    <td className={`p-4 font-bold border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)', color: isHighlighted ? undefined : 'var(--clr-text-2)' }}>{formatCurrency(row.screen2)}</td>
+                    <td className={`p-4 font-black border-r text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30' : 'bg-red-50/20 dark:bg-red-900/5 text-red-600 dark:text-red-400 border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)' }}>{formatCurrency(row.theft1)}</td>
+                    <td className={`p-4 font-black border-r border-l-2 text-sm border-y-2 ${isHighlighted ? 'text-cyan-900 dark:text-cyan-100 border-y-cyan-400 border-r-cyan-400/30 border-l-cyan-400 rounded-l-xl' : 'bg-amber-50/20 dark:bg-amber-900/5 text-amber-600 dark:text-amber-400 border-y-transparent'}`} style={{ borderColor: isHighlighted ? undefined : 'var(--clr-border)' }}>{formatCurrency(row.disable1)}</td>
                   </tr>
                 );
               })}

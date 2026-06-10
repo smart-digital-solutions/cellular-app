@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {
-  FALLBACK_TIERS, FALLBACK_DEVICES, FALLBACK_MAINTENANCE,
+  FALLBACK_TIERS, FALLBACK_ACCESSORIES, FALLBACK_MAINTENANCE,
   FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_GUIDE,
   FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES
 } from './src/fallbackData.js';
@@ -62,7 +62,7 @@ writeCsv('tiers.csv', tiersData, tiersCols);
 
 // 6. Devices
 const devicesCols = ['id', 'label', 'category', 'totalCost', 'isActive'];
-const devicesData = FALLBACK_DEVICES.map(item => ({ ...item, isActive: 'TRUE' }));
+const devicesData = FALLBACK_ACCESSORIES.map(item => ({ ...item, isActive: 'TRUE' }));
 writeCsv('devices.csv', devicesData, devicesCols);
 
 // 7. Maintenance

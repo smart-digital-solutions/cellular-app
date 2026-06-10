@@ -27,7 +27,8 @@ export const CATALOG_SHEET_NAME = 'טבלאות מחירים בחתך דגם מ�
 export const LEASE_MONTHS = 24;
 
 // מפתח לשמירת מטמון בדפדפן (localStorage)
-export const CACHE_PREFIX = 'cellular_app_v2_';
+// v3_ — מבטל כל קאש ישן (v2_, v1_, ללא גרסה) בטעינה הראשונה
+export const CACHE_PREFIX = 'cellular_app_v3_';
 export const CACHE_DURATION_MINUTES = 30;
 
 // מפתח מטמון לקטלוג הממשלתי

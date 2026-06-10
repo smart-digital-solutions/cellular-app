@@ -40,9 +40,7 @@ const ImportantNotesScreen = ({ importantNotes = [] }) => {
   return (
     <div className="animate-in fade-in max-w-4xl mx-auto z-10 relative">
       <div className="text-center mb-10 pt-4">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold text-xs mb-4 border border-amber-200 dark:border-amber-800/50">
-          <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" /> דגשים ונהלי חובה
-        </div>
+
         <h2 className="text-4xl font-black mb-3 text-slate-800 dark:text-white">
           דגשים <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">חשובים</span>
         </h2>

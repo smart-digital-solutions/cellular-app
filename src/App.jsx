@@ -28,10 +28,14 @@ const ALL_TABS_MAP = {
 };
 
 export default function App() {
-  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, importantNotes, terminationRules, source, loading, lastUpdated } = useAppData();
+  const { tiers, devices, maintenance, faq, settings, catalog, catalogIsFallback, importantNotes, terminationRules, guide, source, loading, lastUpdated, errors } = useAppData();
   const [activeTab, setActiveTab] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
   const [showMinimumSplash, setShowMinimumSplash] = useState(true);
+
+  useEffect(() => {
+    console.log('Cellular App Data Source:', source, 'Errors:', errors || []);
+  }, [source, errors]);
 
   useEffect(() => {
     // Minimal splash: only 400ms to allow critical CSS to paint, then reveal app.
@@ -221,7 +225,7 @@ export default function App() {
           {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} accessoriesList={accessoriesList} />}
           {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
           {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
-          {activeTab === 'guide' && <GuideScreen />}
+          {activeTab === 'guide' && <GuideScreen guide={guide} />}
           {activeTab === 'faq' && <FaqScreen faq={faq} />}
           {activeTab === 'important_notes' && <ImportantNotesScreen importantNotes={importantNotes} />}
           {activeTab === 'accessibility' && <AccessibilityStatementScreen />}
