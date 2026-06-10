@@ -1,4 +1,4 @@
-import { Megaphone, Info, Sparkles } from 'lucide-react';
+import { Info, Sparkles } from 'lucide-react';
 import AccordionItem from '../components/AccordionItem';
 
 const FaqScreen = ({ faq }) => (

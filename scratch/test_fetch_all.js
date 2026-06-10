@@ -1,4 +1,3 @@
-import fs from 'fs';
 
 const SHEET_ID = '1kL5cL3S_m79mNXg0k9wZxFURQuK4VuHiMtnX7qhM6YA';
 const GOOGLE_SHEETS_BASE_URL = 'https://docs.google.com/spreadsheets/d';
@@ -45,7 +44,7 @@ async function run() {
       const name = 'טבלאות מחירים בחתך דגם מכשיר וייתרת החודשים לסיום הליסינג';
       const url = `${GOOGLE_SHEETS_BASE_URL}/${catalogId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
       const response = await fetch(url);
-      const text = await response.text();
+      await response.text();
       console.log('Catalog sheet loaded successfully');
     } catch (err) {
       console.error('Catalog sheet failed to load:', err.message);

@@ -1,4 +1,3 @@
-import fs from 'fs';
 
 const SHEET_ID = '1kL5cL3S_m79mNXg0k9wZxFURQuK4VuHiMtnX7qhM6YA';
 const GOOGLE_SHEETS_BASE_URL = 'https://docs.google.com/spreadsheets/d';

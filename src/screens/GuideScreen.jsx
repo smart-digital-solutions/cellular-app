@@ -122,8 +122,8 @@ const GuideCard = ({ card }) => {
         ? card.items.split('|').map(s => s.trim()).filter(Boolean)
         : []);
 
-  let iconBgClass = "bg-slate-100 dark:bg-white/10";
-  let iconColorClass = "text-slate-700 dark:text-slate-300";
+  let iconBgClass;
+  let iconColorClass;
   
   if (card.style === 'cyan') {
     iconBgClass = "bg-cyan-50 dark:bg-cyan-950/40";

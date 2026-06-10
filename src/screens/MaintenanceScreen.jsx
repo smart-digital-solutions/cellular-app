@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Wrench, Smartphone, CheckCircle2 } from 'lucide-react';
+import { Smartphone, CheckCircle2 } from 'lucide-react';
 import OmegaSelect from '../components/OmegaSelect';
 
 // Tier-matching helpers
@@ -16,7 +16,7 @@ const formatCurrency = (val) => {
   const s = String(val).trim();
   if (!s) return s;
   // If it has letters, %, or other non-numeric symbols, return as is
-  if (/[^\d.,₪\s\-]/.test(s)) return s;
+  if (/[^\d.,₪\s-]/.test(s)) return s;
   
   const num = parseFloat(s.replace(/,/g, '').replace(/₪/g, ''));
   if (!isNaN(num)) {

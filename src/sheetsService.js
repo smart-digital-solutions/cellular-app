@@ -71,7 +71,7 @@ function clearLegacyCache() {
 
 export function getCachedAll() {
   // ניקוי מפתחות ישנים בכל טעינה
-  try { clearLegacyCache(); } catch {}
+  try { clearLegacyCache(); } catch (e) { /* ignore */ }
   return {
     tiers: getCached(SHEET_NAMES.TIERS) || FALLBACK_TIERS,
     devices: getCached(SHEET_NAMES.ACCESSORIES) || FALLBACK_ACCESSORIES,
