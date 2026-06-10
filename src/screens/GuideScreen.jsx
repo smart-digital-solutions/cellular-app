@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import {
   Sparkles, CreditCard, Smartphone, Shield, ShieldCheck, Watch,
   Truck, RotateCcw, Link2, Shuffle, Database, Globe2,
@@ -115,7 +116,6 @@ const renderItemText = (text, iconColorClass) => {
 };
 
 const GuideCard = ({ card }) => {
-  const IconComponent = getIcon(card.icon);
   const items = Array.isArray(card.items)
     ? card.items
     : (typeof card.items === 'string'
@@ -168,7 +168,7 @@ const GuideCard = ({ card }) => {
           )}
         </div>
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${iconBgClass}`}>
-          <IconComponent className={`w-5 h-5 ${iconColorClass}`} aria-hidden="true" />
+          {createElement(getIcon(card.icon), { className: `w-5 h-5 ${iconColorClass}`, 'aria-hidden': 'true' })}
         </div>
       </div>
 
