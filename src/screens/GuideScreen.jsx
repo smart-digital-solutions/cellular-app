@@ -6,7 +6,7 @@ import {
   Clock, UserPlus, PackageX, Ban
 } from 'lucide-react';
 import { FALLBACK_GUIDE } from '../fallbackData';
-import { parseRichText } from '../components/AccordionItem';
+import { parseRichText } from '../utils/textParser';
 
 const ICON_MAP = {
   CreditCard, Smartphone, Shield, ShieldCheck, Watch,
