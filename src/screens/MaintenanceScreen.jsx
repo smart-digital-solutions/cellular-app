@@ -35,8 +35,8 @@ const MaintenanceScreen = ({ maintenance, catalog, groupedCatalog }) => {
         <div className="relative z-10">
 
           <h2 className="text-3xl font-black mb-4">מחירון תחזוקה והשתתפות בנזקים</h2>
-          <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8 max-w-3xl">
-            מסלול הליסינג כולל שירות תיקונים. במקרים של אובדן/גניבה/השבתה, קיימת השתתפות עצמית לפי מחירון המכרז (כולל מע&quot;מ 18%).
+          <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8 max-w-4xl text-balance">
+            מסלול הליסינג כולל שירות תיקונים. במקרים של אובדן/גניבה/השבתה, קיימת השתתפות עצמית לפי מחירון המכרז, <span className="whitespace-nowrap">כולל מע&quot;מ (18%).</span>
           </p>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
             <label className="block text-cyan-400 text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-2">

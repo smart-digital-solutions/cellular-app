@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import OmegaSelect from '../components/OmegaSelect';
 
-const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
+const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog, settings }) => {
   const [selectedTermDevice, setSelectedTermDevice] = useState('');
   const [activeStep, setActiveStep] = useState(null);
   const [receiptDate, setReceiptDate] = useState('');
@@ -125,8 +125,8 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
           ) : (
             <div className="space-y-6">
               <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
-                <span className="text-slate-600 dark:text-slate-400 font-medium">עלות חודשית (כולל מע&quot;מ)</span>
-                <span className="font-bold">{termDevice.totalCost.toFixed(2)} ₪</span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">עלות חודשית, כולל מע&quot;מ</span>
+                <span className="font-bold">{termDevice.totalCost.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₪</span>
               </div>
               <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-white/10">
                 <span className="text-slate-600 dark:text-slate-400 font-medium">חודשים שנותרו לתשלום</span>
@@ -137,26 +137,36 @@ const TerminationScreen = ({ catalog, catalogIsFallback, groupedCatalog }) => {
                 <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 shadow-sm relative overflow-hidden group mb-4">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-cyan-400"></div>
                   <div className="text-emerald-600 dark:text-emerald-400 text-xs font-black mb-1 uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> עלות לסיום תקופת ליסינג (כולל רכישת המכשיר ומע&quot;מ)
+                    <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> עלות לסיום תקופת ליסינג, כולל רכישת המכשיר ומע&quot;מ
                   </div>
                   <div className="text-3xl font-black text-slate-900 dark:text-white">
-                    {terminationPenalty.toFixed(2)} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
+                    {terminationPenalty.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-lg text-emerald-500 dark:text-emerald-300">₪</span>
                   </div>
                   <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום נלקח ישירות ממטריצת החודשים באקסל.</div>
                 </div>
 
                 {/* 2. Matrix value minus buyout value (Remaining months ONLY) */}
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" aria-hidden="true" /> יתרת חודשי הליסינג (ללא רכישת המכשיר, יש להחזירו, כולל מע&quot;מ)</div>
-                  <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toFixed(2)} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
+                  <div className="text-amber-600 dark:text-amber-400 text-xs font-bold mb-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" aria-hidden="true" /> יתרת חודשי הליסינג, ללא רכישת המכשיר (יש להחזירו), כולל מע&quot;מ</div>
+                  <div className="text-2xl font-black text-slate-800 dark:text-white">{Math.max(0, terminationPenalty - termDevice.buyoutPrice).toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-lg text-amber-500 dark:text-amber-300">₪</span></div>
                   <div className="mt-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">* הסכום מציג את העלות מהאקסל בהפחתת עלות הרכישה.</div>
                 </div>
 
                 {/* 3. Buyout value */}
                 <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-4 relative overflow-hidden mb-4">
-                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" aria-hidden="true" /> עלות רכישת המכשיר בסיום התקופה (כולל מע&quot;מ)</div>
-                  <div className="text-xl font-black text-slate-800 dark:text-white">{termDevice.buyoutPrice.toFixed(2)} <span className="text-sm text-indigo-500 dark:text-indigo-300">₪</span></div>
+                  <div className="text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-1 flex items-center gap-1"><Smartphone className="w-3 h-3" aria-hidden="true" /> עלות רכישת המכשיר בסיום התקופה, כולל מע&quot;מ</div>
+                  <div className="text-xl font-black text-slate-800 dark:text-white">{termDevice.buyoutPrice.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-sm text-indigo-500 dark:text-indigo-300">₪</span></div>
                 </div>
+
+                {/* Clarification Note */}
+                {settings?.leasing_clarification !== '' && (
+                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-4 relative overflow-hidden mt-6">
+                    <div className="text-blue-600 dark:text-blue-400 text-sm font-medium flex items-start gap-2">
+                      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true" />
+                      <p>{settings?.leasing_clarification || 'העלויות המחושבות תואמות את העלויות המעודכנות לתאריך הנוכחי, להערכת עלות. בפועל, יתרת הליסינג מחושבת לפי עלויות המכשיר במועד האספקה.'}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -223,7 +223,7 @@ export default function App() {
       <main id="main-content" className="max-w-6xl mx-auto px-4 relative z-40 pb-nav-safe flex-grow w-full" role="main">
         <ErrorBoundary>
           {activeTab === 'calculator' && <CalculatorScreen tiers={tiers} allDevices={allDevices} accessoriesList={accessoriesList} />}
-          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} />}
+          {activeTab === 'termination' && <TerminationScreen catalog={catalog} catalogIsFallback={catalogIsFallback} groupedCatalog={groupedCatalog} terminationRules={terminationRules} settings={settings} />}
           {activeTab === 'maintenance' && <MaintenanceScreen maintenance={maintenance} catalog={catalog} groupedCatalog={groupedCatalog} />}
           {activeTab === 'guide' && <GuideScreen guide={guide} />}
           {activeTab === 'faq' && <FaqScreen faq={faq} />}
@@ -234,11 +234,21 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer
-        className="mt-auto backdrop-blur-lg border-t py-4 relative z-10 pb-20 md:pb-6"
+        className="mt-auto backdrop-blur-lg border-t relative z-10 pb-20 md:pb-6"
         role="contentinfo"
         style={{ backgroundColor: 'var(--clr-surface)', borderColor: 'var(--clr-border)' }}
       >
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        {/* Disclaimer Banner */}
+        {settings?.takkam_disclaimer !== '' && (
+          <div className="bg-slate-900 dark:bg-[#0B1120] border-y border-amber-500/30 py-3 px-6 text-center shadow-lg">
+            <div className="max-w-6xl mx-auto flex items-center justify-center gap-2 text-amber-400 text-sm font-black tracking-wide">
+              <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500" aria-hidden="true" />
+              <span>{settings?.takkam_disclaimer || 'בכל סתירה בין נתונים המוצגים בסלולטור, לבין זה המוצג בהוראת התכ"ם, הוראת התכ"ם היא זו הקובעת.'}</span>
+            </div>
+          </div>
+        )}
+
+        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-right">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-indigo-700 dark:text-indigo-400" />

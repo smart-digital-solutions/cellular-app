@@ -6,6 +6,7 @@ import {
   Clock, UserPlus, PackageX, Ban
 } from 'lucide-react';
 import { FALLBACK_GUIDE } from '../fallbackData';
+import { parseRichText } from '../components/AccordionItem';
 
 const ICON_MAP = {
   CreditCard, Smartphone, Shield, ShieldCheck, Watch,
@@ -59,13 +60,22 @@ const getLeasingItemConfig = (text) => {
       liClass: 'flex items-start gap-3'
     };
   }
-  if (text.includes('צימוד') || text.includes('Pairing')) {
+  if (text.includes('צימוד') || text.includes('Pairing') || text.includes('החלפת סים')) {
     return {
       icon: ShieldAlert,
       bgClass: 'bg-pink-100 dark:bg-pink-500/20',
       iconClass: 'text-pink-600 dark:text-pink-400',
       liClass: 'flex items-start gap-3 sm:col-span-2 mt-2 font-bold'
     };
+  }
+  if (text.includes('סים') || text.includes('SIM')) {
+    return { icon: Smartphone, bgClass: 'bg-indigo-100 dark:bg-indigo-500/20', iconClass: 'text-indigo-600 dark:text-indigo-400', liClass: 'flex items-start gap-3' };
+  }
+  if (text.includes('מכשיר') || text.includes('טלפון')) {
+    return { icon: Smartphone, bgClass: 'bg-violet-100 dark:bg-violet-500/20', iconClass: 'text-violet-600 dark:text-violet-400', liClass: 'flex items-start gap-3' };
+  }
+  if (text.includes('השתתפות') || text.includes('תשלום') || text.includes('חיוב')) {
+    return { icon: CreditCard, bgClass: 'bg-amber-100 dark:bg-amber-500/20', iconClass: 'text-amber-600 dark:text-amber-400', liClass: 'flex items-start gap-3' };
   }
   // Default fallback
   return {
@@ -81,7 +91,8 @@ const renderItemText = (text, iconColorClass) => {
   let boldPart = '';
   let regularPart = text;
   
-  if (colonIndex !== -1) {
+  // Only treat the colon as a title prefix if it appears within the first 35 characters
+  if (colonIndex !== -1 && colonIndex < 35) {
     boldPart = text.substring(0, colonIndex + 1);
     regularPart = text.substring(colonIndex + 1);
   }
@@ -100,14 +111,14 @@ const renderItemText = (text, iconColorClass) => {
           </span>
         );
       }
-      return <span key={i}>{p}</span>;
+      return <span key={i}>{parseRichText(p)}</span>;
     });
   };
 
   if (boldPart) {
     return (
       <span>
-        <strong className="font-bold">{boldPart}</strong>
+        <strong className="font-bold">{parseRichText(boldPart)}</strong>
         {renderPart(regularPart)}
       </span>
     );
@@ -159,11 +170,11 @@ const GuideCard = ({ card }) => {
             </span>
           )}
           <h4 className="font-black text-lg leading-tight" style={{ color: 'var(--clr-text-1)' }}>
-            {card.title}
+            {parseRichText(card.title)}
           </h4>
           {card.subtitle && (
             <p className="text-xs font-semibold mt-0.5 opacity-60" style={{ color: 'var(--clr-text-3)' }}>
-              {card.subtitle}
+              {parseRichText(card.subtitle)}
             </p>
           )}
         </div>
@@ -172,13 +183,21 @@ const GuideCard = ({ card }) => {
         </div>
       </div>
 
-      <ul className="text-sm font-medium opacity-90 space-y-2.5 flex-grow mb-4">
-        {items.map((item, idx) => (
-          <li key={idx} className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
-            <span className={`${iconColorClass} select-none mt-0.5 shrink-0`}>•</span>
-            <span className="leading-relaxed">{renderItemText(item, iconColorClass)}</span>
-          </li>
-        ))}
+      <ul className="space-y-4 flex-grow mb-6 text-sm">
+        {items.map((item, idx) => {
+          const config = getLeasingItemConfig(item);
+          const IconComp = config.icon;
+          return (
+            <li key={idx} className="flex items-start gap-3">
+              <div className={`p-1.5 rounded-full shrink-0 mt-0.5 ${config.bgClass}`}>
+                <IconComp className={`w-4 h-4 ${config.iconClass}`} aria-hidden="true" />
+              </div>
+              <span className="text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-line">
+                {renderItemText(item, config.iconClass)}
+              </span>
+            </li>
+          );
+        })}
       </ul>
 
       {card.footer && (
@@ -186,7 +205,7 @@ const GuideCard = ({ card }) => {
           className="mt-auto pt-3 border-t text-xs opacity-75 font-semibold text-slate-500 dark:text-slate-400"
           style={{ borderColor: 'var(--clr-border)' }}
         >
-          {card.footer}
+          {parseRichText(card.footer)}
         </div>
       )}
     </div>
@@ -231,46 +250,58 @@ const GuideScreen = ({ guide }) => {
         </p>
       </div>
 
-      {/* Plans Section Top Cards */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <section className="grid grid-cols-1 lg:grid-cols-9 gap-5">
         {simOnly && (
           <div 
-            className="lg:col-span-1 premium-glass rounded-[2rem] border p-6 flex flex-col transition-all duration-300 hover:shadow-2xl hover-lift" 
-            style={{ borderColor: 'var(--clr-border)', backgroundColor: 'var(--clr-surface)' }}
+            className="lg:col-span-4 relative rounded-[2rem] bg-white/90 dark:bg-[#0B1120] p-6 sm:p-8 xl:p-10 flex flex-col h-full shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 hover:shadow-2xl hover-lift" 
           >
-            <div className="bg-slate-100 dark:bg-white/10 w-12 h-12 rounded-xl flex items-center justify-center mb-5">
-              <CreditCard className="w-6 h-6 text-slate-700 dark:text-slate-300" aria-hidden="true" />
+            <div className="flex flex-col-reverse sm:flex-row justify-between items-start mb-6 gap-4">
+              <div className="bg-slate-100 dark:bg-white/10 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                <CreditCard className="w-6 h-6 text-slate-700 dark:text-slate-300" aria-hidden="true" />
+              </div>
+              {simOnly.badge && (
+                <span className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+                  {simOnly.badge}
+                </span>
+              )}
             </div>
-            <h3 className="text-xl font-black mb-5" style={{ color: 'var(--clr-text-1)' }}>
-              {simOnly.title}
-              <br />
-              <span className="font-medium text-base opacity-60" style={{ color: 'var(--clr-text-3)' }}>
-                {simOnly.subtitle}
-              </span>
+            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2">
+              {parseRichText(simOnly.title)}
             </h3>
+            {simOnly.subtitle && (
+              <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 text-sm">
+                {parseRichText(simOnly.subtitle)}
+              </p>
+            )}
             <ul className="space-y-4 flex-grow mb-6">
-              {simOnlyItems.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-slate-700 dark:text-slate-400 shrink-0 mt-1" aria-hidden="true" />
-                  <span className="font-medium text-sm leading-relaxed" style={{ color: 'var(--clr-text-2)' }}>
-                    {item}
-                  </span>
-                </li>
-              ))}
+              {simOnlyItems.map((item, idx) => {
+                const config = getLeasingItemConfig(item);
+                const IconComp = config.icon;
+                return (
+                  <li key={idx} className="flex items-start gap-3">
+                    <div className={`p-1.5 rounded-full shrink-0 mt-0.5 ${config.bgClass}`}>
+                      <IconComp className={`w-4 h-4 ${config.iconClass}`} aria-hidden="true" />
+                    </div>
+                    <span className="text-slate-800 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-line">
+                      {renderItemText(item, config.iconClass)}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
             {simOnly.footer && (
               <div 
-                className="mt-6 border rounded-xl p-4 text-xs font-bold leading-relaxed" 
+                className="mt-6 border rounded-xl p-4 text-xs font-bold leading-relaxed whitespace-pre-line" 
                 style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)', color: 'var(--clr-text-2)' }}
               >
-                {simOnly.footer}
+                {parseRichText(simOnly.footer)}
               </div>
             )}
           </div>
         )}
 
         {leasing && (
-          <div className="lg:col-span-2 relative rounded-[2rem] bg-white/90 dark:bg-[#0B1120] p-6 sm:p-10 flex flex-col h-full shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 hover:shadow-2xl hover-lift">
+          <div className="lg:col-span-5 relative rounded-[2rem] bg-white/90 dark:bg-[#0B1120] p-6 sm:p-8 xl:p-10 flex flex-col h-full shadow-xl dark:shadow-2xl border border-slate-200 dark:border-white/10 transition-all duration-300 hover:shadow-2xl hover-lift">
             <div className="flex flex-col-reverse sm:flex-row justify-between items-start mb-6 gap-4">
               <div className="bg-gradient-to-br from-[#4F46E5] to-[#06B6D4] w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
                 <Smartphone className="w-6 h-6 text-white" aria-hidden="true" />
@@ -282,11 +313,11 @@ const GuideScreen = ({ guide }) => {
               )}
             </div>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2">
-              {leasing.title}
+              {parseRichText(leasing.title)}
             </h3>
             {leasing.subtitle && (
               <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 text-sm">
-                {leasing.subtitle}
+                {parseRichText(leasing.subtitle)}
               </p>
             )}
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 flex-grow mb-6">
@@ -298,7 +329,7 @@ const GuideScreen = ({ guide }) => {
                     <div className={`p-1.5 rounded-full shrink-0 mt-0.5 ${config.bgClass}`}>
                       <IconComp className={`w-4 h-4 ${config.iconClass}`} aria-hidden="true" />
                     </div>
-                    <span className="text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
+                    <span className="text-slate-800 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-line">
                       {renderItemText(item, config.iconClass)}
                     </span>
                   </li>
@@ -306,8 +337,8 @@ const GuideScreen = ({ guide }) => {
               })}
             </ul>
             {leasing.footer && (
-              <div className="mt-auto pt-3 border-t text-xs opacity-75 font-semibold text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10">
-                {leasing.footer}
+              <div className="mt-auto pt-3 border-t text-xs opacity-75 font-semibold text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 whitespace-pre-line">
+                {parseRichText(leasing.footer)}
               </div>
             )}
           </div>
