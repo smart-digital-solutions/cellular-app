@@ -20,14 +20,16 @@ const FaqScreen = ({ faq }) => (
     <div className="mt-8 border rounded-[1.5rem] p-5 flex items-start gap-3" style={{ backgroundColor: 'var(--clr-surface-2)', borderColor: 'var(--clr-border)' }}>
       <Info className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" aria-hidden="true" />
       <div>
-        <div className="font-black text-indigo-700 dark:text-indigo-300 text-sm mb-1">קישור ישיר לאתר החשכ&quot;ל</div>
+        <div className="font-black text-indigo-700 dark:text-indigo-300 text-sm mb-1">
+          קישור לפרסומים ועדכונים על מכרז הסלולר החדש, באתר מנהל הרכש:
+        </div>
         <a
-          href="https://takam.mof.gov.il/document/HM.16.7.1"
+          href="https://mr.gov.il/ilgstorefront/he/news/details/OVDEIMEDINA"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-indigo-600 dark:text-indigo-400 font-bold text-sm underline hover:text-indigo-800 dark:hover:text-indigo-200 transition-colors"
+          className="text-indigo-600 dark:text-indigo-400 font-bold text-sm underline hover:text-indigo-800 dark:hover:text-indigo-200 transition-colors break-all"
         >
-          לחץ כאן לכלל הוראות תכ&quot;ם 16.7.1 →
+          https://mr.gov.il/ilgstorefront/he/news/details/OVDEIMEDINA →
         </a>
       </div>
     </div>
