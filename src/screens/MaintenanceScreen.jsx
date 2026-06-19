@@ -5,7 +5,7 @@ import OmegaSelect from '../components/OmegaSelect';
 // ──────────────────────────────────────────────
 //  Helpers
 // ──────────────────────────────────────────────
-const normalizeTier = (s) => String(s || '').replace(/מעל ל-?/g, 'מעל').replace(/[\s,₪ש"ח\-]/g, '');
+const normalizeTier = (s) => String(s || '').replace(/מעל ל-?/g, 'מעל').replace(/[\s,₪ש"ח-]/g, '');
 const checkTierMatch = (tier1, tier2) => {
   if (!tier1 || !tier2) return false;
   const n1 = normalizeTier(tier1);
@@ -17,7 +17,7 @@ const formatCurrency = (val) => {
   if (typeof val !== 'string' && typeof val !== 'number') return val;
   const s = String(val).trim();
   if (!s) return s;
-  if (/[^\d.,₪\s\-]/.test(s)) return s;
+  if (/[^\d.,₪\s-]/.test(s)) return s;
   const num = parseFloat(s.replace(/,/g, '').replace(/₪/g, ''));
   if (!isNaN(num)) {
     return num.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ₪';
