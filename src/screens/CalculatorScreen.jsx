@@ -148,7 +148,7 @@ const CalculatorScreen = ({ tiers, allDevices, accessoriesList }) => {
                     { id: '', label: 'ללא אביזר' },
                     ...accessoriesList.map(acc => ({
                       id: acc.id,
-                      label: `${acc.label} (תוספת ${acc.totalCost.toFixed(2)} ₪)`,
+                      label: `${acc.label} (תוספת ${acc.totalCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪)`,
                     }))
                   ]}
                   placeholder="-- בחירת ציוד נלווה --"
@@ -212,30 +212,30 @@ const CalculatorScreen = ({ tiers, allDevices, accessoriesList }) => {
                   <div className="flex flex-col pb-4 border-b border-slate-200 dark:border-white/20">
                     <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm px-2 py-1.5">
                       <span className="text-cyan-600 dark:text-cyan-400 font-medium">עלות מחירון מכשיר</span>
-                      <span className="font-bold text-cyan-700 dark:text-cyan-300 text-left w-24">{deviceCost.toFixed(2)} ₪</span>
+                      <span className="font-bold text-cyan-700 dark:text-cyan-300 text-left w-24">{deviceCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪</span>
                     </div>
                     {currentAccessory && (
                       <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm border-t border-slate-100 dark:border-slate-800 px-2 py-1.5">
                         <span className="text-purple-600 dark:text-purple-400 font-medium truncate">תוספת: {currentAccessory.label}</span>
-                        <span className="font-black text-purple-700 dark:text-purple-300 text-left w-24"><span dir="ltr">+{accessoryCost.toFixed(2)}</span> ₪</span>
+                        <span className="font-black text-purple-700 dark:text-purple-300 text-left w-24"><span dir="ltr">+{accessoryCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span> ₪</span>
                       </div>
                     )}
                     {currentAccessory && (
                       <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm border-t-2 border-slate-300 dark:border-slate-600 px-2 py-2 mt-1">
                         <span className="text-slate-800 dark:text-slate-200 font-black">סה״כ עלות (לפני סבסוד)</span>
-                        <span className="font-black text-slate-900 dark:text-white text-left w-24">{totalCost.toFixed(2)} ₪</span>
+                        <span className="font-black text-slate-900 dark:text-white text-left w-24">{totalCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪</span>
                       </div>
                     )}
                     <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm text-emerald-600 dark:text-emerald-300 font-bold bg-emerald-100 dark:bg-emerald-500/10 backdrop-blur-sm p-2 rounded-lg border border-emerald-200 dark:border-emerald-500/20 mt-2">
                       <span className="flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" aria-hidden="true" /> מימון ממשלתי</span>
-                      <span className="font-black text-left w-24"><span dir="ltr">- {tierAllowance.toFixed(2)}</span> ₪</span>
+                      <span className="font-black text-left w-24"><span dir="ltr">- {tierAllowance.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span> ₪</span>
                     </div>
                   </div>
                   <div className="pt-1">
                     <div className="text-xl text-slate-900 dark:text-white font-black">השתתפות אישית חודשית</div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-2 font-medium">חיוב אמצעי התשלום של העובד (כולל מע&quot;מ)</div>
                     <div className={`text-5xl font-black tracking-tighter ${employeePayment === 0 ? 'text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500 dark:from-emerald-400 dark:to-cyan-300' : 'text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 drop-shadow-sm dark:drop-shadow-md'}`}>
-                      {employeePayment.toFixed(2)} <span className={`text-2xl font-bold ml-1 ${employeePayment === 0 ? 'text-cyan-600 dark:text-cyan-200' : 'text-slate-500 dark:text-slate-400'}`}>₪</span>
+                      {employeePayment.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} <span className={`text-2xl font-bold ml-1 ${employeePayment === 0 ? 'text-cyan-600 dark:text-cyan-200' : 'text-slate-500 dark:text-slate-400'}`}>₪</span>
                     </div>
                     <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-medium">* המחיר המוצג כולל מע&quot;מ</div>
                   </div>

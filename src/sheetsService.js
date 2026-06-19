@@ -99,7 +99,7 @@ async function fetchSheet(sheetName) {
       throw new Error('SHEET_ID_NOT_CONFIGURED');
     }
 
-    const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
+    const url = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&headers=1&_=${Date.now()}`;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -138,10 +138,8 @@ async function fetchSheet(sheetName) {
             val = String(rawF);
           }
           
+          // Use the label as key (not the single-letter column id like 'A','B')
           obj[h] = val;
-          if (cols[i] && cols[i].id) {
-            obj[cols[i].id] = val;
-          }
         });
         return obj;
       })
@@ -313,18 +311,81 @@ function parseDevices(rows) {
 }
 
 function parseMaintenance(rows) {
-  return rows
+  if (rows.length === 0) return [];
+
+  // Always exclude system/internal columns
+  const EXCLUDED_KEYS = new Set(['isActive', 'isactive']);
+
+  const allKeys = Object.keys(rows[0]);
+  const originalKeys = allKeys.filter(k => !EXCLUDED_KEYS.has(k) && !EXCLUDED_KEYS.has(k.toLowerCase()));
+
+  // Detect if the first data row is actually a second row of sub-headers.
+  // This happens when the user uses merged cells in Google Sheets.
+  const firstRow = rows[0];
+  const firstRowValues = originalKeys.map(k => String(firstRow[k] || ''));
+  const isSubHeaderRow = firstRowValues.some(v =>
+    v.includes('פעם') || v.includes('מעבר') || v.includes('מע"מ') ||
+    v.includes('כולל') || v.includes('תקופת')
+  );
+
+  // Also detect if the keys themselves are single letters (A, B, C...) meaning gviz
+  // returned column IDs instead of labels — the labels are in the first data row.
+  const keysAreSingleLetters = originalKeys.every(k => /^[A-Z]{1,3}$/.test(k));
+
+  let columnHeaders = originalKeys;
+  let dataRows = rows;
+
+  if (keysAreSingleLetters) {
+    // First row IS the header labels, second row might be sub-headers
+    const headerRow = rows[0];
+    const subRow = rows[1];
+    const hasSubHeaders = subRow && Object.values(subRow).some(v =>
+      typeof v === 'string' && (v.includes('פעם') || v.includes('מעבר') || v.includes('כולל'))
+    );
+
+    if (hasSubHeaders) {
+      columnHeaders = originalKeys.map(k => {
+        const top = String(headerRow[k] || k);
+        const sub = String(subRow[k] || '');
+        return top + (sub ? '\n' + sub : '');
+      });
+      dataRows = rows.slice(2);
+    } else {
+      columnHeaders = originalKeys.map(k => String(headerRow[k] || k));
+      dataRows = rows.slice(1);
+    }
+  } else if (isSubHeaderRow) {
+    // Keys are real labels, but first row is sub-headers
+    let lastValidKey = originalKeys[0];
+    columnHeaders = originalKeys.map(k => {
+      let topHeader = k;
+      if (!k || k.match(/^[A-Z]{1,3}$/)) {
+        topHeader = lastValidKey;
+      } else {
+        lastValidKey = k;
+      }
+      const subHeader = firstRow[k] || '';
+      return topHeader + (subHeader ? '\n' + subHeader : '');
+    });
+    dataRows = rows.slice(1);
+  }
+
+  return dataRows
     .filter(r => {
-      const val = String(r.isActive ?? 'TRUE').toUpperCase();
-      return val === 'TRUE' || val === '1';
+      const val = String(r.isActive ?? r.isactive ?? 'TRUE').toUpperCase();
+      return val === 'TRUE' || val === '1' || val === '';
     })
-    .map(r => ({
-      tier: String(r.tier || '').trim(),
-      screen1: String(r.screen1 || '').trim(),
-      screen2: String(r.screen2 || '').trim(),
-      theft1: String(r.theft1 || '').trim(),
-      disable1: String(r.disable1 || '').trim(),
-    })).filter(r => r.tier);
+    .map(r => {
+      const obj = {};
+      originalKeys.forEach((oldKey, i) => {
+        obj[columnHeaders[i]] = r[oldKey];
+      });
+      return obj;
+    })
+    .filter(r => {
+      const keys = Object.keys(r);
+      return keys.length > 0 && r[keys[0]]; // ensure tier/first column is not empty
+    });
 }
 
 function parseFaq(rows) {

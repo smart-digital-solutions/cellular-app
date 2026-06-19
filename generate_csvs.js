@@ -4,7 +4,10 @@ import { fileURLToPath } from 'url';
 import {
   FALLBACK_TIERS, FALLBACK_ACCESSORIES, FALLBACK_MAINTENANCE,
   FALLBACK_FAQ, FALLBACK_SETTINGS, FALLBACK_GUIDE,
-  FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES
+  FALLBACK_IMPORTANT_NOTES, FALLBACK_TERMINATION_RULES,
+  MAINT_COL_TIER, MAINT_COL_SCREEN_1, MAINT_COL_SCREEN_2,
+  MAINT_COL_THEFT_1, MAINT_COL_THEFT_2, MAINT_COL_DISABLE_1,
+  MAINT_COL_DISABLE_2
 } from './src/fallbackData.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +29,7 @@ function escapeCsv(val) {
 
 function writeCsv(filename, data, columns) {
   const filePath = path.join(outDir, filename);
-  const header = columns.join(',') + '\n';
+  const header = columns.map(escapeCsv).join(',') + '\n';
   const rows = data.map(row => columns.map(col => escapeCsv(row[col])).join(',')).join('\n');
   fs.writeFileSync(filePath, '\uFEFF' + header + rows, 'utf8'); // \uFEFF for Excel UTF-8 BOM
 }
@@ -66,7 +69,7 @@ const devicesData = FALLBACK_ACCESSORIES.map(item => ({ ...item, isActive: 'TRUE
 writeCsv('devices.csv', devicesData, devicesCols);
 
 // 7. Maintenance
-const maintenanceCols = ['tier', 'screen1', 'screen2', 'theft1', 'disable1', 'isActive'];
+const maintenanceCols = [MAINT_COL_TIER, MAINT_COL_SCREEN_1, MAINT_COL_SCREEN_2, MAINT_COL_THEFT_1, MAINT_COL_THEFT_2, MAINT_COL_DISABLE_1, MAINT_COL_DISABLE_2, 'isActive'];
 const maintenanceData = FALLBACK_MAINTENANCE.map(item => ({ ...item, isActive: 'TRUE' }));
 writeCsv('maintenance.csv', maintenanceData, maintenanceCols);
 

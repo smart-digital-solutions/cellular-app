@@ -27,13 +27,25 @@ export const FALLBACK_ACCESSORIES = [
   { id: 'galaxy_buds4_pro', label: 'Samsung Galaxy Buds 4 Pro (אוזניות)', category: 'אביזרים', totalCost: 26.00 },
 ];
 
+const theft2_text = "לפי דגם ומחיר המכשיר שאבד/ נגנב בפועל וכפי שידוע ביום מימוש האובדן/גניבה בהתאם לסעיף 16.9.2, תוכנית הליסינג תימשך בהתאם לתוכנית המקורית (יתרת התקופה ומחיר החודשי)";
+const disable2_text = "לפי דגם ומחיר המכשיר שהושבת בפועל וכפי שידוע ביום מימוש ההשבתה בהתאם לסעיף 16.9.2, תוכנית הליסינג תימשך בהתאם לתוכנית המקורית (יתרת התקופה ומחיר החודשי)";
+
+export const MAINT_COL_TIER = "מחיר מחירון משוקלל מכשיר\n(כפי שנקבע בעת הזמנת המכשיר בליסינג בהתאם לסעיף 16.9.2), כולל מע\"מ";
+export const MAINT_COL_SCREEN_1 = "שבר/ השבתת מסך\nפעם אחת בכל תקופת הליסינג, כולל מע\"מ";
+export const MAINT_COL_SCREEN_2 = "שבר/ השבתת מסך\nעלות מעבר לפעם הראשונה, כולל מע\"מ";
+export const MAINT_COL_THEFT_1 = "אובדן/ גניבה (המכשיר ייחסם לשימוש)\nפעם אחת בכל תקופת ליסינג, כולל מע\"מ";
+export const MAINT_COL_THEFT_2 = "אובדן/ גניבה (המכשיר ייחסם לשימוש)\nמעבר לפעם הראשונה, כולל מע\"מ";
+export const MAINT_COL_DISABLE_1 = "השבתת מכשיר\nפעם אחת בכל תקופת ליסינג, כולל מע\"מ";
+export const MAINT_COL_DISABLE_2 = "השבתת מכשיר\nמעבר לפעם הראשונה, כולל מע\"מ";
+
 export const FALLBACK_MAINTENANCE = [
   // v1.5: מכשיר לחצנים — בוטלה ההשתתפות הרגילה בהשבתה ואובדן. דורש סגירת התחייבות + רכישת ליסינג לחצנים חדש
-  { tier: "מכשיר לחצנים (Feature Phone)", screen1: "50.40 ₪", screen2: "50.40 ₪", theft1: "סגירת התחייבות + ליסינג לחצנים חדש", disable1: "סגירת התחייבות + ליסינג לחצנים חדש" },
-  { tier: "מכשיר עד 2,000 ₪", screen1: "110.10 ₪", screen2: "302.50 ₪", theft1: "504.00 ₪", disable1: "403.00 ₪" },
-  { tier: "מכשיר עד 3,500 ₪", screen1: "110.10 ₪", screen2: "403.00 ₪", theft1: "1,664.00 ₪", disable1: "1,210.00 ₪" },
-  { tier: "מכשיר עד 5,000 ₪", screen1: "110.10 ₪", screen2: "605.00 ₪", theft1: "2,269.00 ₪", disable1: "1,613.70 ₪" },
-  { tier: "מכשיר מעל 5,000 ₪", screen1: "110.10 ₪", screen2: "807.00 ₪", theft1: "3,025.70 ₪", disable1: "50% מהמחיר" },
+  { [MAINT_COL_TIER]: "מכשיר לחצנים Feature Phone", [MAINT_COL_SCREEN_1]: "50.4 ₪", [MAINT_COL_SCREEN_2]: "50.4 ₪", [MAINT_COL_THEFT_1]: "100.1 ₪", [MAINT_COL_THEFT_2]: "סגירת התחייבות ולקיחת מכשיר ליסינג לחצנים חדש", [MAINT_COL_DISABLE_1]: "100.1 ₪", [MAINT_COL_DISABLE_2]: "סגירת התחייבות ולקיחת מכשיר ליסינג לחצנים חדש" },
+  { [MAINT_COL_TIER]: "מכשיר כשר", [MAINT_COL_SCREEN_1]: "50.4 ₪", [MAINT_COL_SCREEN_2]: "50.4 ₪", [MAINT_COL_THEFT_1]: "100.1 ₪", [MAINT_COL_THEFT_2]: "סגירת התחייבות ולקיחת מכשיר ליסינג לחצנים חדש", [MAINT_COL_DISABLE_1]: "100.1 ₪", [MAINT_COL_DISABLE_2]: "סגירת התחייבות ולקיחת מכשיר ליסינג לחצנים חדש" },
+  { [MAINT_COL_TIER]: "עד 2,000 ₪", [MAINT_COL_SCREEN_1]: "110.1 ₪", [MAINT_COL_SCREEN_2]: "302.5 ₪", [MAINT_COL_THEFT_1]: "504 ₪", [MAINT_COL_THEFT_2]: theft2_text, [MAINT_COL_DISABLE_1]: "403 ₪", [MAINT_COL_DISABLE_2]: disable2_text },
+  { [MAINT_COL_TIER]: "עד 3,500 ₪", [MAINT_COL_SCREEN_1]: "110.1 ₪", [MAINT_COL_SCREEN_2]: "403 ₪", [MAINT_COL_THEFT_1]: "1,664 ₪", [MAINT_COL_THEFT_2]: theft2_text, [MAINT_COL_DISABLE_1]: "1,210 ₪", [MAINT_COL_DISABLE_2]: disable2_text },
+  { [MAINT_COL_TIER]: "עד 5,000 ₪", [MAINT_COL_SCREEN_1]: "110.1 ₪", [MAINT_COL_SCREEN_2]: "605 ₪", [MAINT_COL_THEFT_1]: "2,269 ₪", [MAINT_COL_THEFT_2]: theft2_text, [MAINT_COL_DISABLE_1]: "1,613.7 ₪", [MAINT_COL_DISABLE_2]: disable2_text },
+  { [MAINT_COL_TIER]: "מעל ל- 5,000 ₪", [MAINT_COL_SCREEN_1]: "110.1 ₪", [MAINT_COL_SCREEN_2]: "807 ₪", [MAINT_COL_THEFT_1]: "3,025.7 ₪", [MAINT_COL_THEFT_2]: theft2_text, [MAINT_COL_DISABLE_1]: "50% ממחיר המכשיר, כפי שנקבע בעת הזמנת המכשיר בליסינג, בהתאם לסעיף 16.9.2", [MAINT_COL_DISABLE_2]: disable2_text },
 ];
 
 // v1.5: מדור שו"ת הוחלף ב"הודעות התכ"ם" — הפניות לאתר החשכ"ל (מקור אמת רגולטורי)

@@ -133,7 +133,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                     <span className="font-bold" style={{ color: opt.id === value ? 'var(--clr-primary)' : 'var(--clr-text-1)' }}>{opt.label}</span>
                     {opt.totalCost > 0 && (
                       <span className="font-black opacity-70 group-hover:text-indigo-600 bg-slate-100 dark:bg-white/10 px-2 py-1 rounded-lg text-xs" dir="ltr" style={{ color: 'var(--clr-text-2)' }}>
-                        {opt.totalCost.toFixed(2)} ₪
+                        {opt.totalCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪
                       </span>
                     )}
                   </div>
@@ -155,7 +155,7 @@ const OmegaSelect = ({ value, onChange, options, placeholder, disabled, groups =
                 <span className="font-bold" style={{ color: opt.id === value ? 'var(--clr-primary)' : 'var(--clr-text-1)' }}>{opt.label}</span>
                 {opt.allowance !== undefined && (
                   <span className="font-black text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-lg text-xs" dir="ltr">
-                    {opt.allowance.toFixed(2)} ₪
+                    {opt.allowance.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪
                   </span>
                 )}
               </div>
