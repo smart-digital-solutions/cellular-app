@@ -211,9 +211,15 @@ const CalculatorScreen = ({ tiers, allDevices, accessoriesList }) => {
                   </div>
                   <div className="flex flex-col pb-4 border-b border-slate-200 dark:border-white/20">
                     <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm px-2 py-1.5">
-                      <span className="text-cyan-600 dark:text-cyan-400 font-medium">עלות מחירון מכשיר</span>
+                      <span className="text-cyan-600 dark:text-cyan-400 font-medium">גובה דמי השימוש החודשיים למכשיר</span>
                       <span className="font-bold text-cyan-700 dark:text-cyan-300 text-left w-24">{deviceCost.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪</span>
                     </div>
+                    {currentDevice?.listPrice > 0 && (
+                      <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-xs text-slate-500 dark:text-slate-400 px-2 pb-1.5">
+                        <span>מחיר מחירון מכשיר (מלא)</span>
+                        <span className="text-left w-24">{currentDevice.listPrice.toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₪</span>
+                      </div>
+                    )}
                     {currentAccessory && (
                       <div className="grid grid-cols-[1fr_auto] gap-4 items-center text-sm border-t border-slate-100 dark:border-slate-800 px-2 py-1.5">
                         <span className="text-purple-600 dark:text-purple-400 font-medium truncate">תוספת: {currentAccessory.label}</span>
