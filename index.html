@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ═══ Prevent Flash of Wrong Theme ═══ -->
+    <script>
+      (function() {
+        try {
+          var saved = null;
+          try { saved = localStorage.getItem('theme_override'); } catch(e) {}
+          
+          var def = 'DARK'; // Fallback default
+          
+          // Try to read the live default theme from Google Sheets cache to prevent flash
+          try {
+            var settingsCache = localStorage.getItem('cellular_app_settings');
+            if (settingsCache) {
+              var parsed = JSON.parse(settingsCache);
+              if (parsed && Array.isArray(parsed.data)) {
+                for (var i = 0; i < parsed.data.length; i++) {
+                  var row = parsed.data[i];
+                  var k = row.key !== undefined ? row.key : row['A'];
+                  var v = row.value !== undefined ? row.value : row['B'];
+                  if (k && k.trim() === 'default_theme' && v) {
+                    var cachedDef = v.trim().toUpperCase();
+                    if (cachedDef === 'LIGHT' || cachedDef === 'DARK') {
+                      def = cachedDef;
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          } catch(e) {}
+
+          if (saved === 'dark' || (!saved && def !== 'LIGHT')) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- ═══ Enterprise SEO Meta Tags ═══ -->
+    <title>סלולטור 2026 — מחשבון סלולר ממשלתי | השתתפות עצמית, יתרת ליסינג ומחירון נזקים</title>
+    <meta name="title" content="סלולטור 2026 — מחשבון סלולר ממשלתי | השתתפות עצמית, יתרת ליסינג ומחירון נזקים" />
+    <meta name="description" content="סימולטור סלולר ממשלתי רשמי — בדוק את ההשתתפות העצמית החודשית שלך לפי דרגת זכאות, מחשבון יתרת ליסינג, מחירון נזקים ומדריך מכרז 2026." />
+    <meta name="keywords" content="סלולטור 2026, מחשבון סלולר ממשלתי, השתתפות עצמית סלולר, יתרת ליסינג סלולר, מחירון נזקים סלולר, מכרז סלולר 2026, עובדי מדינה סלולר, זכאות מכשיר סלולרי, סלולר ממשלתי" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="language" content="Hebrew" />
+    <meta name="author" content="סלולטור 2026" />
+    <link rel="canonical" href="https://smart-digital-solutions.github.io/cellular-app/" />
+
+    <!-- ═══ Security Headers (meta fallback — prefer HTTP headers on server) ═══ -->
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://docs.google.com https://sheets.googleapis.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net;" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
+
+    <!-- ═══ Open Graph / Facebook / WhatsApp / LinkedIn ═══ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://smart-digital-solutions.github.io/cellular-app/" />
+    <meta property="og:title" content="סלולטור 2026 — מחשבון סלולר ממשלתי" />
+    <meta property="og:description" content="סימולטור סלולר ממשלתי רשמי — בדוק את ההשתתפות העצמית החודשית שלך לפי דרגת זכאות, מחשבון יתרת ליסינג, מחירון נזקים ומדריך מכרז 2026." />
+    <meta property="og:image" content="https://smart-digital-solutions.github.io/cellular-app/cellular-hero.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="סלולטור 2026" />
+    <meta property="og:locale" content="he_IL" />
+
+    <!-- ═══ Twitter Cards ═══ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://smart-digital-solutions.github.io/cellular-app/" />
+    <meta name="twitter:title" content="סלולטור 2026 — מחשבון סלולר ממשלתי" />
+    <meta name="twitter:description" content="סימולטור סלולר ממשלתי רשמי — בדוק את ההשתתפות העצמית החודשית שלך לפי דרגת זכאות, מחשבון יתרת ליסינג ומחירון נזקים 2026." />
+    <meta name="twitter:image" content="https://smart-digital-solutions.github.io/cellular-app/cellular-hero.webp" />
+
+    <!-- ═══ Structured Data (JSON-LD) for Google Search Rich Results ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://smart-digital-solutions.github.io/cellular-app/#webapp",
+          "url": "https://smart-digital-solutions.github.io/cellular-app/",
+          "name": "סלולטור 2026",
+          "description": "סימולטור סלולר ממשלתי רשמי — בדוק את ההשתתפות העצמית החודשית שלך לפי דרגת זכאות, מחשבון יתרת ליסינג, מחירון נזקים ומדריך מכרז 2026.",
+          "applicationCategory": "GovernmentApplication",
+          "operatingSystem": "All",
+          "inLanguage": "he",
+          "image": "https://smart-digital-solutions.github.io/cellular-app/cellular-hero.webp",
+          "author": {
+            "@type": "Organization",
+            "name": "סלולטור 2026"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://smart-digital-solutions.github.io/cellular-app/#website",
+          "url": "https://smart-digital-solutions.github.io/cellular-app/",
+          "name": "סלולטור 2026",
+          "publisher": {
+            "@type": "Organization",
+            "name": "סלולטור 2026"
+          },
+          "inLanguage": "he"
+        }
+      ]
+    }
+    </script>
+
+    <!-- ═══ Fonts — Preconnect + Preload (prevents FOUT) ═══ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Hero image preload — starts downloading before React loads, critical for LCP -->
+    <link rel="preload" as="image" href="./cellular-hero.webp" fetchpriority="high" type="image/webp" />
+    <link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&family=Assistant:wght@300;400;600;800&display=swap" />
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&family=Assistant:wght@300;400;600;800&display=swap"
+      media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&family=Assistant:wght@300;400;600;800&display=swap" />
+    </noscript>
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="icon-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0B1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="סלולטור" />
+    
+    <style>
+      .skip-link {
+        position: absolute;
+        inset-inline-start: -100%;
+        top: 1rem;
+        z-index: 9999;
+        padding: 8px 16px;
+        background: #4F46E5;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: inset-inline-start 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .skip-link:focus {
+        inset-inline-start: 1rem;
+      }
+    </style>
+    <script type="module" crossorigin src="/cellular-app/assets/index-6gX8x0Op.js"></script>
+    <link rel="modulepreload" crossorigin href="/cellular-app/assets/rolldown-runtime-Bh1tDfsg.js">
+    <link rel="modulepreload" crossorigin href="/cellular-app/assets/icons-DKg6nIPB.js">
+    <link rel="modulepreload" crossorigin href="/cellular-app/assets/react-vendor-DJv6tDEy.js">
+    <link rel="stylesheet" crossorigin href="/cellular-app/assets/index-DJeLD14l.css">
+  </head>
+  <body>
+    <!-- Skip to main content (WCAG 2.2 AA) -->
+    <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+    <noscript>
+      <div style="padding: 20px; text-align: center; background: #fff; color: #000; z-index: 9999; position: relative;">
+        יש להפעיל JavaScript כדי להשתמש במערכת זו.
+      </div>
+    </noscript>
+
+
+    <div id="root"></div>
+    <!-- Google Analytics — deferred to end of body to not block LCP -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LR6JHTZCP9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LR6JHTZCP9');
+    </script>
+  </body>
+</html>
