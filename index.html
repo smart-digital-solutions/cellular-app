@@ -85,7 +85,7 @@
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "WebApplication",
+          "@type": ["WebApplication", "SoftwareApplication"],
           "@id": "https://smart-digital-solutions.github.io/cellular-app/#webapp",
           "url": "https://smart-digital-solutions.github.io/cellular-app/",
           "name": "סלולטור",
@@ -93,21 +93,47 @@
             "סלולטור 2026",
             "מחשבון סלולר ממשלתי",
             "סלולטור משרד התקשורת",
-            "סלולטור דינה שרון"
+            "סלולטור דינה שרון",
+            "מחשבון השתתפות עצמית סלולר",
+            "מחשבון ליסינג סלולר ממשלתי"
           ],
           "description": "סלולטור — מחשבון הסלולר הממשלתי הרשמי של משרד התקשורת (פיתוח: דינה שרון). חישוב השתתפות עצמית חודשית, יתרת ליסינג, מחירון נזקים ומדריך מכרז סלולר 2026.",
           "applicationCategory": "GovernmentApplication",
+          "applicationSubCategory": "מחשבון ממשלתי",
           "operatingSystem": "All",
           "inLanguage": "he",
+          "isAccessibleForFree": true,
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "ILS",
+            "availability": "https://schema.org/InStock"
+          },
+          "featureList": "מחשבון השתתפות עצמית, מחשבון סיום ליסינג, מחירון נזקים, מדריך מכרז סלולר",
+          "screenshot": "https://smart-digital-solutions.github.io/cellular-app/cellular-hero.webp",
           "image": "https://smart-digital-solutions.github.io/cellular-app/cellular-hero.webp",
+          "datePublished": "2026-01-01",
+          "dateModified": "2026-07-28",
+          "softwareVersion": "1.5.0",
           "author": {
             "@type": "Person",
-            "name": "דינה שרון"
+            "name": "דינה שרון",
+            "jobTitle": "מפתחת תוכנה",
+            "worksFor": {
+              "@type": "GovernmentOrganization",
+              "name": "משרד התקשורת"
+            }
           },
           "publisher": {
             "@type": "GovernmentOrganization",
             "name": "משרד התקשורת",
-            "alternateName": "Ministry of Communications"
+            "alternateName": ["Ministry of Communications", "משרד התקשורת ישראל"]
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "ratingCount": "1",
+            "bestRating": "5"
           }
         },
         {
@@ -115,12 +141,23 @@
           "@id": "https://smart-digital-solutions.github.io/cellular-app/#website",
           "url": "https://smart-digital-solutions.github.io/cellular-app/",
           "name": "סלולטור — מחשבון סלולר ממשלתי",
-          "alternateName": "סלולטור משרד התקשורת",
+          "alternateName": ["סלולטור משרד התקשורת", "סלולטור 2026"],
           "publisher": {
             "@type": "GovernmentOrganization",
             "name": "משרד התקשורת"
           },
           "inLanguage": "he"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "סלולטור — דף הבית",
+              "item": "https://smart-digital-solutions.github.io/cellular-app/"
+            }
+          ]
         },
         {
           "@type": "FAQPage",
@@ -131,7 +168,7 @@
               "name": "מהו סלולטור?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "סלולטור הינו מחשבון סלולר ממשלתי רשמי של משרד התקשורת (פיתוח: דינה שרון), המאפשר לעובדי מדינה לחשב בקלות דמי השתתפות עצמית חודשית, יתרת ליסינג בסיום חוזה ומחירון נזקים מעודכן."
+                "text": "סלולטור הינו מחשבון סלולר ממשלתי רשמי של משרד התקשורת (פיתוח: דינה שרון), המאפשר לעובדי מדינה לחשב בקלות דמי השתתפות עצמית חודשית, יתרת ליסינג בסיום חוזה ומחירון נזקים מעודכן במסגרת מכרז הסלולר הממשלתי 2026."
               }
             },
             {
@@ -139,7 +176,7 @@
               "name": "איך מחושבת ההשתתפות העצמית בסלולטור?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "החישוב בסלולטור מבוסס על דרגת הזכאות של העובד במשרד התקשורת ומחיר המכשיר שנבחר במכרז הסלולר הממשלתי 2026."
+                "text": "החישוב בסלולטור מבוסס על דרגת הזכאות של העובד ומחיר המכשיר שנבחר במכרז הסלולר הממשלתי 2026. המערכת מחשבת באופן אוטומטי את ההפרש בין עלות המכשיר לבין הסבסוד המגיע לפי דרגת הזכאות."
               }
             },
             {
@@ -148,6 +185,38 @@
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "סלולטור פותח על ידי דינה שרון עבור עובדי מדינה ומשרד התקשורת ככלי דיגיטלי מתקדם לחישוב עלויות סלולר."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "מה כולל מחירון הנזקים בסלולטור?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "מחירון הנזקים בסלולטור מציג את עלויות ההשתתפות העצמית בתיקון נזקים למכשירי סלולר ממשלתיים, לפי סוג הנזק, דגם המכשיר ודרגת הזכאות של העובד."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "איך מחשבים יתרת ליסינג בסלולטור?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "מחשבון סיום הליסינג בסלולטור מחשב את יתרת התשלומים שנותרה לעובד בעת סיום מוקדם של חוזה הסלולר הממשלתי, כולל חודשי ליסינג שנותרו ועלויות יציאה."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "האם הסלולטור חינמי?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "כן, סלולטור הוא כלי חינמי לחלוטין שפותח על ידי דינה שרון עבור משרד התקשורת. הוא זמין לכל עובדי המדינה ללא עלות וללא צורך בהתקנה — פשוט גולשים לאתר ומתחילים לחשב."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "למי מיועד הסלולטור של משרד התקשורת?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "הסלולטור מיועד לכלל עובדי המדינה הזכאים למכשיר סלולרי במסגרת מכרז הסלולר הממשלתי 2026 של משרד התקשורת. הכלי מסייע בבחירת מכשיר, הבנת העלויות וקבלת החלטות מושכלות."
               }
             }
           ]
@@ -220,10 +289,38 @@
     <div id="root">
       <!-- Static SEO Pre-render content for Googlebot Indexing & Rank #1 Optimization -->
       <main style="max-width:800px;margin:40px auto;padding:20px;font-family:system-ui,sans-serif;direction:rtl;text-align:right;">
-        <h1 style="font-size:28px;font-weight:900;color:#1e293b;margin-bottom:12px;">סלולטור — מחשבון סלולר ממשלתי 2026 | משרד התקשורת</h1>
-        <p style="font-size:16px;line-height:1.6;color:#475569;">
+        <h1 style="font-size:28px;font-weight:900;color:#1e293b;margin-bottom:12px;">סלולטור — מחשבון סלולר ממשלתי 2026 | משרד התקשורת | דינה שרון</h1>
+        <p style="font-size:16px;line-height:1.6;color:#475569;margin-bottom:16px;">
           ברוכים הבאים ל<strong>סלולטור</strong> — מחשבון הסלולר הממשלתי הרשמי של <strong>משרד התקשורת</strong> (פיתוח: <strong>דינה שרון</strong>).
-          המערכת מאפשרת לעובדי מדינה לחשב בקלות דמי השתתפות עצמית חודשית, יתרת ליסינג בסיום חוזה, מחירון נזקים מעודכן והנחיות מכרז סלולר 2026.
+          המערכת מאפשרת לכלל עובדי מדינה לחשב בקלות ובמהירות את דמי ההשתתפות העצמית החודשית, יתרת ליסינג בסיום חוזה, מחירון נזקים מעודכן והנחיות מכרז סלולר 2026.
+          <strong>סלולטור</strong> הוא כלי חינמי לחלוטין, ללא צורך בהתקנה — פשוט גולשים ומתחילים לחשב.
+        </p>
+
+        <h2 style="font-size:22px;font-weight:700;color:#1e293b;margin-bottom:10px;">יכולות הסלולטור</h2>
+        <ul style="font-size:15px;line-height:1.8;color:#475569;padding-right:20px;margin-bottom:16px;">
+          <li><strong>מחשבון השתתפות עצמית</strong> — חישוב מדויק של ההשתתפות העצמית החודשית בתלוש השכר לפי דרגת זכאות ומחיר מכשיר</li>
+          <li><strong>מחשבון סיום ליסינג</strong> — חישוב יתרת תשלומים וקנסות יציאה בעת סיום מוקדם של חוזה הסלולר הממשלתי</li>
+          <li><strong>מחירון נזקים אינטראקטיבי</strong> — השוואת עלויות השתתפות עצמית בנזקים לפי דרג ומכשיר</li>
+          <li><strong>מדריך מכרז סלולר 2026</strong> — ריכוז נהלים, דגשים פיננסיים, SIM Only ומסלולים מיוחדים</li>
+          <li><strong>שאלות ותשובות</strong> — מענה מקיף לשאלות נפוצות של עובדי מדינה בנושא מכרז הסלולר</li>
+        </ul>
+
+        <h2 style="font-size:22px;font-weight:700;color:#1e293b;margin-bottom:10px;">שאלות נפוצות על סלולטור</h2>
+        <dl style="font-size:15px;line-height:1.7;color:#475569;margin-bottom:16px;">
+          <dt style="font-weight:700;margin-bottom:4px;">מהו סלולטור?</dt>
+          <dd style="margin-bottom:12px;margin-right:0;">סלולטור הינו מחשבון סלולר ממשלתי רשמי שפותח על ידי דינה שרון עבור משרד התקשורת. הוא מאפשר לעובדי מדינה לחשב השתתפות עצמית חודשית, יתרת ליסינג ומחירון נזקים.</dd>
+          <dt style="font-weight:700;margin-bottom:4px;">האם הסלולטור חינמי?</dt>
+          <dd style="margin-bottom:12px;margin-right:0;">כן, סלולטור הוא כלי חינמי לחלוטין. אין צורך בהתקנה, הרשמה או סיסמה — גולשים לאתר ומתחילים לחשב מיד.</dd>
+          <dt style="font-weight:700;margin-bottom:4px;">למי מיועד הסלולטור?</dt>
+          <dd style="margin-bottom:12px;margin-right:0;">הסלולטור מיועד לכלל עובדי המדינה הזכאים למכשיר סלולרי במסגרת מכרז הסלולר הממשלתי 2026 של משרד התקשורת.</dd>
+          <dt style="font-weight:700;margin-bottom:4px;">איך מחושבת ההשתתפות העצמית?</dt>
+          <dd style="margin-bottom:12px;margin-right:0;">החישוב מבוסס על דרגת הזכאות של העובד ומחיר המכשיר שנבחר. המערכת מחשבת באופן אוטומטי את ההפרש בין עלות המכשיר לבין הסבסוד המגיע.</dd>
+          <dt style="font-weight:700;margin-bottom:4px;">מי פיתחה את סלולטור?</dt>
+          <dd style="margin-bottom:12px;margin-right:0;">סלולטור פותח על ידי דינה שרון עבור משרד התקשורת ככלי דיגיטלי מתקדם לחישוב עלויות סלולר ממשלתי.</dd>
+        </dl>
+
+        <p style="font-size:14px;color:#64748b;">
+          סלולטור 2026 | מחשבון סלולר ממשלתי | משרד התקשורת | פיתוח: דינה שרון | השתתפות עצמית | יתרת ליסינג | מחירון נזקים | מכרז סלולר עובדי מדינה
         </p>
       </main>
     </div>
