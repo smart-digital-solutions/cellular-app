@@ -162,6 +162,7 @@ function getCatalogCategory(manufacturer, model) {
   const mod = String(model).toUpperCase();
   if (mfr.includes('APPLE')) return 'Apple iPhone';
   if (mod.includes('Z FOLD') || mod.includes('Z FLIP')) return 'Samsung Galaxy - מתקפלים (Z)';
+  if (mod.includes('S26')) return 'Samsung Galaxy - סדרת S26';
   if (mod.includes('S25')) return 'Samsung Galaxy - סדרת S25';
   if (/\bA\d{2}/.test(mod)) return 'Samsung Galaxy - סדרת A';
   return 'Samsung Galaxy';

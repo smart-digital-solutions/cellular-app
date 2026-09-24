@@ -3,7 +3,7 @@
 // =============================================================
 
 export const SHEET_ID = '1kL5cL3S_m79mNXg0k9wZxFURQuK4VuHiMtnX7qhM6YA';
-export const CATALOG_SHEET_ID = '13HhcspJ_P0jnCmdz7icVeKQJCGWdur5vJ0wWfM5Wu_I';
+export const CATALOG_SHEET_ID = '1uwxmXBBy6Dz3F8U_Pr5ON49zXZI68o-V';
 
 export const GOOGLE_SHEETS_BASE_URL = 'https://docs.google.com/spreadsheets/d';
 export const MAIN_SHEET_URL = `${GOOGLE_SHEETS_BASE_URL}/${SHEET_ID}/edit`;
@@ -27,8 +27,8 @@ export const CATALOG_SHEET_NAME = 'טבלאות מחירים בחתך דגם מ�
 export const LEASE_MONTHS = 24;
 
 // מפתח לשמירת מטמון בדפדפן (localStorage)
-// v3_ — מבטל כל קאש ישן (v2_, v1_, ללא גרסה) בטעינה הראשונה
-export const CACHE_PREFIX = 'cellular_app_v3_';
+// v4_ — מבטל כל קאש ישן (v3_, v2_, v1_, ללא גרסה) בטעינה הראשונה
+export const CACHE_PREFIX = 'cellular_app_v4_';
 export const CACHE_DURATION_MINUTES = 30;
 
 // מפתח מטמון לקטלוג הממשלתי
