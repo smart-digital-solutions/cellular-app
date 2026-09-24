@@ -40,7 +40,7 @@ async function run() {
   // Test catalog sheet
   const catalogPromise = (async () => {
     try {
-      const catalogId = '13HhcspJ_P0jnCmdz7icVeKQJCGWdur5vJ0wWfM5Wu_I';
+      const catalogId = '1uwxmXBBy6Dz3F8U_Pr5ON49zXZI68o-V';
       const name = 'טבלאות מחירים בחתך דגם מכשיר וייתרת החודשים לסיום הליסינג';
       const url = `${GOOGLE_SHEETS_BASE_URL}/${catalogId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
       const response = await fetch(url);
